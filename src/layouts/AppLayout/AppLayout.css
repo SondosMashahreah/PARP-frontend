@@ -1,0 +1,9 @@
+.app-layout {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.app-layout__main {
+  position: relative;
+  z-index: 1;
+}
