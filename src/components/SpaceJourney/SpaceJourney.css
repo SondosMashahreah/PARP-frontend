@@ -1,0 +1,454 @@
+.space-journey {
+  --journey-progress: 0;
+  --journey-angle: 0deg;
+  --journey-orbit-scale: 0.88;
+  --journey-nebula-one-x: 0vw;
+  --journey-nebula-two-x: 0vw;
+  --journey-nebula-two-y: 0vh;
+  position: relative;
+  height: 520svh;
+  min-height: 3200px;
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 48% 46%, rgb(137 83 204 / 10%), transparent 30%),
+    linear-gradient(180deg, rgb(12 10 19 / 25%), rgb(7 6 12 / 72%));
+}
+
+.space-journey__sticky {
+  position: sticky;
+  top: var(--header-height);
+  height: calc(100svh - var(--header-height));
+  min-height: 560px;
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 1100px;
+}
+
+.space-journey__stars,
+.space-journey__objects,
+.space-journey__stages,
+.space-journey__nebula,
+.space-journey__orbit {
+  position: absolute;
+  inset: 0;
+}
+
+.space-journey__stars {
+  z-index: -5;
+  width: 100%;
+  height: 100%;
+  opacity: 0.86;
+}
+
+.space-journey__nebula {
+  z-index: -4;
+  pointer-events: none;
+  filter: blur(12px);
+}
+
+.space-journey__nebula--one {
+  background: radial-gradient(circle at 24% 62%, rgb(136 73 211 / 19%), transparent 30%);
+  transform: translate3d(var(--journey-nebula-one-x), 0, 0);
+}
+
+.space-journey__nebula--two {
+  background: radial-gradient(circle at 78% 26%, rgb(87 108 255 / 12%), transparent 28%);
+  transform: translate3d(var(--journey-nebula-two-x), var(--journey-nebula-two-y), 0);
+}
+
+.space-journey__orbit {
+  z-index: -2;
+  inset: 50% auto auto 50%;
+  width: min(76vw, 980px);
+  aspect-ratio: 1;
+  border: 1px solid rgb(214 185 255 / 10%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 90px rgb(149 96 237 / 6%),
+    inset 0 0 70px rgb(149 96 237 / 4%);
+  opacity: 0.55;
+  transform: translate(-50%, -50%) rotate(var(--journey-angle)) scale(var(--journey-orbit-scale));
+}
+
+.space-journey__orbit::before,
+.space-journey__orbit::after {
+  position: absolute;
+  inset: 14%;
+  border: 1px solid rgb(214 185 255 / 7%);
+  border-radius: inherit;
+  content: '';
+  transform: rotate(58deg) scaleY(0.55);
+}
+
+.space-journey__orbit::after {
+  inset: 30%;
+  transform: rotate(-34deg) scaleY(0.66);
+}
+
+.space-journey__objects {
+  z-index: -1;
+  pointer-events: none;
+}
+
+.space-journey__orb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  will-change: transform, opacity, filter;
+}
+
+.space-journey__orb::before,
+.space-journey__orb::after {
+  position: absolute;
+  border-radius: inherit;
+  content: '';
+}
+
+.space-journey__orb--origin {
+  width: clamp(300px, 38vw, 620px);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 32% 28%, rgb(243 226 255 / 88%) 0 2%, transparent 3%),
+    radial-gradient(circle at 37% 35%, #8d5cc4 0 9%, transparent 10%),
+    radial-gradient(circle at 66% 62%, #4a2f6b 0 11%, transparent 12%),
+    radial-gradient(circle at 38% 30%, #ba8ff0, #70449e 38%, #261a36 71%, #120d1b 100%);
+  box-shadow:
+    -34px 8px 90px rgb(181 138 255 / 20%),
+    inset -58px -28px 80px rgb(3 2 7 / 72%);
+}
+
+.space-journey__orb--origin::after {
+  inset: -8%;
+  border: 1px solid rgb(214 185 255 / 18%);
+  transform: rotate(-14deg) scaleY(0.36);
+}
+
+.space-journey__orb--research {
+  width: clamp(170px, 22vw, 340px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 32% 28%, #e8d8ff, #9b6adc 30%, #452b67 68%, #171020 100%);
+  box-shadow:
+    0 0 70px rgb(181 138 255 / 24%),
+    inset -28px -22px 48px rgb(9 4 15 / 62%);
+}
+
+.space-journey__orb--research::before {
+  inset: 17% -34%;
+  border: 12px solid rgb(197 163 244 / 22%);
+  transform: rotate(22deg) scaleY(0.26);
+}
+
+.space-journey__orb--network {
+  width: clamp(220px, 27vw, 430px);
+  aspect-ratio: 1;
+  background:
+    radial-gradient(circle at 50% 50%, rgb(183 143 247 / 15%) 0 34%, transparent 35%),
+    conic-gradient(from 20deg, #73509d, #b98bf0, #4d3571, #9670c5, #73509d);
+  box-shadow: 0 0 90px rgb(120 82 178 / 20%);
+}
+
+.space-journey__orb--network::before {
+  inset: 9%;
+  border: 1px dashed rgb(236 220 255 / 32%);
+}
+
+.space-journey__orb--network::after {
+  inset: 30%;
+  background: radial-gradient(circle, #f0e2ff, #a573dc 40%, transparent 70%);
+  box-shadow: 0 0 42px rgb(214 185 255 / 54%);
+}
+
+.space-journey__orb--core {
+  width: clamp(112px, 13vw, 190px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 40% 35%, #fff, #d8bfff 16%, #9c69e7 43%, #3f255e 72%, #130d1d 100%);
+  box-shadow:
+    0 0 34px rgb(224 200 255 / 68%),
+    0 0 110px rgb(149 96 237 / 38%);
+}
+
+.space-journey__orb--core::before {
+  inset: -46%;
+  border: 1px solid rgb(214 185 255 / 20%);
+}
+
+.space-journey__stages {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.space-journey__stage {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: clamp(28px, 8vw, 132px);
+  width: min(560px, calc(100% - 56px));
+  direction: rtl;
+  text-align: start;
+  opacity: 0;
+  transform: translate3d(0, calc(-50% + 180px), 0) scale(0.94);
+  will-change: transform, opacity;
+}
+
+.space-journey__stage:first-child {
+  opacity: 1;
+  transform: translate3d(0, -50%, 0) scale(1);
+}
+
+.space-journey__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-block-end: 14px;
+  color: #cdb0f4;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.space-journey__eyebrow::before {
+  width: 34px;
+  height: 1px;
+  content: '';
+  background: currentColor;
+  opacity: 0.65;
+}
+
+.space-journey__stage h1,
+.space-journey__stage h2 {
+  max-width: 11ch;
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 6.3rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  text-shadow: 0 12px 48px rgb(0 0 0 / 42%);
+}
+
+.space-journey__stage p {
+  max-width: 48ch;
+  margin: 24px 0 0;
+  color: #c8bdd8;
+  font-size: clamp(1rem, 1.45vw, 1.22rem);
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+
+.space-journey__progress {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  inset-inline-start: clamp(20px, 3.6vw, 58px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: min(46vh, 390px);
+  transform: translateY(-50%);
+}
+
+.space-journey__progress-line {
+  position: relative;
+  width: 1px;
+  height: 100%;
+  overflow: hidden;
+  background: rgb(214 185 255 / 13%);
+}
+
+.space-journey__progress-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #e3cfff, #9560ed);
+  transform: scaleY(var(--journey-progress));
+  transform-origin: top;
+}
+
+.space-journey__progress-dots {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.space-journey__dot {
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgb(214 185 255 / 42%);
+  border-radius: 50%;
+  background: #15101d;
+  transition: transform 240ms ease, background-color 240ms ease, box-shadow 240ms ease;
+}
+
+.space-journey__dot.is-active {
+  background: #d7bcff;
+  box-shadow: 0 0 18px rgb(181 138 255 / 70%);
+  transform: scale(1.7);
+}
+
+.space-journey__cue {
+  position: absolute;
+  z-index: 3;
+  bottom: 28px;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-text-subtle);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  transform: translateX(-50%);
+  transition: opacity 180ms ease;
+}
+
+.space-journey__mouse {
+  position: relative;
+  width: 22px;
+  height: 34px;
+  border: 1px solid rgb(214 185 255 / 36%);
+  border-radius: 14px;
+}
+
+.space-journey__mouse span {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  width: 3px;
+  height: 7px;
+  border-radius: 99px;
+  background: #d6b9ff;
+  transform: translateX(-50%);
+  animation: journey-scroll-cue 1.7s ease-in-out infinite;
+}
+
+@keyframes journey-scroll-cue {
+  0%, 100% { opacity: 0.25; transform: translate(-50%, 0); }
+  45% { opacity: 1; }
+  70% { opacity: 0; transform: translate(-50%, 10px); }
+}
+
+@media (max-width: 900px) {
+  .space-journey {
+    min-height: 2700px;
+  }
+
+  .space-journey__stage {
+    top: 54%;
+    inset-inline: 28px;
+    width: auto;
+  }
+
+  .space-journey__stage h1,
+  .space-journey__stage h2 {
+    max-width: 10ch;
+    font-size: clamp(2.35rem, 10vw, 4.9rem);
+  }
+
+  .space-journey__stage p {
+    max-width: min(42ch, 86vw);
+  }
+
+  .space-journey__progress {
+    top: 48%;
+    inset-inline-start: 16px;
+    height: 34vh;
+    opacity: 0.72;
+  }
+
+  .space-journey__progress-line {
+    display: none;
+  }
+
+  .space-journey__orb--origin {
+    width: clamp(270px, 65vw, 480px);
+  }
+}
+
+@media (max-width: 560px) {
+  .space-journey {
+    height: 460svh;
+    min-height: 2400px;
+  }
+
+  .space-journey__sticky {
+    min-height: 500px;
+  }
+
+  .space-journey__stage {
+    top: 52%;
+    inset-inline: 22px;
+  }
+
+  .space-journey__stage h1,
+  .space-journey__stage h2 {
+    font-size: clamp(2.3rem, 13vw, 4rem);
+  }
+
+  .space-journey__stage p {
+    margin-block-start: 18px;
+    font-size: 0.96rem;
+    line-height: 1.8;
+  }
+
+  .space-journey__progress {
+    display: none;
+  }
+
+  .space-journey__cue {
+    bottom: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-journey {
+    height: auto;
+    min-height: 0;
+  }
+
+  .space-journey__sticky {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: calc(100svh - var(--header-height));
+    overflow: hidden;
+  }
+
+  .space-journey__objects,
+  .space-journey__orbit {
+    display: none;
+  }
+
+  .space-journey__stages {
+    position: relative;
+    display: grid;
+    gap: 32px;
+    width: min(760px, calc(100% - 40px));
+    margin-inline: auto;
+    padding: clamp(64px, 10vh, 120px) 0;
+  }
+
+  .space-journey__stage,
+  .space-journey__stage:first-child {
+    position: relative;
+    top: auto;
+    inset: auto;
+    width: 100%;
+    padding: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: rgb(24 19 33 / 78%);
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+
+  .space-journey__stage h1,
+  .space-journey__stage h2 {
+    font-size: clamp(2rem, 8vw, 4rem);
+  }
+
+  .space-journey__progress,
+  .space-journey__cue {
+    display: none;
+  }
+}

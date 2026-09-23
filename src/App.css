@@ -2,6 +2,7 @@
   min-height: 100vh;
   min-height: 100svh;
   isolation: isolate;
+  overflow: clip;
   background:
     radial-gradient(ellipse at 10% 53%, rgba(170, 110, 234, 0.17), transparent 46%),
     radial-gradient(ellipse at 88% 12%, rgb(110 54 172 / 12%), transparent 38%),
@@ -9,12 +10,10 @@
 }
 
 .app-main {
+  position: relative;
   min-height: calc(100svh - var(--header-height));
-  width: min(var(--content-width), calc(100% - 80px));
-  margin-inline: auto;
 }
 
 @media (max-width: 640px) {
   :root { --header-height: 86px; }
-  .app-main { width: calc(100% - 32px); }
 }
