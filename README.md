@@ -1,16 +1,48 @@
-# React + Vite
+# PARP Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+واجهة المنصة الفلسطينية للبحوث الإجرائية، باستخدام React وVite.
 
-Currently, two official plugins are available:
+## التشغيل
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+استخدمي إصدار Node.js المتوافق مع Vite الموجود في package.json، ثم:
 
-## React Compiler
+```bash
+npm ci
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run build
+npm run lint
+```
 
-## Expanding the ESLint configuration
+## الهيدر
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+هيدر واحد: الشعار الحالي على اليسار، حقل البحث في الوسط، والإشعارات وزر القائمة على اليمين. ترتيب الهيدر مقصود حتى مع اتجاه الصفحة العربي.
+
+| الملف | المسؤولية |
+| --- | --- |
+| src/components/Header/Header.jsx | تركيب الهيدر وإدارة اللوحة المفتوحة |
+| src/components/Header/HeaderLogo.jsx | الشعار الموجود واسم المنصة |
+| src/components/Header/HeaderSearch.jsx | حقل البحث |
+| src/components/Header/Notifications.jsx | زر الإشعارات ولوحة الحالة الفارغة |
+| src/components/Header/Sidebar.jsx | القائمة الجانبية العمودية |
+| src/components/ui/Icon.jsx | الأيقونات المشتركة |
+| src/components/ui/IconButton.jsx | زر أيقونة قابل لإعادة الاستخدام |
+| src/styles/theme.css | ألوان الثيم والخطوط والحواف والمتغيرات العامة |
+
+لكل مكون ملف CSS مرافق. الألوان الأساسية داكنة مع درجات بنفسجية مستوحاة من المرجع البصري. الشعار الأصلي محفوظ كما هو في src/components/Header/img/logo.png.
+
+## نطاق هذه المرحلة
+
+- البحث يقبل الكتابة، ولا يستدعي API أو يعرض نتائج حتى الآن.
+- السايدبار فارغ عمدًا، باستثناء زر الإغلاق. لاحقًا يمكن إضافة محتواه داخل sidebar__content.
+- زر الإشعارات يعرض الحالة الفارغة، دون عدادات أو إشعارات تجريبية.
+- محتوى الصفحة الرئيسية فارغ وجاهز للخطوة التالية.
+- السايدبار يستخدم dialog أصليًا: يحجز التركيز داخله، ويغلق بزر الإغلاق أو Escape أو الضغط على الخلفية، ويعيد التركيز إلى زر الفتح.
+- دعم الشاشات الصغيرة، وأسماء عربية للأزرار، ومؤشرات التركيز، وتفضيل تقليل الحركة.
+- لم تتم إضافة مكتبات واجهة أو توجيه أو ربط بخدمات المتجر السابق.
+
+## ربط البيانات لاحقًا
+
+أضيفي اتصال البحث والإشعارات داخل ميزتهما، ثم مرري النتائج إلى مكونات العرض. صلاحيات البيانات تنفذ في الخلفية. تغيير الألوان العامة يتم من theme.css بدل تكرار القيم في الصفحات.

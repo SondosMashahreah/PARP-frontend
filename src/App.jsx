@@ -1,13 +1,12 @@
-import { useState } from 'react'
 import './App.css'
-import Header from './components/Header/Header.jsx'
+import Home from './pages/Home/Home.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <Header />
+    <div className="app-shell">
+      <a className="skip-link" href="#main-content">انتقل إلى المحتوى</a>
+      <Home />
+      <main id="main-content" className="app-main" tabIndex={-1} aria-label="محتوى المنصة" />
     </div>
   )
 }

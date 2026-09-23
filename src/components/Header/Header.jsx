@@ -1,32 +1,42 @@
-import React from 'react'
-import logo from './img/logo.png'
-import link from 'react-router-dom'
+import { useCallback, useState } from 'react'
+import HeaderLogo from './HeaderLogo.jsx'
+import HeaderSearch from './HeaderSearch.jsx'
+import Notifications from './Notifications.jsx'
+import Sidebar from './Sidebar.jsx'
+import Icon from '../ui/Icon.jsx'
+import IconButton from '../ui/IconButton.jsx'
+import './Header.css'
 
-const Header = () => {
+function Header() {
+  const [activePanel, setActivePanel] = useState(null)
+  const closePanel = useCallback(() => setActivePanel(null), [])
+
   return (
-    <div>
-        <div className="left-header">
-            <div className="logo">   
-                <img
-                    src={logo}
-                    alt={t("Logo")}
-                />
-            </div>
-
-            <div className="title">
-                <h1>PARP</h1>
-                <h2>Palestinian Action Research Platform</h2>
-                <h2>المنصة الفلسطينية للبحوث الإجرائية</h2>
-            </div>
-
+    <header className="site-header">
+      <div className="site-header__inner">
+        <HeaderLogo />
+        <HeaderSearch />
+        <div className="site-header__actions">
+          <Notifications
+            isOpen={activePanel === 'notifications'}
+            onToggle={() => setActivePanel((current) => current === 'notifications' ? null : 'notifications')}
+            onClose={closePanel}
+          />
+          <span className="site-header__divider" aria-hidden="true" />
+          <IconButton
+            className="site-header__menu"
+            aria-label="فتح القائمة الجانبية"
+            aria-expanded={activePanel === 'sidebar'}
+            aria-controls="main-sidebar"
+            aria-haspopup="dialog"
+            onClick={() => setActivePanel('sidebar')}
+          >
+            <Icon name="menu" />
+          </IconButton>
         </div>
-
-        <div className="search-box">
-            
-
-        </div>
-
-    </div>
+      </div>
+      <Sidebar isOpen={activePanel === 'sidebar'} onClose={closePanel} />
+    </header>
   )
 }
 
