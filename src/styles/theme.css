@@ -1,18 +1,36 @@
 :root {
   color-scheme: dark;
 
-  --color-background: #0c0a13;
-  --color-surface: #181321;
-  --color-surface-raised: #211a2e;
-  --color-text: #f6f1fd;
-  --color-text-muted: #b6abc9;
-  --color-text-subtle: #a296b6;
-  --color-primary: #b58aff;
-  --color-primary-strong: #9560ed;
-  --color-primary-soft: rgb(170 117 255 / 12%);
-  --color-border: rgb(205 178 255 / 15%);
-  --color-border-strong: rgb(205 178 255 / 32%);
-  --color-focus: #d6b9ff;
+  /* Violet from the supplied AR logo, balanced with charcoal surfaces. */
+  --background-rgb: 13 9 20;
+  --surface-rgb: 28 21 40;
+  --brand-rgb: 118 33 200;
+  --accent-rgb: 185 126 240;
+  --neutral-rgb: 238 237 242;
+
+  --color-background: #0d0914;
+  --color-surface: #1c1528;
+  --color-surface-raised: #281d39;
+  --color-text: #eeedf2;
+  --color-text-muted: #cbc7d2;
+  --color-text-subtle: #b6afc1;
+  --color-primary: #7621c8;
+  --color-primary-hover: #8429cf;
+  --color-primary-strong: #491478;
+  --color-accent: #b97ef0;
+  --color-highlight: #8b35cc;
+  --color-primary-soft: rgb(var(--brand-rgb) / 16%);
+  --color-border: rgb(var(--accent-rgb) / 24%);
+  --color-border-strong: rgb(var(--accent-rgb) / 58%);
+  --color-focus: #d5b2f4;
+  --color-logo-surface: #21162f;
+  --color-selection: #642095;
+  --color-photo-tint: rgb(var(--brand-rgb) / 6%);
+
+  --surface-glass: linear-gradient(145deg, rgb(var(--accent-rgb) / 8%), rgb(var(--brand-rgb) / 14%) 44%, rgb(var(--background-rgb) / 88%));
+  --gradient-button: linear-gradient(125deg, var(--color-highlight), var(--color-primary) 90%);
+  --shadow-glass: inset 0 1px 0 rgb(var(--neutral-rgb) / 8%), 0 12px 32px rgb(0 0 0 / 18%);
+  --shadow-glow: 0 0 28px rgb(var(--accent-rgb) / 12%);
 
   --font-sans: 'Segoe UI', 'Noto Sans Arabic', Tahoma, Arial, sans-serif;
   --radius-sm: 10px;
@@ -22,5 +40,5 @@
   --shadow-panel: 0 24px 64px rgb(0 0 0 / 38%);
   --transition-fast: 160ms ease;
   --content-width: 1360px;
-  --header-height: 112px;
+  --header-height: 88px;
 }

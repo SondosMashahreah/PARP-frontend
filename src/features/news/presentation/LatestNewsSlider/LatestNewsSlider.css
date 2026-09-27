@@ -5,7 +5,7 @@
   height: calc(100svh - var(--header-height));
   min-height: 640px;
   overflow: hidden;
-  background: #08060d;
+  background: var(--color-background);
   font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Arial, sans-serif;
 }
 
@@ -18,11 +18,11 @@
   align-items: center;
   gap: 10px;
   padding: 10px 15px;
-  border: 1px solid rgb(255 255 255 / 12%);
+  border: 1px solid rgb(var(--neutral-rgb) / 12%);
   border-radius: var(--radius-pill);
-  background: rgb(12 9 18 / 46%);
+  background: rgb(var(--background-rgb) / 46%);
   box-shadow: 0 10px 30px rgb(0 0 0 / 14%);
-  color: rgb(255 255 255 / 92%);
+  color: var(--color-text-muted);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
 }
@@ -34,8 +34,8 @@
 
 .latest-news__section-label small {
   padding-inline-start: 10px;
-  border-inline-start: 1px solid rgb(255 255 255 / 14%);
-  color: rgb(255 255 255 / 48%);
+  border-inline-start: 1px solid rgb(var(--neutral-rgb) / 14%);
+  color: var(--color-text-muted);
   font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -45,8 +45,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-primary);
-  box-shadow: 0 0 0 5px rgb(181 138 255 / 12%), 0 0 18px rgb(181 138 255 / 78%);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 5px rgb(var(--brand-rgb) / 12%), 0 0 18px rgb(var(--brand-rgb) / 78%);
 }
 
 .latest-news__swiper,
@@ -68,7 +68,7 @@
   position: absolute;
   z-index: -3;
   inset: 0;
-  background: #15101e;
+  background: var(--color-background);
 }
 
 .latest-news__background img {
@@ -88,9 +88,9 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 72% 25%, rgb(181 138 255 / 30%), transparent 25%),
-    radial-gradient(circle at 22% 72%, rgb(86 107 255 / 20%), transparent 28%),
-    linear-gradient(145deg, #2b1d3d, #0d0a14 72%);
+    radial-gradient(circle at 72% 25%, rgb(var(--brand-rgb) / 30%), transparent 25%),
+    radial-gradient(circle at 22% 72%, rgb(var(--brand-rgb) / 20%), transparent 28%),
+    linear-gradient(145deg, var(--color-surface), var(--color-background) 72%);
 }
 
 .latest-news__overlay {
@@ -98,8 +98,8 @@
   z-index: -2;
   inset: 0;
   background:
-    linear-gradient(180deg, rgb(5 4 8 / 18%) 0%, rgb(5 4 8 / 10%) 24%, rgb(5 4 8 / 26%) 48%, rgb(5 4 8 / 84%) 100%),
-    linear-gradient(90deg, rgb(4 3 7 / 18%), transparent 28%, transparent 72%, rgb(4 3 7 / 18%));
+    linear-gradient(180deg, rgb(var(--background-rgb) / 18%) 0%, rgb(var(--background-rgb) / 10%) 24%, rgb(var(--background-rgb) / 26%) 48%, rgb(var(--background-rgb) / 84%) 100%),
+    linear-gradient(90deg, rgb(var(--background-rgb) / 18%), transparent 28%, transparent 72%, rgb(var(--background-rgb) / 18%));
 }
 
 .latest-news__content {
@@ -113,7 +113,7 @@
   height: 100%;
   margin-inline: auto;
   padding: 110px 0 clamp(116px, 15vh, 154px);
-  color: white;
+  color: var(--color-text);
   text-align: center;
 }
 
@@ -124,7 +124,7 @@
   border-radius: var(--radius-pill);
   content: '';
   background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
-  box-shadow: 0 0 14px rgb(181 138 255 / 42%);
+  box-shadow: 0 0 14px rgb(var(--brand-rgb) / 42%);
 }
 
 .latest-news__swiper .swiper-slide-active .latest-news__content {
@@ -138,14 +138,14 @@
   justify-content: center;
   gap: 12px;
   margin-bottom: 18px;
-  color: rgb(255 255 255 / 64%);
+  color: var(--color-text-muted);
   font-size: clamp(0.78rem, 1vw, 0.9rem);
   font-weight: 600;
   line-height: 1;
 }
 
 .latest-news__category {
-  color: #e8d8ff;
+  color: var(--color-text);
   font-weight: 800;
 }
 
@@ -157,13 +157,13 @@
 .latest-news__meta-line {
   width: 24px;
   height: 1px;
-  background: rgb(255 255 255 / 34%);
+  background: rgb(var(--neutral-rgb) / 34%);
 }
 
 .latest-news__content h3 {
   max-width: 20ch;
   margin: 0;
-  color: white;
+  color: var(--color-text);
   font-size: clamp(2.45rem, 4.8vw, 5rem);
   font-weight: 650;
   line-height: 1.18;
@@ -177,7 +177,7 @@
   max-width: 720px;
   margin: 22px auto 0;
   overflow: hidden;
-  color: rgb(255 255 255 / 72%);
+  color: var(--color-text-muted);
   font-size: clamp(0.98rem, 1.3vw, 1.12rem);
   font-weight: 400;
   line-height: 1.85;
@@ -199,13 +199,13 @@
   min-width: 168px;
   min-height: 52px;
   padding: 0 24px;
-  border: 1px solid rgb(255 255 255 / 18%);
+  border: 1px solid rgb(var(--neutral-rgb) / 18%);
   border-radius: var(--radius-pill);
-  background: rgb(19 14 28 / 52%);
+  background: rgb(var(--surface-rgb) / 52%);
   box-shadow:
     0 12px 30px rgb(0 0 0 / 24%),
-    inset 0 1px 0 rgb(255 255 255 / 8%);
-  color: white;
+    inset 0 1px 0 rgb(var(--neutral-rgb) / 8%);
+  color: var(--color-text);
   font-size: 0.94rem;
   font-weight: 750;
   text-decoration: none;
@@ -221,8 +221,8 @@
 .latest-news__button:hover {
   gap: 18px;
   transform: translateY(-2px);
-  border-color: rgb(214 185 255 / 50%);
-  background: rgb(149 96 237 / 38%);
+  border-color: rgb(var(--accent-rgb) / 50%);
+  background: rgb(var(--brand-rgb) / 38%);
 }
 
 .latest-news__button--preview {
@@ -237,7 +237,7 @@
 
 .latest-news__button-arrow {
   display: inline-block;
-  color: #dfc8ff;
+  color: var(--color-text);
   font-size: 1.1rem;
   transition: transform var(--transition-fast);
 }
@@ -250,7 +250,7 @@
   display: grid;
   justify-items: center;
   gap: 12px;
-  color: rgb(255 255 255 / 55%);
+  color: var(--color-text-muted);
 }
 
 .latest-news__image-fallback span {
@@ -262,7 +262,7 @@
 .latest-news__image-fallback i {
   width: 90px;
   height: 1px;
-  background: var(--color-primary);
+  background: var(--color-accent);
 }
 
 .latest-news__image-fallback small {
@@ -287,7 +287,7 @@
   margin: 0 !important;
   overflow: hidden;
   border-radius: var(--radius-pill);
-  background: rgb(255 255 255 / 28%);
+  background: rgb(var(--neutral-rgb) / 28%);
   opacity: 1;
   transition:
     width 300ms ease,
@@ -298,14 +298,14 @@
   position: absolute;
   inset: 0;
   content: '';
-  background: white;
+  background: var(--color-logo-surface);
   transform: scaleX(0);
   transform-origin: left;
 }
 
 .latest-news__swiper .swiper-pagination-bullet-active {
   width: 68px;
-  background: rgb(255 255 255 / 34%);
+  background: rgb(var(--neutral-rgb) / 34%);
 }
 
 .latest-news__swiper .swiper-pagination-bullet-active::after {

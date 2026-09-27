@@ -7,7 +7,7 @@
   height: 2px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgb(208 183 241 / 12%);
+  background: rgb(var(--accent-rgb) / 12%);
   opacity: 0.7;
   pointer-events: none;
 }
@@ -17,7 +17,7 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #a778dd, #dcc0f6);
+  background: linear-gradient(90deg, var(--color-accent), var(--color-text-subtle));
   transform: scaleX(var(--journey-progress));
   transform-origin: right;
   will-change: transform;

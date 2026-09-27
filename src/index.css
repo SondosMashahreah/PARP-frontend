@@ -1,4 +1,5 @@
 @import './styles/theme.css';
+@import './styles/media.css';
 
 *,
 *::before,
@@ -19,19 +20,21 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-button, input { font: inherit; }
+button, input, select, textarea { font: inherit; }
 button, a, input { -webkit-tap-highlight-color: transparent; }
 button, a { color: inherit; }
 img, svg { display: block; }
 
 button:focus-visible,
 a:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 5px;
 }
 
-::selection { color: white; background: #7040a8; }
+::selection { color: var(--color-text); background: var(--color-selection); }
 
 .visually-hidden {
   position: absolute;
@@ -66,4 +69,12 @@ input:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Native form controls and scrollbars follow the same brand palette. */
+html { scrollbar-color: var(--color-accent) var(--color-background); }
+input, select, textarea { accent-color: var(--color-primary); }
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-subtle);
+  opacity: 1;
 }

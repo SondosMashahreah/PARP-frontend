@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Icon from '../../../../components/ui/Icon.jsx'
 import './CompactNewsSlider.css'
 
 function formatArabicDate(value) {
@@ -72,9 +73,9 @@ export default function CompactNewsSlider({
   })
 
   const stats = [
-    { value: `${slides.length}+`, label: 'أخبار وفعاليات' },
-    { value: '126+', label: 'باحث/ة وممارس/ة' },
-    { value: '30+', label: 'بحثًا ودليلًا' },
+    { value: `${slides.length}+`, label: 'أخبار وفعاليات', icon: 'document' },
+    { value: '126+', label: 'باحث/ة وممارس/ة', icon: 'users' },
+    { value: '30+', label: 'بحثًا ودليلًا', icon: 'globe' },
   ]
 
   const handlePointerDown = (event) => {
@@ -113,10 +114,10 @@ export default function CompactNewsSlider({
           <p className="parp-news__eyebrow">من المنصة</p>
           <h2 id="news-title">آخر الأخبار</h2>
           <p className="parp-news__lead">
-            حوِّلي رحلتكِ البحثية إلى تجربة معرفية ملهمة.
+            حوّل رحلتك البحثية إلى تجربة معرفية ملهمة.
           </p>
           <p className="parp-news__description">
-            اكتشفي أحدث الأخبار والبحوث والفعاليات داخل منصة PARP عبر تجربة بصرية
+            اكتشف أحدث الأخبار والبحوث والفعاليات داخل منصة PARP عبر تجربة بصرية
             حديثة تجمع الإلهام، المعرفة، والمجتمع البحثي في مكان واحد.
           </p>
 
@@ -134,8 +135,11 @@ export default function CompactNewsSlider({
           <div className="parp-news__stats" aria-label="إحصاءات أولية للمنصة">
             {stats.map((stat) => (
               <div className="parp-news__stat" key={stat.label}>
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
+                <div className="parp-news__stat-copy">
+                  <strong>{stat.value}</strong>
+                  <span>{stat.label}</span>
+                </div>
+                <Icon name={stat.icon} className="parp-news__stat-icon" />
               </div>
             ))}
           </div>

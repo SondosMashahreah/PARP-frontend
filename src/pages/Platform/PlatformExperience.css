@@ -14,7 +14,7 @@
   width: 100%;
   border: 1px solid var(--color-border);
   border-radius: 14px;
-  background: rgb(255 255 255 / 3%);
+  background: rgb(var(--neutral-rgb) / 3%);
   color: var(--color-text);
   font: inherit;
   outline: none;
@@ -39,13 +39,13 @@
 }
 
 .platform-experience select option {
-  background: #181120;
-  color: white;
+  background: var(--color-background);
+  color: var(--color-text);
 }
 
 .platform-experience__result-count {
   margin: 18px 0;
-  color: #ad9cbc;
+  color: var(--color-text-muted);
   font-size: 0.84rem;
 }
 
@@ -63,10 +63,8 @@
 .platform-experience__support-form {
   border: 1px solid var(--color-border);
   border-radius: 24px;
-  background:
-    radial-gradient(circle at 90% 0%, rgb(181 138 255 / 9%), transparent 32%),
-    rgb(19 14 28 / 72%);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 2%);
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-glass);
 }
 
 .platform-experience__research-card {
@@ -77,19 +75,19 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px 14px;
-  color: #ad9cbc;
+  color: var(--color-text-muted);
   font-size: 0.76rem;
 }
 
 .platform-experience__meta span:first-child {
-  color: #d7baff;
+  color: var(--color-text-muted);
 }
 
 .platform-experience__research-card h2,
 .platform-experience__news-card h2,
 .platform-experience__focus-card h2 {
   margin: 12px 0 0;
-  color: #faf7ff;
+  color: var(--color-text);
   font-size: 1.18rem;
   line-height: 1.6;
 }
@@ -97,7 +95,7 @@
 .platform-experience__research-card p,
 .platform-experience__news-card p,
 .platform-experience__focus-card p {
-  color: #bfb3cd;
+  color: var(--color-text-muted);
   line-height: 1.8;
 }
 
@@ -106,10 +104,10 @@
 .platform-experience__support-form button {
   min-height: 42px;
   padding: 0 16px;
-  border: 1px solid rgb(214 185 255 / 22%);
+  border: 1px solid rgb(var(--accent-rgb) / 22%);
   border-radius: 12px;
   background: var(--color-primary-soft);
-  color: #f4eaff;
+  color: var(--color-text);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -122,7 +120,7 @@
   display: grid;
   place-items: center;
   padding: 24px;
-  background: rgb(5 3 10 / 74%);
+  background: rgb(var(--background-rgb) / 74%);
   backdrop-filter: blur(8px);
 }
 
@@ -132,12 +130,12 @@
   padding: 32px;
   border: 1px solid var(--color-border-strong);
   border-radius: 24px;
-  background: #17101f;
+  background: var(--color-background);
   box-shadow: 0 30px 100px rgb(0 0 0 / 45%);
 }
 
 .platform-experience__modal article > span {
-  color: #caa8fa;
+  color: var(--color-text-muted);
 }
 
 .platform-experience__modal article h2 {
@@ -146,7 +144,7 @@
 }
 
 .platform-experience__modal article p {
-  color: #c6bacf;
+  color: var(--color-text-muted);
   line-height: 1.9;
 }
 
@@ -159,7 +157,7 @@
   border: 1px solid var(--color-border);
   border-radius: 50%;
   background: transparent;
-  color: white;
+  color: var(--color-text);
   font-size: 1.4rem;
   cursor: pointer;
 }
@@ -184,22 +182,22 @@
   padding: 8px 14px;
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: rgb(255 255 255 / 2%);
-  color: #c8bdd5;
+  background: rgb(var(--neutral-rgb) / 2%);
+  color: var(--color-text-muted);
   text-align: start;
   font: inherit;
   cursor: pointer;
 }
 
 .platform-experience__steps button span {
-  color: #907ca7;
+  color: var(--color-text-subtle);
   font-size: 0.76rem;
 }
 
 .platform-experience__steps button.is-active {
   border-color: var(--color-border-strong);
   background: var(--color-primary-soft);
-  color: white;
+  color: var(--color-text);
 }
 
 .platform-experience__focus-card {
@@ -208,7 +206,7 @@
 }
 
 .platform-experience__focus-card small {
-  color: #caa8fa;
+  color: var(--color-text-muted);
 }
 
 .platform-experience__focus-card h2 {
@@ -224,7 +222,7 @@
   margin-top: 28px;
   padding-top: 20px;
   border-top: 1px solid var(--color-border);
-  color: #988aa8;
+  color: var(--color-text-subtle);
   font-size: 0.82rem;
 }
 
@@ -242,27 +240,27 @@
 }
 
 .platform-experience__progress-card strong {
-  color: white;
+  color: var(--color-text);
   font-size: 2.3rem;
 }
 
 .platform-experience__progress-card small,
 .platform-experience__progress-card span {
-  color: #b8aabd;
+  color: var(--color-text-muted);
 }
 
 .platform-experience__progress {
   height: 8px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgb(255 255 255 / 6%);
+  background: rgb(var(--neutral-rgb) / 6%);
 }
 
 .platform-experience__progress span {
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #8e58ed, #c49cff);
+  background: linear-gradient(90deg, var(--color-accent), var(--color-text-subtle));
   transition: width 220ms ease;
 }
 
@@ -282,14 +280,14 @@
   padding: 10px 16px;
   border: 1px solid var(--color-border);
   border-radius: 15px;
-  color: #d0c5da;
+  color: var(--color-text-muted);
   cursor: pointer;
 }
 
 .platform-experience__checklist label.is-done {
-  border-color: rgb(181 138 255 / 30%);
+  border-color: rgb(var(--brand-rgb) / 30%);
   background: var(--color-primary-soft);
-  color: white;
+  color: var(--color-text);
 }
 
 .platform-experience__checklist input {
@@ -300,7 +298,7 @@
 }
 
 .platform-experience__checklist label > span {
-  color: #8e7ba1;
+  color: var(--color-text-subtle);
   font-size: 0.72rem;
 }
 
@@ -311,7 +309,7 @@
 .platform-experience__news-media {
   height: 210px;
   overflow: hidden;
-  background: #22182d;
+  background: var(--color-surface);
 }
 
 .platform-experience__news-media img {
@@ -324,7 +322,7 @@
   display: grid;
   place-items: center;
   height: 100%;
-  color: #d6b9ff;
+  color: var(--color-text-muted);
   font-size: 2rem;
   font-weight: 800;
 }
@@ -334,7 +332,7 @@
 }
 
 .platform-experience__news-card a {
-  color: #d6b9ff;
+  color: var(--color-text-muted);
   font-weight: 700;
   text-decoration: none;
 }
@@ -357,7 +355,7 @@
 .platform-experience__faq > div {
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: rgb(255 255 255 / 2%);
+  background: rgb(var(--neutral-rgb) / 2%);
 }
 
 .platform-experience__faq button {
@@ -369,7 +367,7 @@
   padding: 0 18px;
   border: 0;
   background: transparent;
-  color: #eee7f5;
+  color: var(--color-text);
   font: inherit;
   font-weight: 700;
   text-align: start;
@@ -379,7 +377,7 @@
 .platform-experience__faq p {
   margin: 0;
   padding: 0 18px 18px;
-  color: #bcb0c8;
+  color: var(--color-text-muted);
   line-height: 1.8;
 }
 
@@ -390,7 +388,7 @@
 }
 
 .platform-experience__support-form > span {
-  color: #caa8fa;
+  color: var(--color-text-muted);
   font-size: 0.8rem;
 }
 
@@ -404,7 +402,7 @@
 
 .platform-experience__prototype-note {
   margin: 0;
-  color: #9f91ad;
+  color: var(--color-text-subtle);
   font-size: 0.78rem;
   line-height: 1.7;
 }
@@ -431,4 +429,11 @@
   .platform-experience__toolbar select {
     width: 100%;
   }
+}
+
+.platform-experience input:focus-visible,
+.platform-experience select:focus-visible,
+.platform-experience textarea:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
 }

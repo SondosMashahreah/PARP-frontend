@@ -1,0 +1,29 @@
+/* Clear editorial photos with a subtle violet tint. The active image
+   stays sharp; the carousel itself blurs only the neighboring cards. */
+.parp-news__story-media,
+.platform-experience__news-media,
+.latest-news__background {
+  isolation: isolate;
+}
+
+.platform-experience__news-media { position: relative; }
+
+.parp-news__story-media img,
+.platform-experience__news-media img,
+.latest-news__background img {
+  filter: saturate(0.95) contrast(1.02);
+}
+
+.parp-news__story-media:has(img)::before,
+.platform-experience__news-media:has(img)::before,
+.latest-news__background:has(img)::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  content: '';
+  background: var(--color-photo-tint);
+  mix-blend-mode: color;
+  pointer-events: none;
+}
+
+.parp-news__story-media::after { z-index: 2; }

@@ -3,8 +3,8 @@
   z-index: 3;
   border-top: 1px solid var(--color-border);
   background:
-    radial-gradient(circle at 18% 0%, rgb(149 96 237 / 14%), transparent 30%),
-    linear-gradient(180deg, #100c18, #09070e 72%);
+    radial-gradient(circle at 18% 0%, rgb(var(--accent-rgb) / 17%), transparent 30%),
+    linear-gradient(180deg, var(--color-background), var(--color-background) 72%);
 }
 
 .site-footer__inner {
@@ -51,9 +51,10 @@
   width: 58px;
   height: 58px;
   padding: 4px;
-  border: 1px solid rgb(213 188 255 / 34%);
+  border: 1px solid rgb(var(--accent-rgb) / 34%);
   border-radius: 16px;
-  background: white;
+  background: var(--color-logo-surface);
+  box-shadow: var(--shadow-glow);
 }
 
 .site-footer__logo-frame img {
@@ -92,7 +93,7 @@
 }
 
 .site-footer__nav a:hover {
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .site-footer__social p {
@@ -111,7 +112,7 @@
   height: 42px;
   border: 1px solid var(--color-border);
   border-radius: 50%;
-  background: rgb(255 255 255 / 3%);
+  background: rgb(var(--neutral-rgb) / 3%);
   color: var(--color-text-muted);
   transition:
     transform var(--transition-fast),
@@ -122,9 +123,9 @@
 
 .site-footer__social-links a:hover {
   transform: translateY(-2px);
-  border-color: var(--color-primary);
+  border-color: var(--color-accent);
   background: var(--color-primary-soft);
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .site-footer__partners {
@@ -158,7 +159,7 @@
   padding: 14px;
   border: 1px solid var(--color-border);
   border-radius: 16px;
-  background: rgb(255 255 255 / 2.5%);
+  background: rgb(var(--neutral-rgb) / 2.5%);
   color: inherit;
   text-decoration: none;
 }
@@ -169,10 +170,10 @@
   flex: 0 0 38px;
   width: 38px;
   height: 38px;
-  border: 1px solid rgb(214 185 255 / 22%);
+  border: 1px solid rgb(var(--accent-rgb) / 22%);
   border-radius: 12px;
   background: var(--color-primary-soft);
-  color: var(--color-primary);
+  color: var(--color-text);
   font-weight: 800;
 }
 

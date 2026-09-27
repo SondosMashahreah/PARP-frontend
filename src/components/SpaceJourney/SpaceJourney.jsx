@@ -40,6 +40,9 @@ export default function SpaceJourney() {
     if (!root || !canvas) return undefined
     const context = canvas.getContext('2d')
     const staticMode = window.matchMedia(STATIC_QUERY)
+    const theme = getComputedStyle(root)
+    const starColor = theme.getPropertyValue('--neutral-rgb').trim()
+    const trailColor = theme.getPropertyValue('--accent-rgb').trim()
     const stars = createStars(150)
     let frame = 0
     let previousTime = 0
@@ -70,7 +73,7 @@ export default function SpaceJourney() {
         const alpha = (0.15 + (1 - depth) * 0.65) * fade
         context.beginPath()
         context.arc(x, y, star.radius * (0.55 + (1 - depth) * 1.4), 0, Math.PI * 2)
-        context.fillStyle = `rgba(223,211,249,${alpha})`
+        context.fillStyle = `rgb(${starColor} / ${alpha})`
         context.fill()
         if (speed > 0.08) {
           const dx = x - centerX
@@ -81,7 +84,7 @@ export default function SpaceJourney() {
           context.beginPath()
           context.moveTo(x, y)
           context.lineTo(x - dx / distance * tail * direction, y - dy / distance * tail * direction)
-          context.strokeStyle = `rgba(205,180,247,${alpha * speed * 0.4})`
+          context.strokeStyle = `rgb(${trailColor} / ${alpha * speed * 0.4})`
           context.lineWidth = 0.7
           context.stroke()
         }
@@ -237,8 +240,6 @@ export default function SpaceJourney() {
               <h3>{step.title}</h3>
               <p>{step.description}</p>
               <dl className="space-journey__facts">
-                <div><dt>من يشارك؟</dt><dd>{step.actor}</dd></div>
-                <div><dt>الناتج المتوقع</dt><dd>{step.outcome}</dd></div>
               </dl>
             </article>
           ))}

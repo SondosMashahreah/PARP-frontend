@@ -4,22 +4,22 @@
   gap: 12px;
   width: 100%;
   min-width: 0;
-  height: 48px;
+  height: 44px;
   padding-inline: 18px;
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-pill);
-  background: linear-gradient(110deg, rgb(151 110 191 / 7%), rgb(255 255 255 / 3%));
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / 3%);
+  background: linear-gradient(110deg, rgb(var(--accent-rgb) / 12%), rgb(var(--brand-rgb) / 42%));
+  box-shadow: inset 0 1px 0 rgb(var(--neutral-rgb) / 5%), 0 0 24px rgb(var(--brand-rgb) / 18%);
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .header-search:focus-within {
-  border-color: var(--color-primary);
-  background: rgb(167 117 235 / 9%);
-  box-shadow: 0 0 0 3px var(--color-primary-soft);
+  border-color: var(--color-accent);
+  background: rgb(var(--brand-rgb) / 9%);
+  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 18%), var(--shadow-glow);
 }
 
-.header-search__icon { flex: 0 0 19px; width: 19px; height: 19px; color: var(--color-primary); }
+.header-search__icon { flex: 0 0 19px; width: 19px; height: 19px; color: var(--color-text); }
 
 .header-search input {
   width: 100%;

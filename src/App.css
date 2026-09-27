@@ -1,12 +1,36 @@
 .app-shell {
+  position: relative;
   min-height: 100vh;
   min-height: 100svh;
   isolation: isolate;
   overflow: clip;
+  background: var(--color-background);
+}
+
+/* Fixed decorative layers never cover content or intercept pointer input. */
+.app-shell::before,
+.app-shell::after {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+}
+
+.app-shell::before {
+  background: url('./assets/violet-silk.png') center / cover no-repeat;
+}
+
+.app-shell::after {
   background:
-    radial-gradient(ellipse at 10% 53%, rgba(170, 110, 234, 0.17), transparent 46%),
-    radial-gradient(ellipse at 88% 12%, rgb(110 54 172 / 12%), transparent 38%),
-    linear-gradient(155deg, #0d0b14 12%, #100c19 56%, #0b0911);
+    radial-gradient(ellipse at 5% 94%, rgb(var(--accent-rgb) / 12%), transparent 40%),
+    linear-gradient(90deg, transparent 42%, rgb(var(--background-rgb) / 22%) 78%);
+  animation: silk-light 16s ease-in-out infinite alternate;
+}
+
+@keyframes silk-light {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
 }
 
 .app-main {
@@ -14,6 +38,15 @@
   min-height: calc(100svh - var(--header-height));
 }
 
+@media (max-width: 1200px) {
+  :root { --header-height: 80px; }
+}
+
 @media (max-width: 640px) {
-  :root { --header-height: 86px; }
+  :root { --header-height: 76px; }
+  .app-shell::before { background-position: 40% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell::after { animation: none; opacity: 0.65; }
 }
