@@ -1,4 +1,5 @@
 import logo from '../Header/img/logo.png'
+import { useLanguage } from '../../i18n/LanguageContext.jsx'
 import { footerLinks, footerPartners, footerSocialLinks } from './footerData.js'
 import './Footer.css'
 
@@ -50,8 +51,13 @@ function SocialIcon({ name }) {
 function PartnerItem({ partner }) {
   const content = (
     <>
-      <span className="site-footer__partner-mark" aria-hidden="true">
-        {partner.name.charAt(0)}
+      <span
+        className={`site-footer__partner-mark${partner.mark ? ' site-footer__partner-mark--text' : ''}`}
+        aria-hidden="true"
+      >
+        {partner.logo
+          ? <img src={partner.logo} alt="" loading="lazy" decoding="async" />
+          : partner.mark}
       </span>
       <span>
         <strong>{partner.name}</strong>
@@ -61,7 +67,7 @@ function PartnerItem({ partner }) {
   )
 
   return partner.href ? (
-    <a className="site-footer__partner" href={partner.href}>
+    <a className="site-footer__partner" href={partner.href} target="_blank" rel="noreferrer" aria-label={partner.logoAlt}>
       {content}
     </a>
   ) : (
@@ -69,42 +75,78 @@ function PartnerItem({ partner }) {
   )
 }
 
+function localHref(href) {
+  if (href === '#contact') return `${import.meta.env.BASE_URL || '/'}#contact`
+  if (href.startsWith('/')) {
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')
+    return `${base}${href}`
+  }
+  return href
+}
+
 export default function Footer() {
   const year = new Date().getFullYear()
+  const { language, isArabic, dir } = useLanguage()
+  const partners = footerPartners[language]
+  const links = footerLinks[language]
+
+  const copy = isArabic
+    ? {
+        home: 'PARP — الصفحة الرئيسية',
+        subtitle: 'المنصة الفلسطينية للبحوث الإجرائية',
+        description: 'مساحة تجمع البحث الإجرائي والخبرة الميدانية والمعرفة المشتركة في تجربة واحدة قابلة للاستكشاف والتطوير.',
+        linksTitle: 'روابط مهمة',
+        linksLabel: 'روابط التذييل',
+        socialTitle: 'تابع المنصة',
+        socialText: 'تابع آخر الأخبار والتحديثات والفعاليات المرتبطة بالمنصة.',
+        partnersLabel: 'الشركاء والداعمون',
+        partnersTitle: 'شركاؤنا',
+        rights: 'جميع الحقوق محفوظة.',
+      }
+    : {
+        home: 'PARP — Home',
+        subtitle: 'Palestinian Action Research Platform',
+        description: 'A shared space for action research, field experience, and collective knowledge in one platform designed for discovery and growth.',
+        linksTitle: 'Important Links',
+        linksLabel: 'Footer links',
+        socialTitle: 'Follow PARP',
+        socialText: 'Follow the latest platform news, updates, and events.',
+        partnersLabel: 'Partners and supporters',
+        partnersTitle: 'Our Partners',
+        rights: 'All rights reserved.',
+      }
 
   return (
-    <footer className="site-footer" dir="rtl">
+    <footer className="site-footer" dir={dir}>
       <div className="site-footer__inner">
         <div className="site-footer__top">
           <div className="site-footer__brand">
-            <a href={import.meta.env.BASE_URL} className="site-footer__logo-link" aria-label="PARP — الصفحة الرئيسية">
+            <a href={import.meta.env.BASE_URL} className="site-footer__logo-link" aria-label={copy.home}>
               <span className="site-footer__logo-frame">
                 <img src={logo} alt="" width="54" height="54" />
               </span>
               <span>
                 <strong lang="en">PARP.</strong>
-                <small>المنصة الفلسطينية للبحوث الإجرائية</small>
+                <small>{copy.subtitle}</small>
               </span>
             </a>
-            <p>
-              مساحة تجمع البحث الإجرائي والخبرة الميدانية والمعرفة المشتركة في تجربة واحدة قابلة للاستكشاف والتطوير.
-            </p>
+            <p>{copy.description}</p>
           </div>
 
-          <nav className="site-footer__nav" aria-label="روابط التذييل">
-            <h2>روابط مهمة</h2>
+          <nav className="site-footer__nav" aria-label={copy.linksLabel}>
+            <h2>{copy.linksTitle}</h2>
             <ul>
-              {footerLinks.map((link) => (
+              {links.map((link) => (
                 <li key={link.label}>
-                  <a href={link.href}>{link.label}</a>
+                  <a href={localHref(link.href)}>{link.label}</a>
                 </li>
               ))}
             </ul>
           </nav>
 
           <div className="site-footer__social">
-            <h2>تابع المنصة</h2>
-            <p>تابع آخر الأخبار والتحديثات والفعاليات المرتبطة بالمنصة.</p>
+            <h2>{copy.socialTitle}</h2>
+            <p>{copy.socialText}</p>
             <div className="site-footer__social-links">
               {footerSocialLinks.map((item) => (
                 <a key={item.label} href={item.href} aria-label={item.label}>
@@ -115,18 +157,18 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="site-footer__partners" aria-label="الشركاء والداعمون">
-          <span className="site-footer__partners-title">شركاؤنا</span>
+        <div className="site-footer__partners" aria-label={copy.partnersLabel}>
+          <span className="site-footer__partners-title">{copy.partnersTitle}</span>
           <div className="site-footer__partners-grid">
-            {footerPartners.map((partner) => (
+            {partners.map((partner) => (
               <PartnerItem key={partner.name} partner={partner} />
             ))}
           </div>
         </div>
 
         <div className="site-footer__bottom">
-          <p>© {year} PARP. جميع الحقوق محفوظة.</p>
-          <p>المنصة الفلسطينية للبحوث الإجرائية</p>
+          <p>© {year} PARP. {copy.rights}</p>
+          <p>{copy.subtitle}</p>
         </div>
       </div>
     </footer>

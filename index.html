@@ -7,6 +7,22 @@
     <meta name="theme-color" content="#0d0914" />
     <meta name="description" content="PARP — المنصة الفلسطينية للبحوث الإجرائية" />
     <title>PARP | المنصة الفلسطينية للبحوث الإجرائية</title>
+    <script>
+      (() => {
+        try {
+          const language = localStorage.getItem('parp-language') === 'en' ? 'en' : 'ar'
+          document.documentElement.lang = language
+          document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
+          if (language === 'en') {
+            document.title = 'PARP | Palestinian Action Research Platform'
+            document.querySelector('meta[name="description"]')?.setAttribute('content', 'PARP — Palestinian Action Research Platform')
+          }
+        } catch {
+          document.documentElement.lang = 'ar'
+          document.documentElement.dir = 'rtl'
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>

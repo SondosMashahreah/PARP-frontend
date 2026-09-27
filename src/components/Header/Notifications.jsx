@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useLanguage } from '../../i18n/LanguageContext.jsx'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import './Notifications.css'
@@ -6,6 +7,10 @@ import './Notifications.css'
 export default function Notifications({ isOpen, onToggle, onClose }) {
   const containerRef = useRef(null)
   const buttonRef = useRef(null)
+  const { isArabic, dir } = useLanguage()
+
+  const title = isArabic ? 'الإشعارات' : 'Notifications'
+  const empty = isArabic ? 'لا توجد إشعارات بعد' : 'No notifications yet'
 
   useEffect(() => {
     if (!isOpen) return
@@ -37,14 +42,14 @@ export default function Notifications({ isOpen, onToggle, onClose }) {
         if (!event.currentTarget.contains(event.relatedTarget)) onClose()
       }}
     >
-      <IconButton ref={buttonRef} aria-label="الإشعارات" aria-expanded={isOpen} aria-controls="header-notifications" onClick={onToggle}>
+      <IconButton ref={buttonRef} aria-label={title} aria-expanded={isOpen} aria-controls="header-notifications" onClick={onToggle}>
         <Icon name="bell" />
       </IconButton>
-      <section id="header-notifications" className="notifications__panel" aria-label="الإشعارات" dir="rtl" hidden={!isOpen}>
-        <h2 className="notifications__heading">الإشعارات</h2>
+      <section id="header-notifications" className="notifications__panel" aria-label={title} dir={dir} hidden={!isOpen}>
+        <h2 className="notifications__heading">{title}</h2>
         <div className="notifications__empty">
           <span className="notifications__empty-icon"><Icon name="bell" /></span>
-          <p>لا توجد إشعارات بعد</p>
+          <p>{empty}</p>
         </div>
       </section>
     </div>

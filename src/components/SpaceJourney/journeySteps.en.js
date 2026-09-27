@@ -1,0 +1,58 @@
+export const journeyStepsEn = [
+  {
+    id: 1,
+    title: 'Create your account',
+    actor: 'Researcher',
+    description: 'Create your account and complete the essential profile information so your research journey begins with a clear identity and research interests.',
+    outcome: 'A complete researcher account and profile.',
+  },
+  {
+    id: 2,
+    title: 'Train and learn',
+    actor: 'Researcher and trainer',
+    description: 'Learn the action-research methodology and strengthen your skills in question design, data collection, and reflection on findings.',
+    outcome: 'Better preparation for research design.',
+  },
+  {
+    id: 3,
+    title: 'Read the guide',
+    actor: 'Researcher',
+    description: 'Review the platform guide to understand the workflow, documentation requirements, and standards that will support you while preparing your study.',
+    outcome: 'A clear understanding of the methodology and requirements.',
+  },
+  {
+    id: 4,
+    title: 'Download the template',
+    actor: 'Researcher',
+    description: 'Start from the approved template to organize the research question, objectives, plan, and proposal elements in a clear structure.',
+    outcome: 'A ready structure for building the proposal.',
+  },
+  {
+    id: 5,
+    title: 'Write your proposal',
+    actor: 'Researcher and supervisor',
+    description: 'Turn a field observation into a researchable question, define objectives, tools, and an implementation plan, and use guidance when available.',
+    outcome: 'A structured proposal ready for review.',
+  },
+  {
+    id: 6,
+    title: 'Review and revision',
+    actor: 'Researcher and reviewer',
+    description: 'Submit your work for review, read the reviewers’ feedback, and complete the required revisions according to the approval requirements.',
+    outcome: 'A revised version that responds to feedback.',
+  },
+  {
+    id: 7,
+    title: 'Publish your research',
+    actor: 'Researcher and publishing team',
+    description: 'After approval, share your experience and findings under the publication policy so others can learn from the work and build on it.',
+    outcome: 'Published research available for use.',
+  },
+  {
+    id: 8,
+    title: 'Receive your certificate',
+    actor: 'Researcher and platform administration',
+    description: 'Follow the certificate process after meeting the research and approval requirements, then keep the certificate in your achievement record.',
+    outcome: 'A certificate issued under platform requirements.',
+  },
+]

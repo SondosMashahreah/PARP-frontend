@@ -1,11 +1,14 @@
+import { useLanguage } from '../../i18n/LanguageContext.jsx'
 import PlatformExperience from './PlatformExperience.jsx'
+import PlatformExperienceEn from './PlatformExperience.en.jsx'
 import './PlatformPage.css'
 
 export default function PlatformPage({ page }) {
+  const { isArabic, dir } = useLanguage()
   const hasExperience = Boolean(page.kind)
 
   return (
-    <section className="platform-page" dir="rtl" aria-labelledby="platform-page-title">
+    <section className="platform-page" dir={dir} aria-labelledby="platform-page-title">
       <div className="platform-page__glow" aria-hidden="true" />
 
       <header className="platform-page__hero">
@@ -27,23 +30,27 @@ export default function PlatformPage({ page }) {
         <i aria-hidden="true" />
       </div>
 
-      {hasExperience && <PlatformExperience kind={page.kind} />}
+      {hasExperience && (
+        isArabic
+          ? <PlatformExperience kind={page.kind} />
+          : <PlatformExperienceEn kind={page.kind} />
+      )}
 
       {!hasExperience && (
         <div className="platform-page__grid">
           {page.sections.map((section, index) => (
-          <article className="platform-page__card" key={section.title}>
-            <span className="platform-page__number" aria-hidden="true">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-            <h2>{section.title}</h2>
-            {section.body && <p>{section.body}</p>}
-            {section.items && (
-              <ul>
-                {section.items.map((item) => <li key={item}>{item}</li>)}
-              </ul>
-            )}
-          </article>
+            <article className="platform-page__card" key={section.title}>
+              <span className="platform-page__number" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h2>{section.title}</h2>
+              {section.body && <p>{section.body}</p>}
+              {section.items && (
+                <ul>
+                  {section.items.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              )}
+            </article>
           ))}
         </div>
       )}

@@ -1,57 +1,106 @@
 import { useEffect, useRef } from 'react'
+import { useLanguage } from '../../i18n/LanguageContext.jsx'
 import { RouteLink, usePathname } from '../../routing/clientRouter.jsx'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import './Sidebar.css'
 
-const NAV_GROUPS = [
-  {
-    label: 'المنصة',
-    items: [
-      { to: '/', label: 'الرئيسية' },
-      { to: '/about', label: 'عن المنصة' },
-    ],
-  },
-  {
-    label: 'البحث والمعرفة',
-    items: [
-      { to: '/repository', label: 'المستودع الوطني' },
-      { to: '/guide', label: 'الدليل الفلسطيني' },
-      { to: '/template', label: 'القالب الفلسطيني' },
-      { to: '/library', label: 'المكتبة الرقمية' },
-      { to: '/assistant', label: 'المساعد الذكي' },
-    ],
-  },
-  {
-    label: 'المشاركة والتعلّم',
-    items: [
-      { to: '/conference', label: 'المؤتمر الوطني' },
-      { to: '/training', label: 'التدريب' },
-      { to: '/community', label: 'مجتمع الباحثين' },
-      { to: '/news', label: 'الأخبار والفعاليات' },
-    ],
-  },
-  {
-    label: 'البيانات والأثر',
-    items: [
-      { to: '/observatory', label: 'المرصد الوطني' },
-      { to: '/dashboard', label: 'لوحة المؤشرات' },
-      { to: '/institutions', label: 'المدارس والمديريات' },
-      { to: '/excellence', label: 'قاعة التميز' },
-    ],
-  },
-  {
-    label: 'المساندة',
-    items: [
-      { to: '/support', label: 'الدعم الفني' },
-      { to: '/account', label: 'تسجيل الدخول / الملف الشخصي' },
-    ],
-  },
-]
+const NAV_GROUPS = {
+  ar: [
+    {
+      label: 'المنصة',
+      items: [
+        { to: '/', label: 'الرئيسية' },
+        { to: '/about', label: 'عن المنصة' },
+      ],
+    },
+    {
+      label: 'البحث والمعرفة',
+      items: [
+        { to: '/repository', label: 'المستودع الوطني' },
+        { to: '/guide', label: 'الدليل الفلسطيني' },
+        { to: '/template', label: 'القالب الفلسطيني' },
+        { to: '/library', label: 'المكتبة الرقمية' },
+        { to: '/assistant', label: 'المساعد الذكي' },
+      ],
+    },
+    {
+      label: 'المشاركة والتعلّم',
+      items: [
+        { to: '/conference', label: 'المؤتمر الوطني' },
+        { to: '/training', label: 'التدريب' },
+        { to: '/community', label: 'مجتمع الباحثين' },
+        { to: '/news', label: 'الأخبار والفعاليات' },
+      ],
+    },
+    {
+      label: 'البيانات والأثر',
+      items: [
+        { to: '/observatory', label: 'المرصد الوطني' },
+        { to: '/dashboard', label: 'لوحة المؤشرات' },
+        { to: '/institutions', label: 'المدارس والمديريات' },
+        { to: '/excellence', label: 'قاعة التميز' },
+      ],
+    },
+    {
+      label: 'المساندة',
+      items: [
+        { to: '/support', label: 'الدعم الفني' },
+        { to: '/account', label: 'تسجيل الدخول / الملف الشخصي' },
+      ],
+    },
+  ],
+  en: [
+    {
+      label: 'Platform',
+      items: [
+        { to: '/', label: 'Home' },
+        { to: '/about', label: 'About PARP' },
+      ],
+    },
+    {
+      label: 'Research & Knowledge',
+      items: [
+        { to: '/repository', label: 'National Repository' },
+        { to: '/guide', label: 'Palestinian Guide' },
+        { to: '/template', label: 'Palestinian Template' },
+        { to: '/library', label: 'Digital Library' },
+        { to: '/assistant', label: 'AI Assistant' },
+      ],
+    },
+    {
+      label: 'Participation & Learning',
+      items: [
+        { to: '/conference', label: 'National Conference' },
+        { to: '/training', label: 'Training' },
+        { to: '/community', label: 'Research Community' },
+        { to: '/news', label: 'News & Events' },
+      ],
+    },
+    {
+      label: 'Data & Impact',
+      items: [
+        { to: '/observatory', label: 'National Observatory' },
+        { to: '/dashboard', label: 'Dashboard' },
+        { to: '/institutions', label: 'Schools & Directorates' },
+        { to: '/excellence', label: 'Hall of Excellence' },
+      ],
+    },
+    {
+      label: 'Support',
+      items: [
+        { to: '/support', label: 'Technical Support' },
+        { to: '/account', label: 'Log in / Profile' },
+      ],
+    },
+  ],
+}
 
 export default function Sidebar({ isOpen, onClose }) {
   const dialogRef = useRef(null)
   const pathname = usePathname()
+  const { language, isArabic, dir } = useLanguage()
+  const groups = NAV_GROUPS[language]
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -79,8 +128,8 @@ export default function Sidebar({ isOpen, onClose }) {
       id="main-sidebar"
       className="sidebar"
       ref={dialogRef}
-      aria-label="القائمة الجانبية"
-      dir="rtl"
+      aria-label={isArabic ? 'القائمة الجانبية' : 'Sidebar'}
+      dir={dir}
       onClose={onClose}
       onCancel={(event) => {
         event.preventDefault()
@@ -91,13 +140,15 @@ export default function Sidebar({ isOpen, onClose }) {
       <div className="sidebar__top">
         <div>
           <span className="sidebar__brand" lang="en">PARP</span>
-          <p>استكشف المنصة</p>
+          <p>{isArabic ? 'استكشف المنصة' : 'Explore the platform'}</p>
         </div>
-        <IconButton aria-label="إغلاق القائمة الجانبية" onClick={onClose}><Icon name="close" /></IconButton>
+        <IconButton aria-label={isArabic ? 'إغلاق القائمة الجانبية' : 'Close sidebar'} onClick={onClose}>
+          <Icon name="close" />
+        </IconButton>
       </div>
 
-      <nav className="sidebar__content" aria-label="التنقل الرئيسي">
-        {NAV_GROUPS.map((group) => (
+      <nav className="sidebar__content" aria-label={isArabic ? 'التنقل الرئيسي' : 'Main navigation'}>
+        {groups.map((group) => (
           <section className="sidebar__group" key={group.label}>
             <h2>{group.label}</h2>
             <div className="sidebar__links">
@@ -113,7 +164,7 @@ export default function Sidebar({ isOpen, onClose }) {
                   >
                     <span className="sidebar__link-dot" aria-hidden="true" />
                     <span>{item.label}</span>
-                    <span className="sidebar__link-arrow" aria-hidden="true">←</span>
+                    <span className="sidebar__link-arrow" aria-hidden="true">{isArabic ? '←' : '→'}</span>
                   </RouteLink>
                 )
               })}
