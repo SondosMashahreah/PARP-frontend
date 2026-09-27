@@ -1,10 +1,57 @@
 import { useEffect, useRef } from 'react'
+import { RouteLink, usePathname } from '../../routing/clientRouter.jsx'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import './Sidebar.css'
 
+const NAV_GROUPS = [
+  {
+    label: 'المنصة',
+    items: [
+      { to: '/', label: 'الرئيسية' },
+      { to: '/about', label: 'عن المنصة' },
+    ],
+  },
+  {
+    label: 'البحث والمعرفة',
+    items: [
+      { to: '/repository', label: 'المستودع الوطني' },
+      { to: '/guide', label: 'الدليل الفلسطيني' },
+      { to: '/template', label: 'القالب الفلسطيني' },
+      { to: '/library', label: 'المكتبة الرقمية' },
+      { to: '/assistant', label: 'المساعد الذكي' },
+    ],
+  },
+  {
+    label: 'المشاركة والتعلّم',
+    items: [
+      { to: '/conference', label: 'المؤتمر الوطني' },
+      { to: '/training', label: 'التدريب' },
+      { to: '/community', label: 'مجتمع الباحثين' },
+      { to: '/news', label: 'الأخبار والفعاليات' },
+    ],
+  },
+  {
+    label: 'البيانات والأثر',
+    items: [
+      { to: '/observatory', label: 'المرصد الوطني' },
+      { to: '/dashboard', label: 'لوحة المؤشرات' },
+      { to: '/institutions', label: 'المدارس والمديريات' },
+      { to: '/excellence', label: 'قاعة التميز' },
+    ],
+  },
+  {
+    label: 'المساندة',
+    items: [
+      { to: '/support', label: 'الدعم الفني' },
+      { to: '/account', label: 'تسجيل الدخول / الملف الشخصي' },
+    ],
+  },
+]
+
 export default function Sidebar({ isOpen, onClose }) {
   const dialogRef = useRef(null)
+  const pathname = usePathname()
 
   useEffect(() => {
     const dialog = dialogRef.current
@@ -42,9 +89,38 @@ export default function Sidebar({ isOpen, onClose }) {
       onClick={handleBackdropClick}
     >
       <div className="sidebar__top">
+        <div>
+          <span className="sidebar__brand" lang="en">PARP</span>
+          <p>استكشف المنصة</p>
+        </div>
         <IconButton aria-label="إغلاق القائمة الجانبية" onClick={onClose}><Icon name="close" /></IconButton>
       </div>
-      <div className="sidebar__content" />
+
+      <nav className="sidebar__content" aria-label="التنقل الرئيسي">
+        {NAV_GROUPS.map((group) => (
+          <section className="sidebar__group" key={group.label}>
+            <h2>{group.label}</h2>
+            <div className="sidebar__links">
+              {group.items.map((item) => {
+                const isActive = pathname === item.to
+                return (
+                  <RouteLink
+                    className={`sidebar__link${isActive ? ' is-active' : ''}`}
+                    to={item.to}
+                    onClick={onClose}
+                    aria-current={isActive ? 'page' : undefined}
+                    key={item.to}
+                  >
+                    <span className="sidebar__link-dot" aria-hidden="true" />
+                    <span>{item.label}</span>
+                    <span className="sidebar__link-arrow" aria-hidden="true">←</span>
+                  </RouteLink>
+                )
+              })}
+            </div>
+          </section>
+        ))}
+      </nav>
     </dialog>
   )
 }
