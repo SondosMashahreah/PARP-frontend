@@ -114,7 +114,7 @@ export default function SpaceJourneyEn() {
         const isActive = index === active
         const opacity = arrival * departure * (isActive ? 0.96 : 0.24)
         const blur = isActive ? 0 : 7 + Math.min(5, Math.abs(delta) * 3)
-        const x = delta * 58 + Math.sin(index * 1.3) * 5
+        const x = -(delta * 58 + Math.sin(index * 1.3) * 5)
         const y = Math.sin(delta * 1.15) * 23 + Math.sin(index * 1.7) * 4
         artifact.style.visibility = opacity > 0 ? 'visible' : 'hidden'
         artifact.style.opacity = String(opacity)
@@ -187,6 +187,8 @@ export default function SpaceJourneyEn() {
       }
     })
     syncLayout()
+    const sizeObserver = new ResizeObserver(syncLayout)
+    sizeObserver.observe(root.querySelector('.space-journey__sticky'))
     observer.observe(root)
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', syncLayout)
@@ -195,6 +197,7 @@ export default function SpaceJourneyEn() {
     return () => {
       window.cancelAnimationFrame(frame)
       observer.disconnect()
+      sizeObserver.disconnect()
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', syncLayout)
       document.removeEventListener('visibilitychange', handleVisibility)
@@ -231,10 +234,11 @@ export default function SpaceJourneyEn() {
           {journeyStepsEn.map((step, index) => (
             <article
               className={`space-journey__stage${index === 0 ? ' is-current' : ''}`}
-              id={`journey-step-en-${step.id}`}
+              id={`journey-step-${step.id}`}
               key={step.id}
               ref={(node) => { stageRefs.current[index] = node }}
             >
+              <div className="space-journey__static-artifact"><ResearchArtifact step={step.id} /></div>
               <span className="space-journey__eyebrow">Step {number(step.id)} / 08</span>
               <h3>{step.title}</h3>
               <p>{step.description}</p>

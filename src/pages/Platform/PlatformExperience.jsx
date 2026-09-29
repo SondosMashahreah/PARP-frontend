@@ -1,89 +1,17 @@
+import { filterResearch } from '../../features/platform/application/filterResearch.js'
+import ContactForm from '../../features/contact/presentation/ContactForm.jsx'
 import { useMemo, useState } from 'react'
 import { newsRepository } from '../../features/news/data/newsRepository.js'
 import './PlatformExperience.css'
 
-const RESEARCH_ITEMS = [
-  {
-    id: 'r1',
-    title: 'أثر التعلّم القائم على المشكلات في تنمية مهارات التفكير الرياضي',
-    field: 'الرياضيات',
-    author: 'باحث/ة من مجتمع PARP',
-    year: '2026',
-    summary: 'نموذج بحث إجرائي يختبر تدخلاً صفياً ويقيس أثره على مشاركة الطلبة وفهمهم للمفاهيم.',
-  },
-  {
-    id: 'r2',
-    title: 'استراتيجيات صفية لتعزيز المشاركة الفاعلة لدى الطلبة',
-    field: 'العلوم الإنسانية',
-    author: 'باحث/ة من مجتمع PARP',
-    year: '2026',
-    summary: 'بحث تجريبي يركّز على تحسين التفاعل الصفي وتوثيق التغيّر خلال دورة البحث الإجرائي.',
-  },
-  {
-    id: 'r3',
-    title: 'استخدام أدوات التقويم التكويني لتحسين التعلّم',
-    field: 'التقويم',
-    author: 'باحث/ة من مجتمع PARP',
-    year: '2025',
-    summary: 'دراسة تطبيقية حول توظيف التقويم التكويني في توجيه التدريس ورفع جودة التغذية الراجعة.',
-  },
-  {
-    id: 'r4',
-    title: 'بناء ثقافة بحثية داخل المدرسة من خلال مجتمعات التعلّم المهنية',
-    field: 'القيادة التربوية',
-    author: 'باحث/ة من مجتمع PARP',
-    year: '2025',
-    summary: 'تجربة مدرسية توثّق أثر العمل التعاوني المنتظم في تطوير الممارسات المهنية.',
-  },
-]
-
-const CONFERENCE_STEPS = [
-  { title: 'التسجيل', text: 'إنشاء المشاركة وتثبيت بيانات الباحث/ة والجهة.' },
-  { title: 'رفع المقترح', text: 'إرسال المقترح وفق القالب المعتمد واستكمال المتطلبات.' },
-  { title: 'التحكيم', text: 'متابعة الملاحظات والقرارات والتعديلات المطلوبة.' },
-  { title: 'البحث النهائي', text: 'رفع النسخة النهائية بعد تنفيذ التدخل وتحليل النتائج.' },
-  { title: 'النتائج والشهادات', text: 'متابعة القرار النهائي والشهادات والأرشفة.' },
-]
-
-const GUIDE_CHAPTERS = [
-  ['طبيعة البحث الإجرائي وأخلاقياته', 'مدخل عملي لفهم البحث الإجرائي، دوره، وحدوده الأخلاقية.'],
-  ['المشكلة والسؤال والأهداف', 'تحويل ملاحظة من الميدان إلى مشكلة بحثية وسؤال قابل للتقصّي.'],
-  ['التدخل وأدوات جمع البيانات', 'تصميم التدخل واختيار الأدوات الملائمة لجمع الأدلة.'],
-  ['النتائج والتأمل', 'تنظيم البيانات وتحليلها وربطها بالتغيير في الممارسة.'],
-  ['التوصيات والكتابة والنشر', 'صياغة توصيات قابلة للاستخدام وإخراج البحث بصورة موحدة.'],
-]
-
-const TEMPLATE_STEPS = [
-  'بيانات الباحث والجهة',
-  'عنوان البحث والكلمات المفتاحية',
-  'المشكلة والسياق',
-  'السؤال والأهداف',
-  'الفئة المستهدفة',
-  'التدخل والخطة الإجرائية',
-  'أدوات جمع البيانات',
-  'النتائج والتحليل',
-  'التأمل المهني',
-  'التوصيات',
-  'المراجع',
-  'الملحقات والأخلاقيات',
-]
-
-const FAQS = [
-  ['كيف أبدأ بحثًا إجرائيًا؟', 'ابدأ بتحديد مشكلة حقيقية من الميدان، ثم استخدم الدليل والقالب لبناء السؤال والتدخل وخطة جمع الأدلة.'],
-  ['هل يمكن تعديل المقترح بعد إرساله؟', 'في النسخة الكاملة ستعتمد إمكانية التعديل على حالة الطلب ومرحلة التحكيم.'],
-  ['كيف أتابع حالة البحث؟', 'ستظهر الحالة داخل الملف الشخصي مع سجل واضح للمراحل والملاحظات والقرارات.'],
-]
+import { RESEARCH_ITEMS, CONFERENCE_STEPS, GUIDE_CHAPTERS, TEMPLATE_STEPS, FAQS } from '../../features/platform/data/platformContent.js'
 
 function RepositoryExperience() {
   const [query, setQuery] = useState('')
   const [field, setField] = useState('الكل')
   const [selected, setSelected] = useState(null)
   const fields = ['الكل', ...new Set(RESEARCH_ITEMS.map((item) => item.field))]
-  const results = RESEARCH_ITEMS.filter((item) => {
-    const matchesField = field === 'الكل' || item.field === field
-    const haystack = `${item.title} ${item.author} ${item.field}`.toLowerCase()
-    return matchesField && haystack.includes(query.trim().toLowerCase())
-  })
+  const results = filterResearch(query, { language: 'ar', field: field === 'الكل' ? '' : field })
 
   return (
     <div className="platform-experience">
@@ -104,7 +32,7 @@ function RepositoryExperience() {
 
       <div className="platform-experience__research-grid">
         {results.map((item) => (
-          <article className="platform-experience__research-card" key={item.id}>
+          <article className="platform-experience__research-card" key={item.id} id={item.id}>
             <div className="platform-experience__meta"><span>{item.field}</span><span>{item.year}</span></div>
             <h2>{item.title}</h2>
             <p>{item.author}</p>
@@ -224,7 +152,7 @@ function NewsExperience() {
     <div className="platform-experience">
       <div className="platform-experience__news-grid">
         {items.map((item) => (
-          <article key={item.id} className="platform-experience__news-card">
+          <article key={item.id} id={item.id} className="platform-experience__news-card">
             <div className="platform-experience__news-media">
               {item.image ? <img src={item.image} alt={item.imageAlt || ''} /> : <span>PARP</span>}
             </div>
@@ -243,12 +171,6 @@ function NewsExperience() {
 
 function SupportExperience() {
   const [openFaq, setOpenFaq] = useState(0)
-  const [submitted, setSubmitted] = useState(false)
-
-  const submit = (event) => {
-    event.preventDefault()
-    setSubmitted(true)
-  }
 
   return (
     <div className="platform-experience platform-experience--support">
@@ -266,22 +188,7 @@ function SupportExperience() {
         </div>
       </div>
 
-      <form className="platform-experience__support-form" onSubmit={submit}>
-        <span>تذكرة دعم</span>
-        <h2>كيف يمكننا مساعدتك؟</h2>
-        <input required type="text" placeholder="الاسم" aria-label="الاسم" />
-        <input required type="email" placeholder="البريد الإلكتروني" aria-label="البريد الإلكتروني" />
-        <select required defaultValue="" aria-label="نوع المشكلة">
-          <option value="" disabled>نوع المشكلة</option>
-          <option>الحساب والدخول</option>
-          <option>رفع الملفات</option>
-          <option>المؤتمر والتحكيم</option>
-          <option>مشكلة تقنية أخرى</option>
-        </select>
-        <textarea required rows="5" placeholder="اكتب التفاصيل..." aria-label="تفاصيل المشكلة" />
-        <button type="submit">إرسال التذكرة</button>
-        {submitted && <p className="platform-experience__prototype-note">تم التحقق من النموذج. الإرسال إلى الخادم سيُربط عند تجهيز الـ backend.</p>}
-      </form>
+      <div className="platform-experience__support-form"><h2>كيف يمكننا مساعدتك؟</h2><ContactForm /></div>
     </div>
   )
 }

@@ -1,89 +1,17 @@
+import { filterResearch } from '../../features/platform/application/filterResearch.js'
+import ContactForm from '../../features/contact/presentation/ContactForm.jsx'
 import { useMemo, useState } from 'react'
 import { newsRepositoryEn } from '../../features/news/data/newsRepository.en.js'
 import './PlatformExperience.css'
 
-const RESEARCH_ITEMS = [
-  {
-    id: 'r1',
-    title: 'The impact of problem-based learning on mathematical thinking skills',
-    field: 'Mathematics',
-    author: 'Researcher from the PARP community',
-    year: '2026',
-    summary: 'An action-research example testing a classroom intervention and measuring its effect on student participation and conceptual understanding.',
-  },
-  {
-    id: 'r2',
-    title: 'Classroom strategies for strengthening active student participation',
-    field: 'Humanities',
-    author: 'Researcher from the PARP community',
-    year: '2026',
-    summary: 'A practice-based study focused on improving classroom interaction and documenting change during the action-research cycle.',
-  },
-  {
-    id: 'r3',
-    title: 'Using formative assessment tools to improve learning',
-    field: 'Assessment',
-    author: 'Researcher from the PARP community',
-    year: '2025',
-    summary: 'An applied study on using formative assessment to guide teaching and improve the quality of feedback.',
-  },
-  {
-    id: 'r4',
-    title: 'Building a research culture in schools through professional learning communities',
-    field: 'Educational Leadership',
-    author: 'Researcher from the PARP community',
-    year: '2025',
-    summary: 'A school-based experience documenting how regular collaborative work can strengthen professional practice.',
-  },
-]
-
-const CONFERENCE_STEPS = [
-  { title: 'Registration', text: 'Create a participation record and confirm researcher and institution information.' },
-  { title: 'Proposal submission', text: 'Submit the proposal using the approved template and complete the requirements.' },
-  { title: 'Peer review', text: 'Track feedback, decisions, and required revisions.' },
-  { title: 'Final research', text: 'Upload the final version after implementing the intervention and analyzing the findings.' },
-  { title: 'Results and certificates', text: 'Follow the final decision, certificates, and archiving process.' },
-]
-
-const GUIDE_CHAPTERS = [
-  ['The nature and ethics of action research', 'A practical introduction to action research, its role, and its ethical boundaries.'],
-  ['Problem, question, and objectives', 'Turn a field observation into a research problem and an investigable question.'],
-  ['Intervention and data collection tools', 'Design the intervention and choose appropriate tools for gathering evidence.'],
-  ['Findings and reflection', 'Organize and analyze data, then connect the findings with changes in practice.'],
-  ['Recommendations, writing, and publication', 'Write usable recommendations and prepare the research in a consistent format.'],
-]
-
-const TEMPLATE_STEPS = [
-  'Researcher and institution information',
-  'Research title and keywords',
-  'Problem and context',
-  'Question and objectives',
-  'Target group',
-  'Intervention and action plan',
-  'Data collection tools',
-  'Findings and analysis',
-  'Professional reflection',
-  'Recommendations',
-  'References',
-  'Appendices and ethics',
-]
-
-const FAQS = [
-  ['How do I start an action-research project?', 'Start with a real problem from the field, then use the guide and template to build the question, intervention, and evidence-collection plan.'],
-  ['Can I edit the proposal after submitting it?', 'In the full version, editing will depend on the request status and the current review stage.'],
-  ['How can I track the research status?', 'The status will appear in your profile with a clear record of stages, feedback, and decisions.'],
-]
+import { RESEARCH_ITEMS, CONFERENCE_STEPS, GUIDE_CHAPTERS, TEMPLATE_STEPS, FAQS } from '../../features/platform/data/platformContent.en.js'
 
 function RepositoryExperience() {
   const [query, setQuery] = useState('')
   const [field, setField] = useState('All')
   const [selected, setSelected] = useState(null)
   const fields = ['All', ...new Set(RESEARCH_ITEMS.map((item) => item.field))]
-  const results = RESEARCH_ITEMS.filter((item) => {
-    const matchesField = field === 'All' || item.field === field
-    const haystack = `${item.title} ${item.author} ${item.field}`.toLowerCase()
-    return matchesField && haystack.includes(query.trim().toLowerCase())
-  })
+  const results = filterResearch(query, { language: 'en', field: field === 'All' ? '' : field })
 
   return (
     <div className="platform-experience">
@@ -104,7 +32,7 @@ function RepositoryExperience() {
 
       <div className="platform-experience__research-grid">
         {results.map((item) => (
-          <article className="platform-experience__research-card" key={item.id}>
+          <article className="platform-experience__research-card" key={item.id} id={item.id}>
             <div className="platform-experience__meta"><span>{item.field}</span><span>{item.year}</span></div>
             <h2>{item.title}</h2>
             <p>{item.author}</p>
@@ -224,7 +152,7 @@ function NewsExperience() {
     <div className="platform-experience">
       <div className="platform-experience__news-grid">
         {items.map((item) => (
-          <article key={item.id} className="platform-experience__news-card">
+          <article key={item.id} id={item.id} className="platform-experience__news-card">
             <div className="platform-experience__news-media">
               {item.image ? <img src={item.image} alt={item.imageAlt || ''} /> : <span>PARP</span>}
             </div>
@@ -243,12 +171,6 @@ function NewsExperience() {
 
 function SupportExperience() {
   const [openFaq, setOpenFaq] = useState(0)
-  const [submitted, setSubmitted] = useState(false)
-
-  const submit = (event) => {
-    event.preventDefault()
-    setSubmitted(true)
-  }
 
   return (
     <div className="platform-experience platform-experience--support">
@@ -266,22 +188,7 @@ function SupportExperience() {
         </div>
       </div>
 
-      <form className="platform-experience__support-form" onSubmit={submit}>
-        <span>Support ticket</span>
-        <h2>How can we help?</h2>
-        <input required type="text" placeholder="Name" aria-label="Name" />
-        <input required type="email" placeholder="Email" aria-label="Email" />
-        <select required defaultValue="" aria-label="Issue type">
-          <option value="" disabled>Issue type</option>
-          <option>Account and login</option>
-          <option>File uploads</option>
-          <option>Conference and review</option>
-          <option>Other technical issue</option>
-        </select>
-        <textarea required rows="5" placeholder="Write the details..." aria-label="Issue details" />
-        <button type="submit">Submit ticket</button>
-        {submitted && <p className="platform-experience__prototype-note">The form has been validated. Server submission will be connected when the backend is ready.</p>}
-      </form>
+      <div className="platform-experience__support-form"><h2>How can we help?</h2><ContactForm /></div>
     </div>
   )
 }

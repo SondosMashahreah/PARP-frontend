@@ -1,5 +1,5 @@
 import { RouteLink } from '../../routing/clientRouter.jsx'
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import logo from './img/logo.png'
 import './HeaderLogo.css'
 

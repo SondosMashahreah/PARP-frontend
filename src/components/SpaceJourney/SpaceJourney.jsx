@@ -188,6 +188,8 @@ export default function SpaceJourney() {
       }
     })
     syncLayout()
+    const sizeObserver = new ResizeObserver(syncLayout)
+    sizeObserver.observe(root.querySelector('.space-journey__sticky'))
     observer.observe(root)
     window.addEventListener('scroll', handleScroll, { passive: true })
     window.addEventListener('resize', syncLayout)
@@ -196,6 +198,7 @@ export default function SpaceJourney() {
     return () => {
       window.cancelAnimationFrame(frame)
       observer.disconnect()
+      sizeObserver.disconnect()
       window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('resize', syncLayout)
       document.removeEventListener('visibilitychange', handleVisibility)
@@ -236,6 +239,7 @@ export default function SpaceJourney() {
               key={step.id}
               ref={(node) => { stageRefs.current[index] = node }}
             >
+              <div className="space-journey__static-artifact"><ResearchArtifact step={step.id} /></div>
               <span className="space-journey__eyebrow">الخطوة {number(step.id)} / 08</span>
               <h3>{step.title}</h3>
               <p>{step.description}</p>

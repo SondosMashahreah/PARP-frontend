@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+
+import { LanguageContext } from './languageContext.js'
 
 const STORAGE_KEY = 'parp-language'
-const LanguageContext = createContext(null)
 
 function getInitialLanguage() {
   try {
@@ -47,10 +48,4 @@ export function LanguageProvider({ children }) {
   }), [dir, isArabic, language])
 
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
-}
-
-export function useLanguage() {
-  const context = useContext(LanguageContext)
-  if (!context) throw new Error('useLanguage must be used inside LanguageProvider')
-  return context
 }

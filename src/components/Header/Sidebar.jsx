@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
-import { RouteLink, usePathname } from '../../routing/clientRouter.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
+import { RouteLink } from '../../routing/clientRouter.jsx'
+import { usePathname } from '../../routing/useLocation.js'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import './Sidebar.css'
@@ -46,7 +47,7 @@ const NAV_GROUPS = {
       label: 'المساندة',
       items: [
         { to: '/support', label: 'الدعم الفني' },
-        { to: '/account', label: 'تسجيل الدخول / الملف الشخصي' },
+        { to: '/login', label: 'تسجيل الدخول' },
       ],
     },
   ],
@@ -90,7 +91,7 @@ const NAV_GROUPS = {
       label: 'Support',
       items: [
         { to: '/support', label: 'Technical Support' },
-        { to: '/account', label: 'Log in / Profile' },
+        { to: '/login', label: 'Log in' },
       ],
     },
   ],

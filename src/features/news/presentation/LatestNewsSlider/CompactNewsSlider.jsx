@@ -1,3 +1,5 @@
+import { RouteLink } from '../../../../routing/clientRouter.jsx'
+import { getPlatformStats } from '../../../platform/data/platformStats.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Icon from '../../../../components/ui/Icon.jsx'
 import './CompactNewsSlider.css'
@@ -26,20 +28,16 @@ export default function CompactNewsSlider({
   items = [],
   autoplay = true,
   autoplayDelay = 4200,
-  exploreHref = '#',
-  journeyHref = '#space-journey',
+  exploreHref = '/repository',
+  journeyHref = '/#space-journey',
 }) {
   const slides = useMemo(() => (Array.isArray(items) ? items.filter(Boolean) : []), [items])
   const [failedImages, setFailedImages] = useState(() => new Set())
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [requestedIndex, setActiveIndex] = useState(0)
+  const activeIndex = slides.length ? requestedIndex % slides.length : 0
   const [paused, setPaused] = useState(false)
   const pointerStartRef = useRef(null)
   const [isDragging, setIsDragging] = useState(false)
-
-  useEffect(() => {
-    if (activeIndex < slides.length) return
-    setActiveIndex(0)
-  }, [activeIndex, slides.length])
 
   useEffect(() => {
     if (!autoplay || paused || slides.length < 2) return undefined
@@ -72,11 +70,7 @@ export default function CompactNewsSlider({
     }
   })
 
-  const stats = [
-    { value: `${slides.length}+`, label: 'أخبار وفعاليات', icon: 'document' },
-    { value: '126+', label: 'باحث/ة وممارس/ة', icon: 'users' },
-    { value: '30+', label: 'بحثًا ودليلًا', icon: 'globe' },
-  ]
+  const stats = getPlatformStats('ar')
 
   const handlePointerDown = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
@@ -122,14 +116,14 @@ export default function CompactNewsSlider({
           </p>
 
           <div className="parp-news__actions">
-            <a className="parp-news__button parp-news__button--primary" href={exploreHref}>
+            <RouteLink className="parp-news__button parp-news__button--primary" to={exploreHref}>
               <span>استكشف المنصة</span>
               <span aria-hidden="true">↗</span>
-            </a>
-            <a className="parp-news__button parp-news__button--ghost" href={journeyHref}>
+            </RouteLink>
+            <RouteLink className="parp-news__button parp-news__button--ghost" to={journeyHref}>
               <span>ابدأ رحلتك البحثية</span>
               <span aria-hidden="true">←</span>
-            </a>
+            </RouteLink>
           </div>
 
           <div className="parp-news__stats" aria-label="إحصاءات أولية للمنصة">

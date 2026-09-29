@@ -1,4 +1,4 @@
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import Footer from '../../components/Footer/Footer.jsx'
 import Header from '../../components/Header/Header.jsx'
 import './AppLayout.css'

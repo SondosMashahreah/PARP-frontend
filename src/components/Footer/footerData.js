@@ -1,70 +1,30 @@
-export const footerPartners = {
+import universityLogo from '../../assets/partners/al-quds-university.png'
+import ministryLogo from '../../assets/partners/ministry-of-education.jpeg'
+import museumLogo from '../../assets/partners/meet-math-museum.png'
+
+const logos = { university: universityLogo, ministry: ministryLogo, museum: museumLogo }
+const names = {
   ar: [
-    {
-      name: 'جامعة القدس',
-      shortName: 'AL-QUDS UNIVERSITY',
-      href: 'https://www.alquds.edu/ar/',
-      logo: 'https://commons.wikimedia.org/wiki/Special:FilePath/Al_Quds_University_Logo.png',
-      logoAlt: 'شعار جامعة القدس',
-    },
-    {
-      name: 'وزارة التربية والتعليم العالي الفلسطينية',
-      shortName: 'وزارة التربية والتعليم العالي',
-      href: 'https://www.moe.edu.ps/',
-      logo: 'https://moe.edu.ps/storage/app/ItemUrl/_171207_20241209.jpeg',
-      logoAlt: 'شعار وزارة التربية والتعليم العالي',
-    },
-    {
-      name: 'متحف الرياضيات',
-      shortName: 'Meet Math Museum · جامعة القدس',
-      href: 'https://www.alquds.edu/ar/centers-museums-ar/meet-math-museum-ar/',
-      mark: 'π',
-      logoAlt: 'شعار متحف الرياضيات',
-    },
+    ['university', 'جامعة القدس', 'أبو ديس · فلسطين', 'https://www.alquds.edu/ar/'],
+    ['ministry', 'وزارة التربية والتعليم العالي', 'دولة فلسطين', 'https://www.moe.edu.ps/'],
+    ['museum', 'متحف الرياضيات', 'Meet Math Museum · جامعة القدس', 'https://www.alquds.edu/ar/centers-museums-ar/meet-math-museum-ar/'],
   ],
   en: [
-    {
-      name: 'Al-Quds University',
-      shortName: 'AL-QUDS UNIVERSITY',
-      href: 'https://www.alquds.edu/en/',
-      mark: 'AQU',
-      logoAlt: 'Al-Quds University mark',
-    },
-    {
-      name: 'Palestinian Ministry of Education and Higher Education',
-      shortName: 'Ministry of Education and Higher Education',
-      href: 'https://www.moe.edu.ps/',
-      mark: 'MOE',
-      logoAlt: 'Ministry of Education and Higher Education mark',
-    },
-    {
-      name: 'Meet Math Museum',
-      shortName: 'Meet Math Museum · Al-Quds University',
-      href: 'https://www.alquds.edu/en/centers-museums/meet-math-museum/',
-      mark: 'π',
-      logoAlt: 'Meet Math Museum mark',
-    },
+    ['university', 'Al-Quds University', 'Abu Dis · Palestine', 'https://www.alquds.edu/en/'],
+    ['ministry', 'Ministry of Education and Higher Education', 'State of Palestine', 'https://www.moe.edu.ps/'],
+    ['museum', 'Meet Math Museum', 'Al-Quds University', 'https://www.alquds.edu/en/centers-museums/meet-math-museum/'],
   ],
 }
-
+export const footerPartners = Object.fromEntries(Object.entries(names).map(([language, items]) => [language,
+  items.map(([id, name, shortName, href]) => ({ id, name, shortName, href, logo: logos[id] })),
+]))
 export const footerLinks = {
   ar: [
-    { label: 'عن المنصة', href: '/about' },
-    { label: 'سياسة الخصوصية', href: '#' },
-    { label: 'الشروط والأحكام', href: '#' },
-    { label: 'تواصل معنا', href: '#contact' },
+    { label: 'عن المنصة', href: '/about' }, { label: 'المستودع البحثي', href: '/repository' },
+    { label: 'الدليل', href: '/guide' }, { label: 'المساعدة والدعم', href: '/support' },
   ],
   en: [
-    { label: 'About PARP', href: '/about' },
-    { label: 'Privacy Policy', href: '#' },
-    { label: 'Terms & Conditions', href: '#' },
-    { label: 'Contact Us', href: '#contact' },
+    { label: 'About PARP', href: '/about' }, { label: 'Research repository', href: '/repository' },
+    { label: 'Research guide', href: '/guide' }, { label: 'Help and support', href: '/support' },
   ],
 }
-
-export const footerSocialLinks = [
-  { label: 'Facebook', href: '#', icon: 'facebook' },
-  { label: 'X', href: '#', icon: 'x' },
-  { label: 'YouTube', href: '#', icon: 'youtube' },
-  { label: 'LinkedIn', href: '#', icon: 'linkedin' },
-]

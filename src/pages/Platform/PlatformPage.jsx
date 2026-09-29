@@ -1,4 +1,4 @@
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import PlatformExperience from './PlatformExperience.jsx'
 import PlatformExperienceEn from './PlatformExperience.en.jsx'
 import './PlatformPage.css'

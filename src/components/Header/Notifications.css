@@ -3,7 +3,7 @@
 .notifications__panel {
   position: absolute;
   top: calc(100% + 22px);
-  right: 0;
+  inset-inline-end: 0;
   width: 300px;
   max-width: calc(100vw - 32px);
   overflow: hidden;
@@ -48,7 +48,7 @@
   .notifications__panel {
     position: fixed;
     top: calc(var(--header-height) + 8px);
-    right: 16px;
+    inset-inline-end: 16px;
     width: min(320px, calc(100vw - 32px));
   }
 }

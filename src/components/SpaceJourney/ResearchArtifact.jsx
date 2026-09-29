@@ -1,33 +1,25 @@
-import researchToolsAtlas from '../../assets/research-tools-atlas.png'
+import artifact1 from '../../assets/journey/01-account.png'
+import artifact2 from '../../assets/journey/02-learning.png'
+import artifact3 from '../../assets/journey/03-guide.png'
+import artifact4 from '../../assets/journey/04-template.png'
+import artifact5 from '../../assets/journey/05-proposal.png'
+import artifact6 from '../../assets/journey/06-review.png'
+import artifact7 from '../../assets/journey/07-publication.png'
+import artifact8 from '../../assets/journey/08-certificate.png'
 
-// Measured regions include transparent padding around each complete object.
-// Using one atlas keeps all eight assets in a single network request.
-const ATLAS_WIDTH = 1774
-const ATLAS_HEIGHT = 887
-const REGIONS = [
-  { x: 18, y: 72, width: 418, height: 315 }, // Researcher identity
-  { x: 446, y: 45, width: 491, height: 350 }, // Open learning book
-  { x: 938, y: 16, width: 383, height: 419 }, // Research guide
-  { x: 1368, y: 30, width: 390, height: 405 }, // Template folder
-  { x: 10, y: 447, width: 420, height: 394 }, // Proposal and pen
-  { x: 457, y: 449, width: 446, height: 400 }, // Review magnifier
-  { x: 904, y: 444, width: 399, height: 417 }, // Publication
-  { x: 1334, y: 447, width: 428, height: 402 }, // Certificate
+const artifacts = [
+  { src: artifact1, width: 454, height: 348 },
+  { src: artifact2, width: 539, height: 372 },
+  { src: artifact3, width: 425, height: 443 },
+  { src: artifact4, width: 439, height: 429 },
+  { src: artifact5, width: 429, height: 395 },
+  { src: artifact6, width: 480, height: 450 },
+  { src: artifact7, width: 472, height: 450 },
+  { src: artifact8, width: 493, height: 463 },
 ]
 
 export default function ResearchArtifact({ step }) {
-  const { x, y, width, height } = REGIONS[step - 1] || REGIONS[0]
-  return (
-    <div
-      className="research-artifact"
-      aria-hidden="true"
-      style={{
-        width: `${Math.min(1, width / height) * 100}%`,
-        aspectRatio: `${width} / ${height}`,
-        backgroundImage: `url(${researchToolsAtlas})`,
-        backgroundSize: `${ATLAS_WIDTH / width * 100}% ${ATLAS_HEIGHT / height * 100}%`,
-        backgroundPosition: `${x / (ATLAS_WIDTH - width) * 100}% ${y / (ATLAS_HEIGHT - height) * 100}%`,
-      }}
-    />
-  )
+  const artifact = artifacts[step - 1] || artifacts[0]
+  return <img className="research-artifact" src={artifact.src} width={artifact.width} height={artifact.height}
+    alt="" aria-hidden="true" decoding="async" draggable="false" />
 }

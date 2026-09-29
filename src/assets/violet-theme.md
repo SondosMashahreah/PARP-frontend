@@ -4,7 +4,7 @@ The palette is derived from the supplied purple AR monogram. All UI tokens live 
 
 - `src/assets/violet-silk.png`: dark silk background, used by `src/App.css`.
 - `src/components/Header/img/logo.png`: the supplied violet logo prepared on transparency; shared by header, footer and favicon.
-- `src/assets/research-tools-atlas.png`: restored original violet researcher tools, with their original eight crop regions.
+- `src/assets/journey/`: eight separate violet researcher tools from the latest project artwork.
 
 ## Image generation
 

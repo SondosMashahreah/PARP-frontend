@@ -1,8 +1,7 @@
 node_modules
+dist/
+.env.local
+.env.*.local
 
 # Local patch files
-*.patch
-
-
-
 *.patch

@@ -1,4 +1,4 @@
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import './PlatformPage.css'
 

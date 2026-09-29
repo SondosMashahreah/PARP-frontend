@@ -100,8 +100,7 @@
 }
 
 .platform-experience__research-card button,
-.platform-experience__primary-action,
-.platform-experience__support-form button {
+.platform-experience__primary-action {
   min-height: 42px;
   padding: 0 16px;
   border: 1px solid rgb(var(--accent-rgb) / 22%);
@@ -396,9 +395,6 @@
   margin: 0 0 6px;
 }
 
-.platform-experience__support-form button {
-  min-height: 48px;
-}
 
 .platform-experience__prototype-note {
   margin: 0;

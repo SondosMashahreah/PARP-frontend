@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import HeaderLogo from './HeaderLogo.jsx'
 import HeaderSearch from './HeaderSearch.jsx'
 import Notifications from './Notifications.jsx'
@@ -6,86 +6,55 @@ import Sidebar from './Sidebar.jsx'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import { RouteLink } from '../../routing/clientRouter.jsx'
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import './Header.css'
 
-function sectionHref(id) {
-  return `${import.meta.env.BASE_URL || '/'}#${id}`
-}
-
-function Header() {
+export default function Header() {
   const [activePanel, setActivePanel] = useState(null)
   const closePanel = useCallback(() => setActivePanel(null), [])
-  const { isArabic, toggleLanguage } = useLanguage()
+  const headerRef = useRef(null)
+  const { isArabic, dir, toggleLanguage } = useLanguage()
 
-  const labels = isArabic
-    ? {
-        news: 'الأخبار',
-        stats: 'الإحصائيات',
-        contact: 'تواصل معنا',
-        login: 'تسجيل الدخول',
-        language: 'English',
-        menu: 'فتح القائمة الجانبية',
-      }
-    : {
-        news: 'News',
-        stats: 'Stats',
-        contact: 'Contact Us',
-        login: 'Log in',
-        language: 'العربية',
-        menu: 'Open sidebar',
-      }
+  useEffect(() => {
+    const header = headerRef.current
+    const measure = () => document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`)
+    measure()
+    const observer = new ResizeObserver(measure)
+    observer.observe(header)
+    return () => observer.disconnect()
+  }, [])
+
+  const links = isArabic
+    ? [['news', 'آخر الأخبار', 'الأخبار'], ['stats', 'المنصة بالأرقام', 'أرقامنا'], ['space-journey', 'رحلة الباحث', 'رحلتك'], ['contact', 'تواصل معنا', 'تواصل معنا']]
+    : [['news', 'Latest news', 'News'], ['stats', 'Platform stats', 'Stats'], ['space-journey', 'Research journey', 'Journey'], ['contact', 'Contact us', 'Contact']]
+  const login = isArabic ? 'تسجيل الدخول' : 'Log in'
 
   return (
-    <header className="site-header">
+    <header className="site-header" ref={headerRef} dir={dir}>
       <div className="site-header__inner">
         <HeaderLogo />
-
-        <nav className="site-header__nav" aria-label={isArabic ? 'أقسام الصفحة الرئيسية' : 'Homepage sections'}>
-          <a href={sectionHref('news')}>{labels.news}</a>
-          <a href={sectionHref('stats')}>{labels.stats}</a>
-          <a href={sectionHref('contact')}>{labels.contact}</a>
-        </nav>
-
         <HeaderSearch />
-
         <div className="site-header__actions">
-          <button
-            type="button"
-            className="site-header__language"
-            onClick={toggleLanguage}
-            aria-label={isArabic ? 'Switch to English' : 'Switch to Arabic'}
-          >
-            {labels.language}
+          <button type="button" className="site-header__language" onClick={toggleLanguage}
+            aria-label={isArabic ? 'Switch to English' : 'التبديل إلى العربية'}
+            title={isArabic ? 'English' : 'العربية'} lang={isArabic ? 'en' : 'ar'}>
+            <Icon name="globe" /><span>{isArabic ? 'EN' : 'ع'}</span>
           </button>
-
-          <RouteLink className="site-header__login" to="/account">
-            {labels.login}
+          <RouteLink className="site-header__login" to="/login" aria-label={login} title={login} onClick={closePanel}>
+            <Icon name="user" /><span>{login}</span>
           </RouteLink>
-
-          <Notifications
-            isOpen={activePanel === 'notifications'}
+          <Notifications isOpen={activePanel === 'notifications'}
             onToggle={() => setActivePanel((current) => current === 'notifications' ? null : 'notifications')}
-            onClose={closePanel}
-          />
-
-          <span className="site-header__divider" aria-hidden="true" />
-
-          <IconButton
-            className="site-header__menu"
-            aria-label={labels.menu}
-            aria-expanded={activePanel === 'sidebar'}
-            aria-controls="main-sidebar"
-            aria-haspopup="dialog"
-            onClick={() => setActivePanel('sidebar')}
-          >
-            <Icon name="menu" />
-          </IconButton>
+            onClose={closePanel} />
+          <IconButton className="site-header__menu" aria-label={isArabic ? 'فتح القائمة' : 'Open menu'}
+            aria-expanded={activePanel === 'sidebar'} aria-controls="main-sidebar" aria-haspopup="dialog"
+            onClick={() => setActivePanel('sidebar')}><Icon name="menu" /></IconButton>
         </div>
       </div>
+      <nav className="site-header__nav" aria-label={isArabic ? 'أقسام الصفحة الرئيسية' : 'Homepage sections'}>
+        {links.map(([id, label, shortLabel]) => <RouteLink key={id} to={`/#${id}`} onClick={closePanel} aria-label={label}><span className="site-header__nav-full">{label}</span><span className="site-header__nav-short" aria-hidden="true">{shortLabel}</span></RouteLink>)}
+      </nav>
       <Sidebar isOpen={activePanel === 'sidebar'} onClose={closePanel} />
     </header>
   )
 }
-
-export default Header

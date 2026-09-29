@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useLanguage } from '../../i18n/LanguageContext.jsx'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import './Notifications.css'

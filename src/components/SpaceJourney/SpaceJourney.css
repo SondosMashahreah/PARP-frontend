@@ -104,7 +104,10 @@
 }
 
 .research-artifact {
-  background-repeat: no-repeat;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   pointer-events: none;
   filter: drop-shadow(0 18px 22px rgb(0 0 0 / 28%)) drop-shadow(0 0 20px rgb(var(--accent-rgb) / 24%));
 }
@@ -126,9 +129,9 @@
 .space-journey__stage {
   position: absolute;
   top: 48%;
-  right: max(32px, calc((100% - 1120px) / 2));
+  inset-inline-start: max(32px, calc((100% - 1120px) / 2));
   width: min(520px, 46%);
-  direction: rtl;
+  direction: inherit;
   text-align: start;
   opacity: 0;
   visibility: hidden;
@@ -194,9 +197,11 @@
 @media (max-width: 900px) {
   .space-journey__heading { inset-inline: 24px; }
   .space-journey__heading p { display: none; }
-  .space-journey__stage { width: min(520px, calc(100% - 64px)); right: 32px; }
-  .space-journey__objects { opacity: 0.24; }
-  .space-journey__artifact { left: 24%; }
+  .space-journey__stage { width: min(640px, calc(100% - 64px)); inset-inline-start: 50%; top: 72%; transform: translate(-50%, -50%); }
+  .space-journey[dir="rtl"] .space-journey__stage { transform: translate(50%, -50%); }
+  .space-journey__stage.is-current { animation: none; }
+  .space-journey__objects { opacity: 1; }
+  .space-journey__artifact { left: 50%; top: 32%; width: clamp(190px, 34vh, 280px); }
   .space-journey__stage::before { content: ''; position: absolute; inset: -28px; z-index: -1; background: radial-gradient(ellipse, rgb(var(--background-rgb) / 0.949) 20%, rgb(var(--background-rgb) / 0.000) 72%); }
   .space-journey__navigation { inset-inline: 20px; }
   .space-journey__nav-title { display: none; }
@@ -205,7 +210,7 @@
 @media (max-width: 560px) {
   .space-journey { height: 740svh; min-height: 4200px; }
   .space-journey__heading { top: 22px; inset-inline: 22px; }
-  .space-journey__stage { top: 48%; right: 24px; width: calc(100% - 48px); }
+  .space-journey__stage { width: calc(100% - 48px); }
   .space-journey__stage h3 { font-size: clamp(1.8rem, 8vw, 2.6rem); }
   .space-journey__stage p { font-size: 0.93rem; line-height: 1.85; }
   .space-journey__facts { margin-top: 18px; padding-top: 14px; }
@@ -221,7 +226,7 @@
   .space-journey__stars, .space-journey__objects, .space-journey__orbit, .space-journey__navigation { display: none; }
   .space-journey__stages { position: relative; inset: auto; display: grid; gap: 18px; width: min(860px, calc(100% - 40px)); margin-inline: auto; }
   .space-journey__stage, .space-journey__stage:first-child {
-    position: relative; top: auto; right: auto; width: 100%; padding: 24px;
+    position: relative; top: auto; inset-inline-start: auto; width: 100%; padding: 24px;
     border: 1px solid rgb(var(--accent-rgb) / 0.200); border-radius: 20px; background: rgb(var(--background-rgb) / 0.902);
     opacity: 1 !important; visibility: visible !important; transform: none !important;
     pointer-events: auto; will-change: auto; animation: none !important;
@@ -231,9 +236,14 @@
 }
 
 
-/* إخفاء شريط الخطوات للتجربة */
-/*.space-journey__navigation {
-  display: none;
-}*/
 
 
+
+
+@media (min-width: 901px) { .space-journey[dir='ltr'] .space-journey__artifact { left: 73%; } }
+.space-journey[dir='ltr'] .space-journey__reading-progress-fill { transform-origin: left; }
+.space-journey__static-artifact { display: none; }
+@media (prefers-reduced-motion: reduce), (max-height: 650px) {
+  .space-journey__stage { inset-inline-start: auto; }
+  .space-journey__static-artifact { display: block; width: 110px; height: 100px; margin-bottom: 18px; }
+}
