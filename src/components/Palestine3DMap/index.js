@@ -1,0 +1,1 @@
+export { Palestine3DMap } from './Palestine3DMap';

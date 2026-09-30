@@ -1,3 +1,5 @@
+
+
 export const platformPagesEn = {
   '/about': {
     eyebrow: 'About PARP',
@@ -123,6 +125,16 @@ export const platformPagesEn = {
       { title: 'From evidence to decisions', body: 'Move from an indicator to the related research and evidence for deeper interpretation.' },
     ],
   },
+
+    '/observatory/map': {
+    kind: 'observatory-map',
+    eyebrow: 'Geographic Map',
+    title: 'Palestine Education 3D Map',
+    description: 'An interactive geographic representation of directorates and schools, showing educational data by indicator: research, interactions, teachers, problems.',
+    primary: 'Explore the map',
+    sections: [],
+  },
+
   '/dashboard': {
     eyebrow: 'Dashboard',
     title: 'Measure use, quality, and impact',

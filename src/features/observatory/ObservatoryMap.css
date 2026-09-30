@@ -1,0 +1,11 @@
+/* Wrapper that gives the map a definite height inside the PlatformPage layout. */
+.observatory-map {
+  position: relative;
+  width: 100%;
+  height: clamp(480px, 78vh, 760px);
+  margin-block-start: 8px;
+}
+
+@media (max-width: 720px) {
+  .observatory-map { height: clamp(420px, 62vh, 560px); }
+}

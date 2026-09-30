@@ -6,6 +6,8 @@ import './PlatformExperience.css'
 
 import { RESEARCH_ITEMS, CONFERENCE_STEPS, GUIDE_CHAPTERS, TEMPLATE_STEPS, FAQS } from '../../features/platform/data/platformContent.js'
 
+import ObservatoryMap from '../../features/observatory/ObservatoryMap.jsx'
+
 function RepositoryExperience() {
   const [query, setQuery] = useState('')
   const [field, setField] = useState('الكل')
@@ -200,5 +202,7 @@ export default function PlatformExperience({ kind }) {
   if (kind === 'template') return <TemplateExperience />
   if (kind === 'news') return <NewsExperience />
   if (kind === 'support') return <SupportExperience />
+  if (kind === 'observatory-map') return <ObservatoryMap />
+
   return null
 }
