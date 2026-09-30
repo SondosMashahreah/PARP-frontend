@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "id": 1,
+      "properties": { "id": "directorate-nablus", "nameAr": "مديرية نابلس", "nameEn": "Nablus", "schoolCount": 48, "teacherCount": 1240, "researchCount": 183, "interactionCount": 4820, "problemCount": 17 },
+      "geometry": { "type": "Polygon", "coordinates": [[[35.15,32.18],[35.35,32.18],[35.35,32.30],[35.15,32.30],[35.15,32.18]]] }
+    },
+    {
+      "type": "Feature",
+      "id": 2,
+      "properties": { "id": "directorate-hebron", "nameAr": "مديرية الخليل", "nameEn": "Hebron", "schoolCount": 92, "teacherCount": 2310, "researchCount": 141, "interactionCount": 6120, "problemCount": 28 },
+      "geometry": { "type": "Polygon", "coordinates": [[[34.95,31.45],[35.15,31.45],[35.15,31.60],[34.95,31.60],[34.95,31.45]]] }
+    },
+    {
+      "type": "Feature",
+      "id": 3,
+      "properties": { "id": "directorate-ramallah", "nameAr": "مديرية رام الله", "nameEn": "Ramallah", "schoolCount": 61, "teacherCount": 1520, "researchCount": 210, "interactionCount": 5310, "problemCount": 12 },
+      "geometry": { "type": "Polygon", "coordinates": [[[35.10,31.85],[35.28,31.85],[35.28,31.98],[35.10,31.98],[35.10,31.85]]] }
+    },
+    {
+      "type": "Feature",
+      "id": 4,
+      "properties": { "id": "directorate-gaza", "nameAr": "مديرية غزة", "nameEn": "Gaza", "schoolCount": 210, "teacherCount": 5400, "researchCount": 96, "interactionCount": 7310, "problemCount": 44 },
+      "geometry": { "type": "Polygon", "coordinates": [[[34.25,31.42],[34.50,31.42],[34.50,31.58],[34.25,31.58],[34.25,31.42]]] }
+    }
+  ]
+}
