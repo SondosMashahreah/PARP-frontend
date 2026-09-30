@@ -7,6 +7,7 @@ import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import { useLanguage } from '../../i18n/useLanguage.js'
+import { useAuth } from '../../features/auth/useAuth.js'
 import './Header.css'
 
 export default function Header() {
@@ -14,6 +15,7 @@ export default function Header() {
   const closePanel = useCallback(() => setActivePanel(null), [])
   const headerRef = useRef(null)
   const { isArabic, dir, toggleLanguage } = useLanguage()
+  const { isAuthenticated, user } = useAuth()
 
   useEffect(() => {
     const header = headerRef.current
@@ -27,7 +29,9 @@ export default function Header() {
   const links = isArabic
     ? [['news', 'آخر الأخبار', 'الأخبار'], ['stats', 'المنصة بالأرقام', 'أرقامنا'], ['space-journey', 'رحلة الباحث', 'رحلتك'], ['contact', 'تواصل معنا', 'تواصل معنا']]
     : [['news', 'Latest news', 'News'], ['stats', 'Platform stats', 'Stats'], ['space-journey', 'Research journey', 'Journey'], ['contact', 'Contact us', 'Contact']]
-  const login = isArabic ? 'تسجيل الدخول' : 'Log in'
+  const accountLabel = isAuthenticated
+    ? (user?.full_name || (isArabic ? 'الملف الشخصي' : 'Profile'))
+    : (isArabic ? 'تسجيل الدخول' : 'Log in')
 
   return (
     <header className="site-header" ref={headerRef} dir={dir}>
@@ -40,21 +44,26 @@ export default function Header() {
             title={isArabic ? 'English' : 'العربية'} lang={isArabic ? 'en' : 'ar'}>
             <Icon name="globe" /><span>{isArabic ? 'EN' : 'ع'}</span>
           </button>
-          <RouteLink className="site-header__login" to="/login" aria-label={login} title={login} onClick={closePanel}>
-            <Icon name="user" /><span>{login}</span>
+          <RouteLink className="site-header__login" to={isAuthenticated ? '/profile' : '/login'}
+            aria-label={accountLabel} title={accountLabel} onClick={closePanel}>
+            <Icon name="user" /><span>{accountLabel}</span>
           </RouteLink>
-          <Notifications isOpen={activePanel === 'notifications'}
-            onToggle={() => setActivePanel((current) => current === 'notifications' ? null : 'notifications')}
-            onClose={closePanel} />
-          <IconButton className="site-header__menu" aria-label={isArabic ? 'فتح القائمة' : 'Open menu'}
-            aria-expanded={activePanel === 'sidebar'} aria-controls="main-sidebar" aria-haspopup="dialog"
-            onClick={() => setActivePanel('sidebar')}><Icon name="menu" /></IconButton>
+          {isAuthenticated && (
+            <>
+              <Notifications isOpen={activePanel === 'notifications'}
+                onToggle={() => setActivePanel((current) => current === 'notifications' ? null : 'notifications')}
+                onClose={closePanel} />
+              <IconButton className="site-header__menu" aria-label={isArabic ? 'فتح القائمة' : 'Open menu'}
+                aria-expanded={activePanel === 'sidebar'} aria-controls="main-sidebar" aria-haspopup="dialog"
+                onClick={() => setActivePanel('sidebar')}><Icon name="menu" /></IconButton>
+            </>
+          )}
         </div>
       </div>
       <nav className="site-header__nav" aria-label={isArabic ? 'أقسام الصفحة الرئيسية' : 'Homepage sections'}>
         {links.map(([id, label, shortLabel]) => <RouteLink key={id} to={`/#${id}`} onClick={closePanel} aria-label={label}><span className="site-header__nav-full">{label}</span><span className="site-header__nav-short" aria-hidden="true">{shortLabel}</span></RouteLink>)}
       </nav>
-      <Sidebar isOpen={activePanel === 'sidebar'} onClose={closePanel} />
+      {isAuthenticated && <Sidebar isOpen={activePanel === 'sidebar'} onClose={closePanel} />}
     </header>
   )
 }

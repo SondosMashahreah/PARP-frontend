@@ -18,3 +18,12 @@
 .login-card__submit:hover { background: #6020a0; }
 .login-card__notice { margin: 0; font-size: .84rem; line-height: 1.8; color: #51405f; }
 .login-card__back { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 26px; color: #653395; font-size: .84rem; text-decoration: none; }
+
+.login-card__tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 22px 0; padding: 5px; border-radius: 12px; background: #eee8f5; }
+.login-card__tabs button { min-height: 40px; border: 0; border-radius: 9px; background: transparent; color: #61536d; font: inherit; font-weight: 700; cursor: pointer; }
+.login-card__tabs button.is-active { background: #fff; color: #5b1c92; box-shadow: 0 3px 14px rgb(44 22 62 / 9%); }
+.login-card small { color: #756a7f; line-height: 1.55; }
+.login-card__error { margin: 0; padding: 10px 12px; border-radius: 9px; background: #ffe9eb; color: #8b1730; font-size: .82rem; }
+.login-card__pending { margin: 0; padding: 10px 12px; border-radius: 9px; background: #f1edf5; color: #554760; text-align: center; }
+.login-card__secondary { min-height: 44px; border: 1px solid #c8bdd2; border-radius: 10px; background: #fff; color: #653395; font: inherit; font-weight: 700; cursor: pointer; }
+.login-card button:disabled { opacity: .6; cursor: wait; }
