@@ -10,6 +10,7 @@ import { useLocation } from './routing/useLocation.js'
 import RouteEffects from './routing/RouteEffects.jsx'
 import SearchPage from './pages/Search/SearchPage.jsx'
 import LoginPage from './pages/Login/LoginPage.jsx'
+import AssistantPage from './pages/Assistant/AssistantPage.jsx'
 
 function App() {
   const { pathname, search, hash } = useLocation()
@@ -21,6 +22,7 @@ function App() {
   let content = <NotFound />
   if (pathname === '/') content = <Home />
   else if (pathname === '/search') content = <SearchPage query={query} key={query} />
+  else if (pathname === '/assistant') content = <AssistantPage />
   else if (pathname === '/login' || pathname === '/account') content = <LoginPage />
   else if (page) content = <PlatformPage page={page} key={`${pathname}${hash}`} />
 
