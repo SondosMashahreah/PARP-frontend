@@ -1,6 +1,6 @@
 import { t } from './i18n.js'
 
-export function MapLegend({ language, metric, theme, metricLabel }) {
+export function MapLegend({ language, theme, metricLabel }) {
   const s = t(language)
   return (
     <div className="parp-map__legend" dir={language === 'ar' ? 'rtl' : 'ltr'}>

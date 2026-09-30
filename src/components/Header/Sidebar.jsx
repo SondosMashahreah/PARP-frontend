@@ -38,6 +38,7 @@ const NAV_GROUPS = {
       label: 'البيانات والأثر',
       items: [
         { to: '/observatory', label: 'المرصد الوطني' },
+        { to: '/map', label: 'خريطة المديريات والمدارس' },
         { to: '/dashboard', label: 'لوحة المؤشرات' },
         { to: '/institutions', label: 'المدارس والمديريات' },
         { to: '/excellence', label: 'قاعة التميز' },
@@ -82,6 +83,7 @@ const NAV_GROUPS = {
       label: 'Data & Impact',
       items: [
         { to: '/observatory', label: 'National Observatory' },
+        { to: '/map', label: 'Directorates & schools map' },
         { to: '/dashboard', label: 'Dashboard' },
         { to: '/institutions', label: 'Schools & Directorates' },
         { to: '/excellence', label: 'Hall of Excellence' },

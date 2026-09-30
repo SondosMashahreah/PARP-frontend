@@ -113,7 +113,15 @@ export const platformPagesEn = {
       { title: 'Ethical safeguards', items: ['Ethics alerts', 'Prevent uncritical reliance', 'Disclosure and human review'] },
     ],
   },
+  '/map': {
+    eyebrow: 'Education geography',
+    title: 'Directorates & schools map',
+    description: 'Search school and directorate records in Arabic and English, and explore governorate boundaries.',
+    primary: 'Explore the directory',
+    sections: [],
+  },
   '/observatory': {
+    kind: 'observatory-overview',
     eyebrow: 'National Observatory',
     title: 'Read the trends emerging from the field',
     description: 'An interface for monitoring trends, gaps, and educational issues through maps, national reports, and governorate and directorate reports.',
@@ -126,11 +134,11 @@ export const platformPagesEn = {
     ],
   },
 
-    '/observatory/map': {
+  '/observatory/map': {
     kind: 'observatory-map',
-    eyebrow: 'Geographic Map',
-    title: 'Palestine Education 3D Map',
-    description: 'An interactive geographic representation of directorates and schools, showing educational data by indicator: research, interactions, teachers, problems.',
+    eyebrow: 'Research geography',
+    title: 'National Observatory map',
+    description: 'Geographic boundaries are available. Problems, excellence, and gaps await a research data source.',
     primary: 'Explore the map',
     sections: [],
   },

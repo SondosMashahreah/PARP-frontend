@@ -1,5 +1,4 @@
 import maplibregl from 'maplibre-gl'
-import { getMapTheme } from './mapTheme.js'
 
 export const DIRECTORATE_SOURCE = 'parp-directorates-src'
 export const DIRECTORATE_FILL = 'parp-directorates-fill'

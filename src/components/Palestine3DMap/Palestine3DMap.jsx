@@ -77,50 +77,6 @@ export function Palestine3DMap({
     [schools, language],
   )
 
-  // Create the map exactly once.
-  useEffect(() => {
-    if (!containerRef.current || mapRef.current) return
-    const map = createMap(containerRef.current, theme)
-    mapRef.current = map
-
-    function onLoad() {
-      applyDirectorateLayers(map, directorateFeatures, theme)
-      applySchoolLayers(map, schoolFeatures, theme)
-      attachInteractions(map)
-      setReady(true)
-    }
-
-    map.on('load', onLoad)
-    return () => {
-      map.off('load', onLoad)
-      map.remove()
-      mapRef.current = null
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // Update directorate layer when metric / language / data change.
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map || !ready) return
-    applyDirectorateLayers(map, directorateFeatures, theme)
-  }, [directorateFeatures, ready, theme])
-
-  // Update school layer when data / language change.
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map || !ready) return
-    applySchoolLayers(map, schoolFeatures, theme)
-  }, [schoolFeatures, ready, theme])
-
-  // 2D / 3D toggle.
-  useEffect(() => {
-    const map = mapRef.current
-    if (!map || !ready) return
-    map.setLayoutProperty(DIRECTORATE_EXT, 'visibility', is3D ? 'visible' : 'none')
-    map.easeTo({ pitch: is3D ? DEFAULT_VIEW.pitch : 0, duration: 600 })
-  }, [is3D, ready])
-
   function attachInteractions(map) {
     map.on('mousemove', DIRECTORATE_FILL, (e) => {
       if (!e.features || !e.features.length) return
@@ -206,6 +162,50 @@ export function Palestine3DMap({
       })
     })
   }
+
+  // Create the map exactly once.
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) return
+    const map = createMap(containerRef.current, theme)
+    mapRef.current = map
+
+    function onLoad() {
+      applyDirectorateLayers(map, directorateFeatures, theme)
+      applySchoolLayers(map, schoolFeatures, theme)
+      attachInteractions(map)
+      setReady(true)
+    }
+
+    map.on('load', onLoad)
+    return () => {
+      map.off('load', onLoad)
+      map.remove()
+      mapRef.current = null
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Update directorate layer when metric / language / data change.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+    applyDirectorateLayers(map, directorateFeatures, theme)
+  }, [directorateFeatures, ready, theme])
+
+  // Update school layer when data / language change.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+    applySchoolLayers(map, schoolFeatures, theme)
+  }, [schoolFeatures, ready, theme])
+
+  // 2D / 3D toggle.
+  useEffect(() => {
+    const map = mapRef.current
+    if (!map || !ready) return
+    map.setLayoutProperty(DIRECTORATE_EXT, 'visibility', is3D ? 'visible' : 'none')
+    map.easeTo({ pitch: is3D ? DEFAULT_VIEW.pitch : 0, duration: 600 })
+  }, [is3D, ready])
 
   function handleReset() {
     const map = mapRef.current

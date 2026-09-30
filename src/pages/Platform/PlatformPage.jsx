@@ -36,9 +36,9 @@ export default function PlatformPage({ page }) {
           : <PlatformExperienceEn kind={page.kind} />
       )}
 
-      {!hasExperience && (
+      {(!hasExperience || page.kind === 'observatory-overview') && (
         <div className="platform-page__grid">
-          {page.sections.map((section, index) => (
+          {(page.kind === 'observatory-overview' ? page.sections.slice(1) : page.sections).map((section, index) => (
             <article className="platform-page__card" key={section.title}>
               <span className="platform-page__number" aria-hidden="true">
                 {String(index + 1).padStart(2, '0')}

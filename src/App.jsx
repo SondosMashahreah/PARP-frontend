@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import './App.css'
 import AppLayout from './layouts/AppLayout/AppLayout.jsx'
 import Home from './pages/Home/Home.jsx'
@@ -14,6 +14,8 @@ import LoginPage from './pages/Login/LoginPage.jsx'
 import ProfilePage from './pages/Profile/ProfilePage.jsx'
 import AssistantPage from './pages/Assistant/AssistantPage.jsx'
 import { useAuth } from './features/auth/useAuth.js'
+
+const EducationMapPage = lazy(() => import('./features/educationMap/presentation/EducationMapPage.jsx'))
 
 const PUBLIC_PATHS = new Set(['/', '/search', '/login', '/account'])
 
@@ -34,8 +36,9 @@ function App() {
   }, [hash, isAuthenticated, isProtectedPath, loading, pathname, search])
 
   let content = <NotFound />
-  if (loading && isProtectedPath) content = null
+  if ((loading || !isAuthenticated) && isProtectedPath) content = null
   else if (pathname === '/') content = <Home />
+  else if (pathname === '/map') content = <Suspense fallback={<p role="status">{isArabic ? 'جارٍ تحميل الخريطة…' : 'Loading map…'}</p>}><EducationMapPage /></Suspense>
   else if (pathname === '/search') content = <SearchPage query={query} key={query} />
   else if (pathname === '/assistant') content = <AssistantPage />
   else if (pathname === '/login' || pathname === '/account') content = <LoginPage />
