@@ -41,6 +41,7 @@ const journey = journeySteps.map((ar, index) => {
   return { id: `step:${ar.id}`, type: 'journey', to: `/#journey-step-${ar.id}`, title: { ar: ar.title, en: en.title }, description: { ar: ar.description, en: en.description }, text: `${textOf(ar)} ${textOf(en)}`, step: ar.id }
 })
 export const searchIndex = [
+  { id: 'practices', type: 'page', to: '/practices', title: { ar: 'أفضل الممارسات', en: 'Best Practices' }, description: { ar: 'نماذج توضيحية للتطبيق والتأمل في الأثر.', en: 'Illustrative templates for application and reflection.' }, text: 'أفضل الممارسات بنك المعرفة التدخلات التقويم المشاركة best practices knowledge bank interventions assessment participation' },
   ...pages, ...news, ...research, ...journey,
   { id: 'contact', type: 'page', to: '/#contact', title: { ar: 'تواصل معنا', en: 'Contact us' }, description: { ar: 'أرسل استفسارك أو اقتراحك لفريق المنصة.', en: 'Send a question or suggestion to the platform team.' }, text: 'رسالة بريد مساعدة تواصل اتصل contact message email support help' },
   { id: 'stats', type: 'page', to: '/#stats', title: { ar: 'أرقام من المنصة', en: 'Platform stats' }, description: { ar: 'المحتوى المتاح على المنصة.', en: 'Explore the content available on the platform.' }, text: 'إحصاءات احصائيات أرقام بيانات stats statistics data' },

@@ -15,6 +15,8 @@ import ProfilePage from './pages/Profile/ProfilePage.jsx'
 import AssistantPage from './pages/Assistant/AssistantPage.jsx'
 import { useAuth } from './features/auth/useAuth.js'
 
+const PracticesPage = lazy(() => import('./features/practices/PracticesPage.jsx'))
+
 const EducationMapPage = lazy(() => import('./features/educationMap/presentation/EducationMapPage.jsx'))
 
 const PUBLIC_PATHS = new Set(['/', '/search', '/login', '/account'])
@@ -38,6 +40,7 @@ function App() {
   let content = <NotFound />
   if ((loading || !isAuthenticated) && isProtectedPath) content = null
   else if (pathname === '/') content = <Home />
+  else if (pathname === '/practices') content = <Suspense fallback={<p role="status">{isArabic ? 'جارٍ التحميل…' : 'Loading…'}</p>}><PracticesPage /></Suspense>
   else if (pathname === '/map') content = <Suspense fallback={<p role="status">{isArabic ? 'جارٍ تحميل الخريطة…' : 'Loading map…'}</p>}><EducationMapPage /></Suspense>
   else if (pathname === '/search') content = <SearchPage query={query} key={query} />
   else if (pathname === '/assistant') content = <AssistantPage />

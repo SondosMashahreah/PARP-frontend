@@ -26,9 +26,13 @@ export default function Header() {
     return () => observer.disconnect()
   }, [])
 
-  const links = isArabic
+  const guestLinks = isArabic
     ? [['news', 'آخر الأخبار', 'الأخبار'], ['stats', 'المنصة بالأرقام', 'أرقامنا'], ['space-journey', 'رحلة الباحث', 'رحلتك'], ['contact', 'تواصل معنا', 'تواصل معنا']]
     : [['news', 'Latest news', 'News'], ['stats', 'Platform stats', 'Stats'], ['space-journey', 'Research journey', 'Journey'], ['contact', 'Contact us', 'Contact']]
+  const memberLinks = isArabic
+    ? [['/', 'الرئيسية', 'الرئيسية'], ['/excellence', 'قاعة التميز', 'التميز'], ['/map', 'الخريطة', 'الخريطة'], ['/#contact', 'تواصل معنا', 'تواصل معنا']]
+    : [['/', 'Home', 'Home'], ['/excellence', 'Hall of Excellence', 'Excellence'], ['/map', 'Map', 'Map'], ['/#contact', 'Contact us', 'Contact']]
+  const links = isAuthenticated ? memberLinks : guestLinks.map(([id, label, short]) => [`/#${id}`, label, short])
   const accountLabel = isAuthenticated
     ? (user?.full_name || (isArabic ? 'الملف الشخصي' : 'Profile'))
     : (isArabic ? 'تسجيل الدخول' : 'Log in')
@@ -61,7 +65,7 @@ export default function Header() {
         </div>
       </div>
       <nav className="site-header__nav" aria-label={isArabic ? 'أقسام الصفحة الرئيسية' : 'Homepage sections'}>
-        {links.map(([id, label, shortLabel]) => <RouteLink key={id} to={`/#${id}`} onClick={closePanel} aria-label={label}><span className="site-header__nav-full">{label}</span><span className="site-header__nav-short" aria-hidden="true">{shortLabel}</span></RouteLink>)}
+        {links.map(([id, label, shortLabel]) => <RouteLink key={id} to={id} onClick={closePanel} aria-label={label}><span className="site-header__nav-full">{label}</span><span className="site-header__nav-short" aria-hidden="true">{shortLabel}</span></RouteLink>)}
       </nav>
       {isAuthenticated && <Sidebar isOpen={activePanel === 'sidebar'} onClose={closePanel} />}
     </header>
