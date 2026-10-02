@@ -1,0 +1,4 @@
+@import '../../components/platform/PlatformPage.css';
+@import '../../components/platform/PlatformExperience.css';
+
+/* Styles specific to Guide belong here. Shared design stays in components/platform. */

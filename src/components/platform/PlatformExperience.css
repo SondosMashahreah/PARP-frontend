@@ -1,0 +1,435 @@
+.platform-experience {
+  margin-top: 34px;
+}
+
+.platform-experience__toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 12px;
+}
+
+.platform-experience input,
+.platform-experience select,
+.platform-experience textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: rgb(var(--neutral-rgb) / 3%);
+  color: var(--color-text);
+  font: inherit;
+  outline: none;
+}
+
+.platform-experience input,
+.platform-experience select {
+  min-height: 48px;
+  padding: 0 16px;
+}
+
+.platform-experience textarea {
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+.platform-experience input:focus,
+.platform-experience select:focus,
+.platform-experience textarea:focus {
+  border-color: var(--color-border-strong);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.platform-experience select option {
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+.platform-experience__result-count {
+  margin: 18px 0;
+  color: var(--color-text-muted);
+  font-size: 0.84rem;
+}
+
+.platform-experience__research-grid,
+.platform-experience__news-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.platform-experience__research-card,
+.platform-experience__news-card,
+.platform-experience__focus-card,
+.platform-experience__progress-card,
+.platform-experience__support-form {
+  border: 1px solid var(--color-border);
+  border-radius: 24px;
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+.platform-experience__research-card {
+  padding: 24px;
+}
+
+.platform-experience__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+}
+
+.platform-experience__meta span:first-child {
+  color: var(--color-text-muted);
+}
+
+.platform-experience__research-card h2,
+.platform-experience__news-card h2,
+.platform-experience__focus-card h2 {
+  margin: 12px 0 0;
+  color: var(--color-text);
+  font-size: 1.18rem;
+  line-height: 1.6;
+}
+
+.platform-experience__research-card p,
+.platform-experience__news-card p,
+.platform-experience__focus-card p {
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+.platform-experience__research-card button,
+.platform-experience__primary-action {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgb(var(--accent-rgb) / 22%);
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.platform-experience__modal {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgb(var(--background-rgb) / 74%);
+  backdrop-filter: blur(8px);
+}
+
+.platform-experience__modal article {
+  position: relative;
+  width: min(580px, 100%);
+  padding: 32px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 24px;
+  background: var(--color-background);
+  box-shadow: 0 30px 100px rgb(0 0 0 / 45%);
+}
+
+.platform-experience__modal article > span {
+  color: var(--color-text-muted);
+}
+
+.platform-experience__modal article h2 {
+  margin: 14px 0;
+  line-height: 1.55;
+}
+
+.platform-experience__modal article p {
+  color: var(--color-text-muted);
+  line-height: 1.9;
+}
+
+.platform-experience__modal-close {
+  position: absolute;
+  top: 14px;
+  inset-inline-end: 14px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.platform-experience--split {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.76fr) minmax(0, 1.24fr);
+  gap: 18px;
+}
+
+.platform-experience__steps {
+  display: grid;
+  gap: 10px;
+}
+
+.platform-experience__steps button {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: rgb(var(--neutral-rgb) / 2%);
+  color: var(--color-text-muted);
+  text-align: start;
+  font: inherit;
+  cursor: pointer;
+}
+
+.platform-experience__steps button span {
+  color: var(--color-text-subtle);
+  font-size: 0.76rem;
+}
+
+.platform-experience__steps button.is-active {
+  border-color: var(--color-border-strong);
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+}
+
+.platform-experience__focus-card {
+  min-height: 360px;
+  padding: clamp(28px, 5vw, 48px);
+}
+
+.platform-experience__focus-card small {
+  color: var(--color-text-muted);
+}
+
+.platform-experience__focus-card h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.platform-experience__focus-card p {
+  max-width: 48ch;
+  font-size: 1rem;
+}
+
+.platform-experience__status {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
+  font-size: 0.82rem;
+}
+
+.platform-experience__progress-card {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 24px;
+}
+
+.platform-experience__progress-card > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.platform-experience__progress-card strong {
+  color: var(--color-text);
+  font-size: 2.3rem;
+}
+
+.platform-experience__progress-card small,
+.platform-experience__progress-card span {
+  color: var(--color-text-muted);
+}
+
+.platform-experience__progress {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(var(--neutral-rgb) / 6%);
+}
+
+.platform-experience__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-text-subtle));
+  transition: width 220ms ease;
+}
+
+.platform-experience__checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.platform-experience__checklist label {
+  display: grid;
+  grid-template-columns: auto 36px 1fr;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 15px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.platform-experience__checklist label.is-done {
+  border-color: rgb(var(--brand-rgb) / 30%);
+  background: var(--color-primary-soft);
+  color: var(--color-text);
+}
+
+.platform-experience__checklist input {
+  width: 18px;
+  min-height: 0;
+  height: 18px;
+  padding: 0;
+}
+
+.platform-experience__checklist label > span {
+  color: var(--color-text-subtle);
+  font-size: 0.72rem;
+}
+
+.platform-experience__news-card {
+  overflow: hidden;
+}
+
+.platform-experience__news-media {
+  height: 210px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.platform-experience__news-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.platform-experience__news-media > span {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--color-text-muted);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.platform-experience__news-card > div:last-child {
+  padding: 22px;
+}
+
+.platform-experience__news-card a {
+  color: var(--color-text-muted);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.platform-experience--support {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr);
+  gap: 18px;
+}
+
+.platform-experience__section-title {
+  margin-top: 0;
+}
+
+.platform-experience__faq {
+  display: grid;
+  gap: 10px;
+}
+
+.platform-experience__faq > div {
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: rgb(var(--neutral-rgb) / 2%);
+}
+
+.platform-experience__faq button {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  min-height: 58px;
+  padding: 0 18px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+
+.platform-experience__faq p {
+  margin: 0;
+  padding: 0 18px 18px;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+.platform-experience__support-form {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+}
+
+.platform-experience__support-form > span {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.platform-experience__support-form h2 {
+  margin: 0 0 6px;
+}
+
+
+.platform-experience__prototype-note {
+  margin: 0;
+  color: var(--color-text-subtle);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 800px) {
+  .platform-experience__research-grid,
+  .platform-experience__news-grid,
+  .platform-experience--split,
+  .platform-experience--support {
+    grid-template-columns: 1fr;
+  }
+
+  .platform-experience__progress-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .platform-experience__toolbar,
+  .platform-experience__checklist {
+    grid-template-columns: 1fr;
+  }
+
+  .platform-experience__toolbar select {
+    width: 100%;
+  }
+}
+
+.platform-experience input:focus-visible,
+.platform-experience select:focus-visible,
+.platform-experience textarea:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
