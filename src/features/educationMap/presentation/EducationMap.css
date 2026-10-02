@@ -566,3 +566,20 @@
 @media (max-width: 720px) {
   .education-map__context-note { flex-direction: column; }
 }
+.education-map__coordinate-details {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.education-map__coordinate-details dd[dir='ltr'] {
+  text-align: start;
+  font-variant-numeric: tabular-nums;
+}
+
+.education-map__coordinate-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.25rem;
+  margin-block-start: 0.75rem;
+  overflow-wrap: anywhere;
+}

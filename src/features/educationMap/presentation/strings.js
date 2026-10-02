@@ -7,7 +7,7 @@ export const mapStrings = {
     schools: 'المدارس',
     directorates: 'المديريات والجهات',
     governorates: 'المحافظات',
-    located: 'مواقع مدارس موثّقة',
+    located: 'مدارس ذات إحداثيات',
     records: 'سجل مدرسي في الملف',
     search: 'ابحث بالعربية أو الإنجليزية',
     searchHint: 'اسم المدرسة أو المديرية أو الرقم الوطني…',
@@ -36,7 +36,7 @@ export const mapStrings = {
     results: 'نتيجة',
     page: 'الصفحة',
     noLocation:
-      'لا تتوفر إحداثيات لهذه المدرسة في المصدر. موقعها الدقيق غير معروض على الخريطة.',
+      'لم تتوفر مطابقة واضحة لموقع هذه المدرسة بعد. يبقى سجلها في الدليل دون علامة تخمينية على الخريطة.',
     noDirectorate: 'لم يتوفر ربط موثّق لهذه المدرسة بمديرية تعليمية بعد.',
     unmappedRecords: 'سجلات غير مرتبطة بمحافظة',
     noBoundaryUnassigned:
@@ -52,9 +52,16 @@ export const mapStrings = {
     official: 'المصدر الرسمي',
     ministry: 'وزارة التربية والتعليم العالي',
     locationNote:
-      'الملف المرفق لا يحتوي مواقع المدارس. جميع سجلاته متاحة في الدليل؛ ستظهر العلامات بعد إضافة إحداثيات موثّقة.',
+      'قرّب الخريطة أو اختر مدرسة لعرض موقعها المتاح. المواقع مرجعية حسب مصادرها وتواريخها؛ لا تؤكد حالة المبنى أو استمرار عمل المدرسة حاليًا.',
     sourceNote:
-      'الحدود: محافظات، وليست حدود مديريات تعليمية. تاريخ الحدود 2023-10-19؛ تاريخ بيانات المدارس غير مرفق.',
+      'الحدود: محافظات، بتاريخ 2023-10-19. ملف أسماء المدارس مطابق لملف HDX المؤرّخ 2022-03-07. مصادر المواقع وتواريخها تظهر في تفاصيل المدرسة.',
+    coordinates: 'الإحداثيات — خط العرض، خط الطول',
+    coordinateSource: 'مصدر الموقع',
+    coordinateSources: 'مصادر الإحداثيات',
+    wbLocationSource: 'وزارة التربية وUNICEF عبر HDX · 2015',
+    osmLocationSource: '© مساهمو OpenStreetMap عبر HOT · 2026-09-06',
+    osmDownload: 'تنزيل المواقع المشتقة من OpenStreetMap',
+    locationCoverage: 'مواقع متاحة من سجلات الدليل',
     directoryNote:
       'قائمة المديريات تجمع الأسماء المنشورة في دليلي الوزارة وeSchool؛ ليست إحصاءً وطنيًا مكتملًا أو آنيًا.',
     mapLabel:
@@ -70,7 +77,7 @@ export const mapStrings = {
     low: 'أقل',
     high: 'أكثر',
     hint: 'اختر محافظة على الخريطة لاستعراض مدارسها',
-    schoolHint: 'قرّب الخريطة لإظهار المواقع الموثّقة',
+    schoolHint: 'قرّب الخريطة لإظهار مواقع المدارس المتاحة',
     pointError: 'تعذّر تحميل مواقع المدارس لهذا النطاق.',
     truncated: 'بعض المواقع خارج حد العرض. قرّب الخريطة لنطاق أصغر.',
     loaded: 'بيانات مستوردة',
@@ -93,7 +100,7 @@ export const mapStrings = {
     schools: 'Schools',
     directorates: 'Directorates & agencies',
     governorates: 'Governorates',
-    located: 'Verified school locations',
+    located: 'Schools with coordinates',
     records: 'School records in the file',
     search: 'Search in Arabic or English',
     searchHint: 'School, directorate, or national code…',
@@ -122,7 +129,7 @@ export const mapStrings = {
     results: 'results',
     page: 'Page',
     noLocation:
-      'This source has no coordinates for this school. Its precise location is not plotted.',
+      'No unambiguous location match is available for this school yet. Its record remains searchable without a guessed map marker.',
     noDirectorate:
       'A verified link between this school and an educational directorate is not available yet.',
     unmappedRecords: 'Records without a governorate',
@@ -140,9 +147,16 @@ export const mapStrings = {
     official: 'Official source',
     ministry: 'Ministry of Education and Higher Education',
     locationNote:
-      'The uploaded file has no school coordinates. All its records are available in the directory; markers appear after verified coordinates are added.',
+      'Zoom in or choose a school to show its available location. These are reference locations from dated sources, not confirmation of current building condition or school operation.',
     sourceNote:
-      'Boundaries represent governorates, not educational directorates. Boundary date: 2023-10-19. School data date was not supplied.',
+      'Governorate boundaries: 2023-10-19. The school-name file matches the HDX dataset dated 2022-03-07. Location sources and dates appear in school details.',
+    coordinates: 'Coordinates — latitude, longitude',
+    coordinateSource: 'Location source',
+    coordinateSources: 'Coordinate sources',
+    wbLocationSource: 'MoE and UNICEF via HDX · 2015',
+    osmLocationSource: '© OpenStreetMap contributors via HOT · 2026-09-06',
+    osmDownload: 'Download the OpenStreetMap-derived locations',
+    locationCoverage: 'Available locations out of directory records',
     directoryNote:
       'Directorate names combine the published ministry and eSchool directories; this is not a complete or live national census.',
     mapLabel:
@@ -158,7 +172,7 @@ export const mapStrings = {
     low: 'Fewer',
     high: 'More',
     hint: 'Select a governorate to browse its schools',
-    schoolHint: 'Zoom in to show verified school locations',
+    schoolHint: 'Zoom in to show available school locations',
     pointError: 'School locations could not be loaded for this view.',
     truncated:
       'Some locations exceed the display limit. Zoom into a smaller area.',

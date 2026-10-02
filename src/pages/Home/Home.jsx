@@ -10,6 +10,7 @@ import ContactForm from '../../features/contact/presentation/ContactForm.jsx'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import Icon from '../../components/ui/Icon.jsx'
+import ValuesNetwork from '../../features/values/presentation/ValuesNetwork.jsx'
 import './Home.css'
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
         </div>
       </section>
       <div id="space-journey">{isArabic ? <SpaceJourney /> : <SpaceJourneyEn />}</div>
+      <ValuesNetwork />
       <section className="home-contact" id="contact" dir={dir} aria-labelledby="contact-title">
         <div className="home-contact__intro">
           <span className="home-section-eyebrow">{isArabic ? 'لنبقَ على تواصل' : 'Let’s stay connected'}</span>

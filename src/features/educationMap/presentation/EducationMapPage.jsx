@@ -569,7 +569,16 @@ function Directory({
                       <p>{copy.noDirectorate}</p>
                     )}
                     {hasCoordinates(displayedSchool) && (
-                      <p dir="auto">{displayedSchool.coordinate_source}</p>
+                      <div className="education-map__coordinate-details">
+                        <dl>
+                          <dt>{copy.coordinates}</dt>
+                          <dd dir="ltr">
+                            {displayedSchool.latitude.toFixed(6)}, {displayedSchool.longitude.toFixed(6)}
+                          </dd>
+                        </dl>
+                        <strong>{copy.coordinateSource}</strong>
+                        <p dir="auto">{displayedSchool.coordinate_source}</p>
+                      </div>
                     )}
                   </>
                 )
@@ -614,6 +623,9 @@ function Directory({
           <div className="education-map__notice">
             <span aria-hidden="true">ⓘ</span>
             <p>
+              <strong>
+                {copy.locationCoverage}: {format(catalog.located_schools)} / {format(catalog.total_schools)}.
+              </strong>{' '}
               {copy.locationNote}
               {catalog.unassigned_governorate_schools > 0 && (
                 <>
@@ -632,6 +644,18 @@ function Directory({
         </a>
         <p>{copy.sourceNote}</p>
         <p>{copy.directoryNote}</p>
+        <div className="education-map__coordinate-sources" aria-label={copy.coordinateSources}>
+          <a href="https://data.humdata.org/dataset/state-of-palestine-west-bank-schools" target="_blank" rel="noreferrer">
+            {copy.wbLocationSource} ↗
+          </a>
+          <a href="https://data.humdata.org/dataset/hotosm_pse_education_facilities" target="_blank" rel="noreferrer">
+            {copy.osmLocationSource} ↗
+          </a>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap / ODbL 1.0 ↗</a>
+          <a href={`${import.meta.env.BASE_URL}data/school-locations-osm.geojson`} download>
+            {copy.osmDownload} ↓
+          </a>
+        </div>
       </footer>
     </>
   )
