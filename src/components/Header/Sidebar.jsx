@@ -4,6 +4,8 @@ import { RouteLink } from '../../routing/clientRouter.jsx'
 import { usePathname } from '../../routing/useLocation.js'
 import Icon from '../ui/Icon.jsx'
 import IconButton from '../ui/IconButton.jsx'
+import { useAuth } from '../../features/auth/useAuth.js'
+import { canAccessPath } from '../../features/auth/roles.js'
 import './Sidebar.css'
 
 const NAV_GROUPS = {
@@ -12,6 +14,7 @@ const NAV_GROUPS = {
       label: 'المنصة',
       items: [
         { to: '/', label: 'الرئيسية' },
+        { to: '/workspace', label: 'مساحة العمل' },
         { to: '/about', label: 'عن المنصة' },
       ],
     },
@@ -31,7 +34,6 @@ const NAV_GROUPS = {
       items: [
         { to: '/conference', label: 'المؤتمر الوطني' },
         { to: '/training', label: 'التدريب' },
-        { to: '/community', label: 'مجتمع الباحثين' },
         { to: '/news', label: 'الأخبار والفعاليات' },
       ],
     },
@@ -58,6 +60,7 @@ const NAV_GROUPS = {
       label: 'Platform',
       items: [
         { to: '/', label: 'Home' },
+        { to: '/workspace', label: 'Workspace' },
         { to: '/about', label: 'About PARP' },
       ],
     },
@@ -77,7 +80,6 @@ const NAV_GROUPS = {
       items: [
         { to: '/conference', label: 'National Conference' },
         { to: '/training', label: 'Training' },
-        { to: '/community', label: 'Research Community' },
         { to: '/news', label: 'News & Events' },
       ],
     },
@@ -105,7 +107,14 @@ export default function Sidebar({ isOpen, onClose }) {
   const dialogRef = useRef(null)
   const pathname = usePathname()
   const { language, isArabic, dir } = useLanguage()
-  const groups = NAV_GROUPS[language]
+  const { user, isAuthenticated } = useAuth()
+  const groups = NAV_GROUPS[language].map((group) => ({
+    ...group,
+    items: group.items.filter((item) => {
+      if (item.to === '/login') return !isAuthenticated
+      return !isAuthenticated || canAccessPath(user?.role, item.to)
+    }),
+  })).filter((group) => group.items.length)
 
   useEffect(() => {
     const dialog = dialogRef.current

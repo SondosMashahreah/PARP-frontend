@@ -13,20 +13,22 @@ import ProfilePage from './pages/Profile/ProfilePage.jsx'
 import AssistantPage from './pages/Assistant/AssistantPage.jsx'
 import { pageRoutes } from './routing/pageRoutes.jsx'
 import { useAuth } from './features/auth/useAuth.js'
+import { canAccessPath } from './features/auth/roles.js'
 
 const PracticesPage = lazy(() => import('./pages/Practices/PracticesPage.jsx'))
 
 const EducationMapPage = lazy(() => import('./pages/Map/MapPage.jsx'))
 
-const PUBLIC_PATHS = new Set(['/', '/search', '/login', '/account'])
+const PUBLIC_PATHS = new Set(['/', '/search', '/login', '/account', '/news'])
 
 function App() {
   const { pathname, search, hash } = useLocation()
   const query = new URLSearchParams(search).get('q')?.slice(0, 160) || ''
   const { isArabic } = useLanguage()
-  const { isAuthenticated, loading } = useAuth()
+  const { user, isAuthenticated, loading } = useAuth()
   const Page = pageRoutes[pathname]
   const isProtectedPath = !PUBLIC_PATHS.has(pathname)
+  const isRoleAllowed = !isProtectedPath || !isAuthenticated || canAccessPath(user?.role, pathname)
 
   useEffect(() => {
     if (loading || isAuthenticated || !isProtectedPath) return
@@ -35,8 +37,14 @@ function App() {
     window.dispatchEvent(new PopStateEvent('popstate'))
   }, [hash, isAuthenticated, isProtectedPath, loading, pathname, search])
 
+  useEffect(() => {
+    if (loading || !isAuthenticated || !isProtectedPath || isRoleAllowed) return
+    window.history.replaceState(null, '', '/workspace')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+  }, [isAuthenticated, isProtectedPath, isRoleAllowed, loading, pathname])
+
   let content = <NotFound />
-  if ((loading || !isAuthenticated) && isProtectedPath) content = null
+  if ((loading || !isAuthenticated || !isRoleAllowed) && isProtectedPath) content = null
   else if (pathname === '/') content = <Home />
   else if (pathname === '/practices') content = <Suspense fallback={<p role="status">{isArabic ? 'جارٍ التحميل…' : 'Loading…'}</p>}><PracticesPage /></Suspense>
   else if (pathname === '/map') content = <Suspense fallback={<p role="status">{isArabic ? 'جارٍ تحميل الخريطة…' : 'Loading map…'}</p>}><EducationMapPage /></Suspense>

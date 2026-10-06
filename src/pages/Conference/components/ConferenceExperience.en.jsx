@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { RouteLink } from '../../../routing/clientRouter.jsx'
 import { CONFERENCE_STEPS } from '../../../features/platform/data/platformContent.en.js'
 
 export default function ConferenceExperience() {
@@ -7,14 +8,8 @@ export default function ConferenceExperience() {
     <div className="platform-experience platform-experience--split">
       <div className="platform-experience__steps">
         {CONFERENCE_STEPS.map((step, index) => (
-          <button
-            type="button"
-            key={step.title}
-            className={index === active ? 'is-active' : ''}
-            onClick={() => setActive(index)}
-          >
-            <span>{String(index + 1).padStart(2, '0')}</span>
-            {step.title}
+          <button type="button" key={step.title} className={index === active ? 'is-active' : ''} onClick={() => setActive(index)}>
+            <span>{String(index + 1).padStart(2, '0')}</span>{step.title}
           </button>
         ))}
       </div>
@@ -22,7 +17,8 @@ export default function ConferenceExperience() {
         <small>Stage {String(active + 1).padStart(2, '0')}</small>
         <h2>{CONFERENCE_STEPS[active].title}</h2>
         <p>{CONFERENCE_STEPS[active].text}</p>
-        <div className="platform-experience__status">Prototype interface — account and request integration will be connected later.</div>
+        <div className="platform-experience__status">The live submission, review, and decision workflow is connected to the role workspace and account permissions.</div>
+        <RouteLink className="platform-page__back" to="/workspace">Open workspace →</RouteLink>
       </article>
     </div>
   )

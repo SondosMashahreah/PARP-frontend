@@ -19,14 +19,19 @@ export function AuthProvider({ children }) {
     user,
     loading,
     isAuthenticated: Boolean(user),
-    async login(email, password) {
-      const payload = await authApi.login(email, password)
+    async login(email, password, role) {
+      const payload = await authApi.login(email, password, role)
       saveTokens(payload)
       setUser(payload.user)
       return payload.user
     },
     async register(body) {
-      return authApi.register(body)
+      const payload = await authApi.register(body)
+      if (payload?.access_token && payload?.user) {
+        saveTokens(payload)
+        setUser(payload.user)
+      }
+      return payload
     },
     async verifyOtp(email, otp) {
       const payload = await authApi.verifyOtp(email, otp)

@@ -1,8 +1,11 @@
 import { useLanguage } from '../../i18n/useLanguage.js'
+import { usePathname } from '../../routing/useLocation.js'
+import LiveDataPanel from '../../features/workflow/LiveDataPanel.jsx'
 import './PlatformPage.css'
 
 export default function PlatformPage({ page, children }) {
   const { dir } = useLanguage()
+  const pathname = usePathname()
   const hasExperience = Boolean(children)
 
   return (
@@ -29,6 +32,7 @@ export default function PlatformPage({ page, children }) {
       </div>
 
       {children}
+      <LiveDataPanel pathname={pathname} />
 
       {(!hasExperience || page.kind === 'observatory-overview') && (
         <div className="platform-page__grid">

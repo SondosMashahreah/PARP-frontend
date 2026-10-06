@@ -30,7 +30,10 @@
 }
 .site-header__language svg { width: 17px; height: 17px; }
 .site-header__login { background: var(--gradient-button); border-color: var(--color-border-strong); color: var(--color-text); }
-.site-header__login svg { width: 18px; height: 18px; }
+.site-header__login svg { width: 18px; height: 18px; flex: 0 0 auto; }
+.site-header__account-text { display: grid; gap: 1px; line-height: 1.15; text-align: start; }
+.site-header__account-name { max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+.site-header__account-role { color: var(--color-text-muted); font-size: .68rem; font-weight: 650; }
 .site-header__language:hover, .site-header__login:hover { border-color: var(--color-accent); background: var(--color-primary-soft); }
 .site-header__menu { border-color: var(--color-border-strong); background: var(--surface-glass); }
 .site-header__nav {
@@ -56,7 +59,7 @@
   .site-header__inner { width: calc(100% - 32px); gap: 10px; padding-block: 10px; }
   .site-header__actions { gap: 6px; }
   .site-header__language, .site-header__login { width: 40px; min-height: 42px; padding: 0; }
-  .site-header__language svg, .site-header__login span { display: none; }
+  .site-header__language svg, .site-header__login > span { display: none; }
   .site-header__actions .icon-button { width: 40px; height: 42px; }
   .site-header__nav { gap: 22px; justify-content: safe center; }
   .site-header__nav a { font-size: .75rem; }

@@ -3,17 +3,17 @@ const ACCESS_KEY = 'parp-access-token'
 const REFRESH_KEY = 'parp-refresh-token'
 
 export function getAccessToken() {
-  return window.localStorage.getItem(ACCESS_KEY)
+  return window.sessionStorage.getItem(ACCESS_KEY)
 }
 
 export function clearTokens() {
-  window.localStorage.removeItem(ACCESS_KEY)
-  window.localStorage.removeItem(REFRESH_KEY)
+  window.sessionStorage.removeItem(ACCESS_KEY)
+  window.sessionStorage.removeItem(REFRESH_KEY)
 }
 
 export function saveTokens(payload) {
-  window.localStorage.setItem(ACCESS_KEY, payload.access_token)
-  window.localStorage.setItem(REFRESH_KEY, payload.refresh_token)
+  window.sessionStorage.setItem(ACCESS_KEY, payload.access_token)
+  window.sessionStorage.setItem(REFRESH_KEY, payload.refresh_token)
 }
 
 async function parseResponse(response) {
@@ -28,7 +28,7 @@ async function parseResponse(response) {
 }
 
 async function refreshAccessToken() {
-  const refreshToken = window.localStorage.getItem(REFRESH_KEY)
+  const refreshToken = window.sessionStorage.getItem(REFRESH_KEY)
   if (!refreshToken) return null
   const response = await fetch(`${API_URL}/auth/refresh`, {
     method: 'POST',
@@ -53,7 +53,7 @@ export async function api(path, options = {}, retry = true) {
   }
 
   let response = await fetch(`${API_URL}${path}`, { ...options, headers })
-  if (response.status === 401 && retry && window.localStorage.getItem(REFRESH_KEY)) {
+  if (response.status === 401 && retry && window.sessionStorage.getItem(REFRESH_KEY)) {
     const nextToken = await refreshAccessToken()
     if (nextToken) {
       headers.set('Authorization', `Bearer ${nextToken}`)
@@ -64,7 +64,7 @@ export async function api(path, options = {}, retry = true) {
 }
 
 export const authApi = {
-  login: (email, password) => api('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) }, false),
+  login: (email, password, role) => api('/auth/login', { method: 'POST', body: JSON.stringify({ email, password, role }) }, false),
   register: (body) => api('/auth/register', { method: 'POST', body: JSON.stringify(body) }, false),
   verifyOtp: (email, otp) => api('/auth/verify-otp', { method: 'POST', body: JSON.stringify({ email, otp }) }, false),
   resendOtp: (email) => api('/auth/resend-otp', { method: 'POST', body: JSON.stringify({ email }) }, false),

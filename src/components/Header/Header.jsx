@@ -8,6 +8,7 @@ import IconButton from '../ui/IconButton.jsx'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { useAuth } from '../../features/auth/useAuth.js'
+import { roleLabel } from '../../features/auth/roles.js'
 import './Header.css'
 
 export default function Header() {
@@ -26,16 +27,28 @@ export default function Header() {
     return () => observer.disconnect()
   }, [])
 
+  useEffect(() => {
+    const openSidebar = () => {
+      if (isAuthenticated) setActivePanel('sidebar')
+    }
+    window.addEventListener('parp:open-sidebar', openSidebar)
+    return () => window.removeEventListener('parp:open-sidebar', openSidebar)
+  }, [isAuthenticated])
+
   const guestLinks = isArabic
     ? [['news', 'آخر الأخبار', 'الأخبار'], ['stats', 'المنصة بالأرقام', 'أرقامنا'], ['space-journey', 'رحلة الباحث', 'رحلتك'], ['contact', 'تواصل معنا', 'تواصل معنا']]
     : [['news', 'Latest news', 'News'], ['stats', 'Platform stats', 'Stats'], ['space-journey', 'Research journey', 'Journey'], ['contact', 'Contact us', 'Contact']]
   const memberLinks = isArabic
-    ? [['/', 'الرئيسية', 'الرئيسية'], ['/excellence', 'قاعة التميز', 'التميز'], ['/map', 'الخريطة', 'الخريطة'], ['/#contact', 'تواصل معنا', 'تواصل معنا']]
-    : [['/', 'Home', 'Home'], ['/excellence', 'Hall of Excellence', 'Excellence'], ['/map', 'Map', 'Map'], ['/#contact', 'Contact us', 'Contact']]
-  const links = isAuthenticated ? memberLinks : guestLinks.map(([id, label, short]) => [`/#${id}`, label, short])
-  const accountLabel = isAuthenticated
+    ? [['/', 'الرئيسية', 'الرئيسية'], ['/workspace', 'مساحة العمل', 'العمل'], ['/excellence', 'قاعة التميز', 'التميز'], ['/map', 'الخريطة', 'الخريطة'], ['/#contact', 'تواصل معنا', 'تواصل معنا']]
+    : [['/', 'Home', 'Home'], ['/workspace', 'Workspace', 'Workspace'], ['/excellence', 'Hall of Excellence', 'Excellence'], ['/map', 'Map', 'Map'], ['/#contact', 'Contact us', 'Contact']]
+  const links = isAuthenticated
+    ? memberLinks
+    : guestLinks.map(([id, label, short]) => [`/#${id}`, label, short])
+  const accountName = isAuthenticated
     ? (user?.full_name || (isArabic ? 'الملف الشخصي' : 'Profile'))
     : (isArabic ? 'تسجيل الدخول' : 'Log in')
+  const accountRole = isAuthenticated ? roleLabel(user?.role, isArabic) : ''
+  const accountLabel = accountRole ? `${accountName} — ${accountRole}` : accountName
 
   return (
     <header className="site-header" ref={headerRef} dir={dir}>
@@ -50,7 +63,13 @@ export default function Header() {
           </button>
           <RouteLink className="site-header__login" to={isAuthenticated ? '/profile' : '/login'}
             aria-label={accountLabel} title={accountLabel} onClick={closePanel}>
-            <Icon name="user" /><span>{accountLabel}</span>
+            <Icon name="user" />
+            {isAuthenticated ? (
+              <span className="site-header__account-text">
+                <span className="site-header__account-name">{accountName}</span>
+                <small className="site-header__account-role">{accountRole}</small>
+              </span>
+            ) : <span>{accountName}</span>}
           </RouteLink>
           {isAuthenticated && (
             <>

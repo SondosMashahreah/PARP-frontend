@@ -10,7 +10,6 @@ import { content as Map } from '../Map/MapPage.content.js'
 import { content as Observatory } from '../Observatory/ObservatoryPage.content.js'
 import { content as ObservatoryMap } from '../ObservatoryMap/ObservatoryMapPage.content.js'
 import { content as Dashboard } from '../Dashboard/DashboardPage.content.js'
-import { content as Community } from '../Community/CommunityPage.content.js'
 import { content as Institutions } from '../Institutions/InstitutionsPage.content.js'
 import { content as Excellence } from '../Excellence/ExcellencePage.content.js'
 import { content as News } from '../News/NewsPage.content.js'
@@ -30,7 +29,6 @@ export const platformPages = {
   '/observatory': Observatory.ar,
   '/observatory/map': ObservatoryMap.ar,
   '/dashboard': Dashboard.ar,
-  '/community': Community.ar,
   '/institutions': Institutions.ar,
   '/excellence': Excellence.ar,
   '/news': News.ar,

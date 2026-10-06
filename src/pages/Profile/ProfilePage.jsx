@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { useAuth } from '../../features/auth/useAuth.js'
 import { api } from '../../features/auth/authApi.js'
+import { roleLabel } from '../../features/auth/roles.js'
 import './ProfilePage.css'
 
 export default function ProfilePage() {
@@ -11,16 +12,22 @@ export default function ProfilePage() {
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [publications, setPublications] = useState([])
 
   const copy = isArabic ? {
     title: 'الملف الشخصي', name: 'الاسم الكامل', email: 'البريد الإلكتروني',
     save: 'حفظ التعديلات', avatar: 'تغيير الصورة الشخصية', logout: 'تسجيل الخروج',
-    saved: 'تم حفظ التعديلات.', uploaded: 'تم تحديث الصورة.',
+    saved: 'تم حفظ التعديلات.', uploaded: 'تم تحديث الصورة.', role: 'الدور', publications: 'الأبحاث والمنشورات', noPublications: 'لا توجد منشورات بعد.',
   } : {
     title: 'Profile', name: 'Full name', email: 'Email address',
     save: 'Save changes', avatar: 'Change profile photo', logout: 'Log out',
-    saved: 'Profile updated.', uploaded: 'Profile photo updated.',
+    saved: 'Profile updated.', uploaded: 'Profile photo updated.', role: 'Role', publications: 'Research & publications', noPublications: 'No publications yet.',
   }
+
+  useEffect(() => {
+    if (!user) return
+    api('/api/workflow/profile/research').then(setPublications).catch(() => setPublications([]))
+  }, [user])
 
   if (!user) return null
 
@@ -63,10 +70,21 @@ export default function ProfilePage() {
           <form onSubmit={updateProfile}>
             <label>{copy.name}<input name="full_name" defaultValue={user.full_name} minLength={2} maxLength={150} required /></label>
             <label>{copy.email}<input value={user.email} readOnly dir="ltr" /></label>
+            <label>{copy.role}<input value={roleLabel(user.role, isArabic)} readOnly /></label>
             {error && <p className="profile-card__error" role="alert">{error}</p>}
             {message && <p className="profile-card__message" role="status">{message}</p>}
             <button className="profile-card__primary" type="submit" disabled={busy}>{copy.save}</button>
           </form>
+          <section className="profile-card__publications">
+            <h2>{copy.publications}</h2>
+            {publications.length ? publications.map((item) => (
+              <article key={item.id}>
+                <strong>{item.title}</strong>
+                <span>{item.research_field} · {item.publication_type}</span>
+                {item.file?.url && <a href={item.file.url} target="_blank" rel="noreferrer">{isArabic ? 'فتح المنشور' : 'Open publication'}</a>}
+              </article>
+            )) : <p>{copy.noPublications}</p>}
+          </section>
           <button className="profile-card__logout" type="button" onClick={logout}>{copy.logout}</button>
         </div>
       </div>

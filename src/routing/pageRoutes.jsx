@@ -8,11 +8,11 @@ import Page6 from '../pages/Library/LibraryPage.jsx'
 import Page7 from '../pages/Observatory/ObservatoryPage.jsx'
 import Page8 from '../pages/ObservatoryMap/ObservatoryMapPage.jsx'
 import Page9 from '../pages/Dashboard/DashboardPage.jsx'
-import Page10 from '../pages/Community/CommunityPage.jsx'
 import Page11 from '../pages/Institutions/InstitutionsPage.jsx'
 import Page12 from '../pages/Excellence/ExcellencePage.jsx'
 import Page13 from '../pages/News/NewsPage.jsx'
 import Page14 from '../pages/Support/SupportPage.jsx'
+import WorkspacePage from '../pages/Workspace/WorkspacePage.jsx'
 
 export const pageRoutes = {
   '/about': Page0,
@@ -25,9 +25,9 @@ export const pageRoutes = {
   '/observatory': Page7,
   '/observatory/map': Page8,
   '/dashboard': Page9,
-  '/community': Page10,
   '/institutions': Page11,
   '/excellence': Page12,
   '/news': Page13,
   '/support': Page14,
+  '/workspace': WorkspacePage,
 }

@@ -1,7 +1,6 @@
 import { RouteLink } from '../../../../routing/clientRouter.jsx'
-import { getPlatformStats } from '../../../platform/data/platformStats.js'
+import { useAuth } from '../../../auth/useAuth.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import Icon from '../../../../components/ui/Icon.jsx'
 import './CompactNewsSlider.css'
 
 function formatEnglishDate(value) {
@@ -28,9 +27,9 @@ export default function CompactNewsSliderEn({
   items = [],
   autoplay = true,
   autoplayDelay = 4200,
-  exploreHref = '/repository',
-  journeyHref = '/#space-journey',
+  journeyHref = '/repository',
 }) {
+  const { isAuthenticated } = useAuth()
   const slides = useMemo(() => (Array.isArray(items) ? items.filter(Boolean) : []), [items])
   const [failedImages, setFailedImages] = useState(() => new Set())
   const [requestedIndex, setActiveIndex] = useState(0)
@@ -70,8 +69,6 @@ export default function CompactNewsSliderEn({
     }
   })
 
-  const stats = getPlatformStats('en')
-
   const handlePointerDown = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return
     pointerStartRef.current = event.clientX
@@ -96,13 +93,16 @@ export default function CompactNewsSliderEn({
     event.currentTarget.releasePointerCapture?.(event.pointerId)
   }
 
+  const openSidebar = () => {
+    window.dispatchEvent(new Event('parp:open-sidebar'))
+  }
+
   return (
     <section className="parp-news" dir="ltr" aria-labelledby="news-title-en">
       <div className="parp-news__shell">
         <div className="parp-news__content">
           <div className="parp-news__badges" aria-hidden="true">
             <span className="parp-news__preview" lang="en">PARP NEWS</span>
-            <span className="parp-news__total">{slides.length} stories</span>
           </div>
 
           <p className="parp-news__eyebrow">From the platform</p>
@@ -115,28 +115,18 @@ export default function CompactNewsSliderEn({
             experience that brings inspiration, knowledge, and the research community together.
           </p>
 
-          <div className="parp-news__actions">
-            <RouteLink className="parp-news__button parp-news__button--primary" to={exploreHref}>
-              <span>Explore the platform</span>
-              <span aria-hidden="true">↗</span>
-            </RouteLink>
-            <RouteLink className="parp-news__button parp-news__button--ghost" to={journeyHref}>
-              <span>Start your research journey</span>
-              <span aria-hidden="true">→</span>
-            </RouteLink>
-          </div>
-
-          <div className="parp-news__stats" aria-label="Initial platform statistics">
-            {stats.map((stat) => (
-              <div className="parp-news__stat" key={stat.label}>
-                <div className="parp-news__stat-copy">
-                  <strong>{stat.value}</strong>
-                  <span>{stat.label}</span>
-                </div>
-                <Icon name={stat.icon} className="parp-news__stat-icon" />
-              </div>
-            ))}
-          </div>
+          {isAuthenticated && (
+            <div className="parp-news__actions">
+              <button type="button" className="parp-news__button parp-news__button--primary" onClick={openSidebar}>
+                <span>Explore the platform</span>
+                <span aria-hidden="true">↗</span>
+              </button>
+              <RouteLink className="parp-news__button parp-news__button--ghost" to={journeyHref}>
+                <span>Start your research journey</span>
+                <span aria-hidden="true">→</span>
+              </RouteLink>
+            </div>
+          )}
         </div>
 
         <div
@@ -187,17 +177,10 @@ export default function CompactNewsSliderEn({
                     </div>
                     <h3 dir="auto">{item.title}</h3>
                     {role === 'active' && (
-                      item.href ? (
-                        <a className="parp-news__story-link" href={item.href}>
-                          <span>View details</span>
-                          <span aria-hidden="true">→</span>
-                        </a>
-                      ) : (
-                        <span className="parp-news__story-link parp-news__story-link--disabled">
-                          <span>View details</span>
-                          <span aria-hidden="true">→</span>
-                        </span>
-                      )
+                      <RouteLink className="parp-news__story-link" to="/news">
+                        <span>View details</span>
+                        <span aria-hidden="true">→</span>
+                      </RouteLink>
                     )}
                   </div>
                 </article>

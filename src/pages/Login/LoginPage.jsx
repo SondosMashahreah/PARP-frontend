@@ -4,6 +4,7 @@ import { RouteLink } from '../../routing/clientRouter.jsx'
 import Icon from '../../components/ui/Icon.jsx'
 import logo from '../../components/Header/img/logo.png'
 import { useAuth } from '../../features/auth/useAuth.js'
+import { ROLE_OPTIONS } from '../../features/auth/roles.js'
 import './LoginPage.css'
 
 const DOMAIN = '@meo.edu.ps'
@@ -22,19 +23,19 @@ export default function LoginPage() {
   const copy = isArabic ? {
     welcome: 'أهلًا بك في PARP', login: 'تسجيل الدخول', register: 'إنشاء حساب', verify: 'تأكيد البريد',
     intro: 'الحسابات متاحة فقط لمستخدمي وزارة التربية والتعليم.',
-    name: 'الاسم الكامل', email: 'البريد الإلكتروني', password: 'كلمة المرور',
+    name: 'الاسم الكامل', email: 'البريد الإلكتروني', password: 'كلمة المرور', role: 'الدور',
     passwordHelp: '10 أحرف على الأقل، وتتضمن حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.',
     show: 'إظهار كلمة المرور', hide: 'إخفاء كلمة المرور', otp: 'رمز التحقق',
-    submitLogin: 'تسجيل الدخول', submitRegister: 'إنشاء الحساب وإرسال الرمز', submitOtp: 'تأكيد الرمز',
+    submitLogin: 'تسجيل الدخول', submitRegister: 'إنشاء الحساب', submitOtp: 'تأكيد الرمز',
     resend: 'إعادة إرسال الرمز', back: 'العودة إلى المنصة',
     domain: `استخدم بريدك المنتهي بـ ${DOMAIN}`,
   } : {
     welcome: 'Welcome to PARP', login: 'Log in', register: 'Create account', verify: 'Verify email',
     intro: 'Accounts are available only to Ministry of Education users.',
-    name: 'Full name', email: 'Email address', password: 'Password',
+    name: 'Full name', email: 'Email address', password: 'Password', role: 'Role',
     passwordHelp: 'At least 10 characters with uppercase, lowercase, number and symbol.',
     show: 'Show password', hide: 'Hide password', otp: 'Verification code',
-    submitLogin: 'Log in', submitRegister: 'Create account & send code', submitOtp: 'Verify code',
+    submitLogin: 'Log in', submitRegister: 'Create account', submitOtp: 'Verify code',
     resend: 'Resend code', back: 'Back to the platform',
     domain: `Use your email ending in ${DOMAIN}`,
   }
@@ -59,15 +60,20 @@ export default function LoginPage() {
     setBusy(true)
     try {
       if (mode === 'login') {
-        await login(email, password)
+        const role = String(data.get('role') || 'researcher')
+        await login(email, password, role)
         const next = new URLSearchParams(window.location.search).get('next')
-        window.location.assign(next || '/')
+        window.location.assign(next || '/workspace')
       } else if (mode === 'register') {
-        await register({
+        const result = await register({
           full_name: String(data.get('full_name') || '').trim(),
           email,
           password,
         })
+        if (result?.access_token) {
+          window.location.assign('/workspace')
+          return
+        }
         setPendingEmail(email)
         setMode('otp')
         setNotice(isArabic ? 'تم إرسال رمز التحقق إلى بريدك.' : 'Verification code sent to your email.')
@@ -114,6 +120,14 @@ export default function LoginPage() {
           {mode !== 'otp' ? (
             <>
               <div className="login-card__field"><label htmlFor="login-email">{copy.email}</label><input id="login-email" name="email" type="email" autoComplete="username" dir="ltr" required maxLength={254} placeholder={`name${DOMAIN}`} /><small>{copy.domain}</small></div>
+              {mode === 'login' && (
+                <div className="login-card__field">
+                  <label htmlFor="login-role">{copy.role}</label>
+                  <select id="login-role" name="role" defaultValue="researcher">
+                    {ROLE_OPTIONS.map((item) => <option key={item.value} value={item.value}>{isArabic ? item.ar : item.en}</option>)}
+                  </select>
+                </div>
+              )}
               <div className="login-card__field"><label htmlFor="login-password">{copy.password}</label>
                 <div className="login-card__password"><input id="login-password" name="password" type={visible ? 'text' : 'password'} autoComplete={mode === 'register' ? 'new-password' : 'current-password'} dir="ltr" required maxLength={72} />
                   <button type="button" onClick={() => setVisible((value) => !value)} aria-label={visible ? copy.hide : copy.show} aria-pressed={visible}><Icon name="eye" /></button>

@@ -9,7 +9,7 @@
 .login-card form { display: grid; gap: 20px; }
 .login-card__field { display: grid; gap: 8px; }
 .login-card label { font-size: .86rem; font-weight: 650; }
-.login-card input { width: 100%; min-width: 0; min-height: 48px; border: 1px solid #bbb1c7; border-radius: 10px; padding: 12px; background: #fff; color: #241b31; font: inherit; font-size: 16px; }
+.login-card input, .login-card select { width: 100%; min-width: 0; min-height: 48px; border: 1px solid #bbb1c7; border-radius: 10px; padding: 12px; background: #fff; color: #241b31; font: inherit; font-size: 16px; }
 .login-card :focus-visible { outline: 3px solid #7621c8; outline-offset: 3px; }
 .login-card__password { display: flex; align-items: center; border: 1px solid #bbb1c7; border-radius: 10px; background: #fff; }
 .login-card__password input { border: 0; }

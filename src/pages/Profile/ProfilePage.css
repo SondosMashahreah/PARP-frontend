@@ -14,3 +14,9 @@
 .profile-card__error { color: #ff8ba0; }
 .profile-card__message { color: var(--color-accent); }
 @media (max-width: 650px) { .profile-card { grid-template-columns: 1fr; } }
+
+.profile-card__publications { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--color-border); }
+.profile-card__publications h2 { margin: 0 0 14px; font-size: 1rem; }
+.profile-card__publications article { display: grid; gap: 5px; padding: 12px 0; border-bottom: 1px solid var(--color-border); }
+.profile-card__publications article span, .profile-card__publications p { color: var(--color-text-muted); font-size: .82rem; }
+.profile-card__publications a { color: var(--color-accent); font-size: .82rem; }
