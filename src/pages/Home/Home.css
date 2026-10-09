@@ -1,3 +1,12 @@
+:root {
+  /* Secondary accent — used sparingly to break the violet palette */
+  --home-accent-rgb: 214 181 110;
+  --home-accent: #d6b56e;
+  --home-accent-light: #e3ca92;
+  --home-accent-soft: rgb(var(--home-accent-rgb) / 10%);
+  --home-accent-border: rgb(var(--home-accent-rgb) / 28%);
+}
+
 .home-stats, .home-contact { width: min(var(--content-width), calc(100% - 80px)); margin-inline: auto; }
 .home-stats { padding-block: clamp(44px, 6vw, 80px); }
 .home-section-eyebrow { display: block; margin-bottom: 12px; color: var(--color-accent); font-size: .8rem; font-weight: 700; }
@@ -23,3 +32,113 @@
 .home-contact__form { min-width: 0; }
 @media (max-width: 900px) { .home-stats__heading { align-items: start; flex-direction: column; gap: 16px; } .home-contact { grid-template-columns: 1fr; } .home-contact h2 { max-width: 25ch; } }
 @media (max-width: 640px) { .home-stats, .home-contact { width: calc(100% - 32px); } .home-stats__grid { grid-template-columns: 1fr; gap: 12px; } .home-stats__card strong { margin-bottom: 14px; } .home-contact { padding: 22px; border-radius: 22px; } }
+
+
+/* ========================================
+   HOME — Champagne accent
+   Keeps violet as the main brand color
+   ======================================== */
+
+/* Small editorial label */
+.home-section-eyebrow {
+  color: var(--home-accent);
+}
+
+/* Stats cards — keep them purple/dark,
+   champagne only appears on interaction/details */
+.home-stats__card {
+  overflow: hidden;
+}
+
+/* Very subtle warm light in the corner */
+.home-stats__card::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgb(var(--home-accent-rgb) / 7%),
+      transparent 38%
+    );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+
+.home-stats__card:hover {
+  border-color: var(--home-accent-border);
+  box-shadow:
+    0 14px 34px rgb(0 0 0 / 18%),
+    0 0 24px rgb(var(--home-accent-rgb) / 6%);
+}
+
+.home-stats__card:hover::before {
+  opacity: 1;
+}
+
+/* Icon gets the clearest champagne touch */
+.home-stats__icon {
+  color: var(--home-accent-light);
+  border-color: rgb(var(--home-accent-rgb) / 24%);
+  background:
+    linear-gradient(
+      145deg,
+      rgb(var(--home-accent-rgb) / 11%),
+      rgb(var(--brand-rgb) / 11%)
+    );
+}
+
+/* Keep big numbers mostly neutral —
+   slightly warmer instead of full gold */
+.home-stats__card strong {
+  color: #f2ede3;
+}
+
+/* Small value / arrow / metadata accent */
+.home-stats__card p span {
+  color: var(--home-accent);
+}
+
+
+/* ========================================
+   CONTACT
+   Purple still dominates, champagne
+   only adds warmth/depth.
+   ======================================== */
+
+.home-contact {
+  background:
+    radial-gradient(
+      circle at 0% 0%,
+      rgb(var(--home-accent-rgb) / 9%),
+      transparent 36%
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      rgb(var(--brand-rgb) / 10%),
+      transparent 46%
+    ),
+    var(--surface-glass);
+}
+
+/* Email icon */
+.home-contact__email svg {
+  color: var(--home-accent);
+}
+
+/* Tiny interaction without making the whole link gold */
+.home-contact__email {
+  transition:
+    color .2s ease,
+    transform .2s ease;
+}
+
+.home-contact__email:hover {
+  color: var(--home-accent-light);
+}
+
+.home-contact__email:hover svg {
+  transform: translateX(-2px);
+}

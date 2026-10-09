@@ -2,6 +2,16 @@ import { api } from '../auth/authApi.js'
 
 export const workflowApi = {
   workspace: () => api('/api/workflow/workspace'),
+  adminDashboard: () => api('/api/workflow/admin/dashboard'),
+  adminUsers: ({ q = '', role = '', active = '', limit = 50, offset = 0 } = {}) => {
+    const params = new URLSearchParams()
+    if (q) params.set('q', q)
+    if (role) params.set('role', role)
+    if (active !== '') params.set('active', String(active))
+    params.set('limit', String(limit))
+    params.set('offset', String(offset))
+    return api(`/api/workflow/admin/users?${params.toString()}`)
+  },
   repository: () => api('/api/workflow/repository'),
   practices: () => api('/api/workflow/practices'),
   recommendations: () => api('/api/workflow/observatory/recommendations'),

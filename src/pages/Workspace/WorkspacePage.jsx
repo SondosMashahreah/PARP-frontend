@@ -21,7 +21,6 @@ const WORKSPACE_SHORTCUTS = {
   ],
   supervisor: [
     ['/institutions', 'المدارس والمديريات', 'Schools & Directorates'],
-    ['/dashboard', 'لوحة المؤشرات', 'Dashboard'],
     ['/map', 'الخريطة', 'Map'],
     ['/repository', 'المستودع الوطني', 'National Repository'],
   ],
@@ -31,20 +30,17 @@ const WORKSPACE_SHORTCUTS = {
   ],
   school_manager: [
     ['/institutions', 'ملف المدرسة', 'School profile'],
-    ['/dashboard', 'مؤشرات المدرسة', 'School dashboard'],
     ['/map', 'الخريطة', 'Map'],
     ['/excellence', 'قاعة التميز', 'Hall of Excellence'],
   ],
   directorate_manager: [
     ['/institutions', 'المدارس والباحثون', 'Schools & Researchers'],
-    ['/dashboard', 'لوحة المؤشرات', 'Dashboard'],
     ['/map', 'الخريطة', 'Map'],
     ['/training', 'التدريب', 'Training'],
   ],
   scientific_committee: [
     ['/guide', 'الدليل الفلسطيني', 'Palestinian Guide'],
     ['/template', 'القالب الفلسطيني', 'Palestinian Template'],
-    ['/dashboard', 'لوحة المؤشرات', 'Dashboard'],
     ['/conference', 'المؤتمر الوطني', 'National Conference'],
   ],
   organizing_committee: [
@@ -54,12 +50,13 @@ const WORKSPACE_SHORTCUTS = {
     ['/excellence', 'قاعة التميز', 'Hall of Excellence'],
   ],
   decision_maker: [
-    ['/dashboard', 'لوحة المؤشرات', 'Dashboard'],
     ['/observatory', 'المرصد الوطني', 'National Observatory'],
     ['/observatory/map', 'خريطة المرصد', 'Observatory Map'],
     ['/repository', 'الأدلة والبحوث', 'Evidence & Research'],
   ],
-  system_admin: [],
+  system_admin: [
+    ['/dashboard', 'لوحة تحكم المنصة', 'Platform dashboard'],
+  ],
 }
 
 function WorkspaceShortcuts({ role, isArabic }) {

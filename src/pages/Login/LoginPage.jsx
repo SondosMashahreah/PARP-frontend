@@ -61,9 +61,11 @@ export default function LoginPage() {
     try {
       if (mode === 'login') {
         const role = String(data.get('role') || 'researcher')
-        await login(email, password, role)
-        const next = new URLSearchParams(window.location.search).get('next')
-        window.location.assign(next || '/workspace')
+const loggedUser = await login(email, password, role)
+const next = new URLSearchParams(window.location.search).get('next')
+window.location.assign(
+  next || (loggedUser?.role === 'system_admin' ? '/dashboard' : '/workspace')
+)
       } else if (mode === 'register') {
         const result = await register({
           full_name: String(data.get('full_name') || '').trim(),

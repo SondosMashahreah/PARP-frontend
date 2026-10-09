@@ -23,16 +23,16 @@ const ACCESS = {
     '/library', '/assistant', '/practices', '/news',
   ],
   supervisor: [
-    '/workspace', '/institutions', '/map', '/dashboard', '/repository', '/guide',
+    '/workspace', '/institutions', '/map', '/repository', '/guide',
     '/training', '/library', '/practices',
   ],
   reviewer: ['/workspace', '/repository', '/guide', '/library'],
-  school_manager: ['/workspace', '/institutions', '/dashboard', '/map', '/repository', '/excellence', '/practices'],
-  directorate_manager: ['/workspace', '/institutions', '/dashboard', '/map', '/repository', '/excellence', '/training', '/practices'],
-  scientific_committee: ['/workspace', '/repository', '/guide', '/template', '/dashboard', '/conference', '/practices'],
+  school_manager: ['/workspace', '/institutions', '/map', '/repository', '/excellence', '/practices'],
+  directorate_manager: ['/workspace', '/institutions', '/map', '/repository', '/excellence', '/training', '/practices'],
+  scientific_committee: ['/workspace', '/repository', '/guide', '/template', '/conference', '/practices'],
   organizing_committee: ['/workspace', '/conference', '/news', '/excellence'],
-  decision_maker: ['/workspace', '/dashboard', '/observatory', '/observatory/map', '/map', '/repository', '/institutions', '/practices'],
-  system_admin: ['/workspace'],
+  decision_maker: ['/workspace', '/observatory', '/observatory/map', '/map', '/repository', '/institutions', '/practices'],
+  system_admin: ['/workspace', '/dashboard'],
 }
 
 export function roleLabel(role, isArabic = true) {
