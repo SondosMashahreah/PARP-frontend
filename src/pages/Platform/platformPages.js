@@ -27,7 +27,7 @@ export const platformPages = {
   '/assistant': Assistant.ar,
   '/map': Map.ar,
   '/observatory': Observatory.ar,
-  '/observatory/map': ObservatoryMap.ar,
+  '/map': ObservatoryMap.ar,
   '/dashboard': Dashboard.ar,
   '/institutions': Institutions.ar,
   '/excellence': Excellence.ar,

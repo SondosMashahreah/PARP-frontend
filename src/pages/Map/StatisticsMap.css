@@ -1,0 +1,90 @@
+.statistics-map {
+  max-width: 1400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+}
+.statistics-map header {
+  max-width: 850px;
+}
+.statistics-map label {
+  display: grid;
+  gap: 0.5rem;
+  margin-block: 1rem;
+  max-width: 500px;
+}
+.statistics-map select,
+.statistics-map input {
+  padding: 0.8rem;
+  background: #211725;
+  color: #eee;
+  border: 1px solid #905060;
+  border-radius: 10px;
+}
+.statistics-map-canvas {
+  height: 620px;
+  border: 1px solid #ffffff25;
+  border-radius: 18px;
+}
+.statistics-map-label {
+  background: #201723ef;
+  color: #fff;
+  border: 1px solid;
+  border-radius: 8px;
+  padding: 5px 9px;
+  font: 600 12px sans-serif;
+  cursor: pointer;
+}
+.statistics-map-legend {
+  display: flex;
+  gap: 1.2rem;
+  padding: 1rem;
+}
+.statistics-map-legend span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.statistics-map-legend i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+.statistics-map-detail {
+  padding: 1rem;
+  background: #23172d;
+  border-radius: 12px;
+  margin-block: 1rem;
+}
+.statistics-map-table {
+  max-height: 440px;
+  overflow: auto;
+}
+.statistics-map-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.statistics-map-table th,
+.statistics-map-table td {
+  text-align: start;
+  padding: 0.7rem;
+  border-bottom: 1px solid #ffffff20;
+}
+.statistics-map-table button,
+.statistics-map-directorates button {
+  background: transparent;
+  color: inherit;
+  border: 1px solid #ffffff25;
+  border-radius: 8px;
+  padding: 0.6rem;
+  cursor: pointer;
+}
+.statistics-map-directorates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+@media (max-width: 650px) {
+  .statistics-map-canvas {
+    height: 440px;
+  }
+}

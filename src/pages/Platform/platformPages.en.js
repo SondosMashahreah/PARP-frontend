@@ -27,7 +27,7 @@ export const platformPagesEn = {
   '/assistant': Assistant.en,
   '/map': Map.en,
   '/observatory': Observatory.en,
-  '/observatory/map': ObservatoryMap.en,
+  '/map': ObservatoryMap.en,
   '/dashboard': Dashboard.en,
   '/institutions': Institutions.en,
   '/excellence': Excellence.en,

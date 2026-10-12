@@ -1,0 +1,64 @@
+.institution-workspace {
+  margin-block: 2rem;
+}
+.institution-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-block: 1rem;
+}
+.institution-metrics article {
+  padding: 1.5rem;
+  border: 1px solid #90506060;
+  border-radius: 12px;
+  display: grid;
+  gap: 0.6rem;
+}
+.institution-metrics strong {
+  font-size: 1.8rem;
+}
+.institution-donut {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: conic-gradient(#905060 var(--progress), #ffffff12 0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  isolation: isolate;
+}
+.institution-donut:before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  background: #190e17;
+  border-radius: 50%;
+  z-index: -1;
+}
+.institution-table {
+  overflow-x: auto;
+}
+.institution-table table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: start;
+}
+.institution-table th,
+.institution-table td {
+  padding: 1rem;
+  text-align: start;
+  border-bottom: 1px solid #ffffff18;
+  vertical-align: top;
+}
+.institution-table caption {
+  text-align: start;
+  font-weight: 700;
+  padding: 1rem;
+}
+.institution-table details {
+  max-width: 500px;
+  min-width: 180px;
+}

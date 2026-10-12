@@ -30,7 +30,7 @@ export const journeyStepsEn = [
   {
     id: 5,
     title: 'Write your proposal',
-    actor: 'Researcher and supervisor',
+    actor: 'Researcher and research evaluation committee',
     description: 'Turn a field observation into a researchable question, define objectives, tools, and an implementation plan, and use guidance when available.',
     outcome: 'A structured proposal ready for review.',
   },

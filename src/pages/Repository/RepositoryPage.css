@@ -2,3 +2,4 @@
 @import '../../components/platform/PlatformExperience.css';
 
 /* Styles specific to Repository belong here. Shared design stays in components/platform. */
+.repository-catalog{max-width:1100px;margin:3rem auto;padding:1.5rem}.repository-catalog article{padding:2rem;margin-block:1rem;border:1px solid #90506066;border-radius:12px}.repository-catalog input{display:block;width:100%;padding:1rem;background:#ffffff0a;color:inherit;border:1px solid #905060;border-radius:10px}.repository-catalog button:disabled{opacity:.6}

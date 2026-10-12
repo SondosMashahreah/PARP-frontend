@@ -1,0 +1,20 @@
+.problem-bank {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+}
+.problem-bank article {
+  padding: 1.5rem;
+  border: 1px solid #90506066;
+  border-radius: 12px;
+  margin-block: 1rem;
+}
+.problem-bank input {
+  display: block;
+  width: 100%;
+  padding: 1rem;
+  background: #ffffff0a;
+  color: inherit;
+  border: 1px solid #905060;
+  border-radius: 10px;
+}

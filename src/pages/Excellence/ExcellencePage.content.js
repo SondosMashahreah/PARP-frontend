@@ -49,7 +49,7 @@ export const content = {
       {
         "title": "Supporting roles",
         "items": [
-          "Outstanding supervisor",
+          "Outstanding researcher",
           "Outstanding reviewer"
         ]
       },

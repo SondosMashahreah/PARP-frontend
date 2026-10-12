@@ -19,7 +19,7 @@ const PracticesPage = lazy(() => import('./pages/Practices/PracticesPage.jsx'))
 
 const EducationMapPage = lazy(() => import('./pages/Map/MapPage.jsx'))
 
-const PUBLIC_PATHS = new Set(['/', '/search', '/login', '/account', '/news'])
+const PUBLIC_PATHS = new Set(['/', '/search', '/login', '/account', '/news', '/practices', '/repository'])
 
 function App() {
   const { pathname, search, hash } = useLocation()

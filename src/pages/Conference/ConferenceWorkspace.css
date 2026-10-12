@@ -1,0 +1,32 @@
+.conference-workspace {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+.conference-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 1rem;
+}
+.conference-workspace .workspace-panel {
+  margin-block: 1.5rem;
+}
+.conference-workspace textarea {
+  min-height: 110px;
+}
+.conference-workspace small {
+  display: block;
+  opacity: 0.75;
+}
+.publication-payment {
+  border: 1px solid #90506070;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-block: 1rem;
+}
+.publication-payment button {
+  margin: 0.3rem;
+}
+.publication-payment button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

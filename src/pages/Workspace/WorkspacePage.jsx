@@ -1,3 +1,6 @@
+import PublicationPayment from './components/PublicationPayment.jsx'
+import ConferenceWorkspace from '../Conference/ConferenceWorkspace.jsx'
+import InstitutionWorkspace from './InstitutionWorkspace.jsx'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { useAuth } from '../../features/auth/useAuth.js'
@@ -6,6 +9,8 @@ import { ROLE_OPTIONS, roleLabel } from '../../features/auth/roles.js'
 import { workflowApi } from '../../features/workflow/workflowApi.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import './WorkspacePage.css'
+import ResearcherWorkspace from './ResearcherWorkspace.jsx'
+import RevisionEditor from './components/RevisionEditor.jsx'
 
 const STATUS_AR = {
   submitted: 'مرفوع', under_review: 'قيد التحكيم', revision_requested: 'بحاجة لتعديل',
@@ -17,11 +22,6 @@ const WORKSPACE_SHORTCUTS = {
     ['/training', 'التدريب', 'Training'],
     ['/guide', 'الدليل الفلسطيني', 'Palestinian Guide'],
     ['/template', 'القالب الفلسطيني', 'Palestinian Template'],
-    ['/repository', 'المستودع الوطني', 'National Repository'],
-  ],
-  supervisor: [
-    ['/institutions', 'المدارس والمديريات', 'Schools & Directorates'],
-    ['/map', 'الخريطة', 'Map'],
     ['/repository', 'المستودع الوطني', 'National Repository'],
   ],
   reviewer: [
@@ -51,7 +51,7 @@ const WORKSPACE_SHORTCUTS = {
   ],
   decision_maker: [
     ['/observatory', 'المرصد الوطني', 'National Observatory'],
-    ['/observatory/map', 'خريطة المرصد', 'Observatory Map'],
+    ['/map', 'خريطة المرصد', 'Observatory Map'],
     ['/repository', 'الأدلة والبحوث', 'Evidence & Research'],
   ],
   system_admin: [
@@ -80,7 +80,7 @@ function WorkspaceShortcuts({ role, isArabic }) {
 function downloadCsv(filename, rows) {
   if (!rows.length) return
   const columns = [...new Set(rows.flatMap((row) => Object.keys(row)))]
-  const escape = (value) => `"${String(value ?? '').replaceAll('\"', '\"\"')}"`
+  const escape = (value) => `"${String(value ?? '').replaceAll('"', '""')}"`
   const csv = [columns.map(escape).join(','), ...rows.map((row) => columns.map((key) => escape(row[key])).join(','))].join('\n')
   const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }))
   const link = document.createElement('a')
@@ -102,26 +102,13 @@ function ResearchCard({ item, isArabic, onRefresh, reviewers = [], committee = f
     try { await action(); await onRefresh() } catch (err) { setError(err.message) } finally { setBusy(false) }
   }
 
-  async function resubmit(event) {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    const body = new FormData()
-    body.append('file', data.get('file'))
-    body.append('form_json', '{}')
-    await run(() => workflowApi.resubmitResearch(item.id, body))
-  }
-
   async function assign(event) {
     event.preventDefault()
     const reviewerId = new FormData(event.currentTarget).get('reviewer_id')
     await run(() => workflowApi.assignReviewer(item.id, reviewerId))
   }
 
-  async function decide(event) {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    await run(() => workflowApi.decide(item.id, { decision: data.get('decision'), note: String(data.get('note') || '') }))
-  }
+
 
   return (
     <article className="workspace-card">
@@ -134,33 +121,26 @@ function ResearchCard({ item, isArabic, onRefresh, reviewers = [], committee = f
         <span>{isArabic ? 'المديرية' : 'Directorate'}: {item.directorate_id || '—'}</span>
         <span>{isArabic ? 'النسخة' : 'Version'}: {item.current_version}</span>
       </div>
+      {item.abstract && <p>{item.abstract}</p>}
       {item.problem && <p><strong>{isArabic ? 'المشكلة:' : 'Problem:'}</strong> {item.problem}</p>}
       {item.file?.url && <a className="workspace-link" href={item.file.url} target="_blank" rel="noreferrer">{isArabic ? 'فتح الملف المرفوع' : 'Open uploaded file'}</a>}
       {item.reviews?.map((review) => <blockquote key={review.id}><strong>{isArabic ? 'ملاحظات التحكيم:' : 'Review notes:'}</strong> {review.comments}</blockquote>)}
+      {item.events?.filter(event => event.event_type === 'scientific_decision').slice(-1).map((event, i) => <blockquote key={`decision-${i}`}><strong>{isArabic ? 'ملاحظات اللجنة: ' : 'Committee feedback: '}</strong>{event.note || (isArabic ? 'لم تُرفق ملاحظات بالقرار.' : 'No notes were attached to this decision.')}</blockquote>)}
       {item.events?.length > 0 && (
         <details><summary>{isArabic ? 'سجل العملية' : 'Workflow history'}</summary>
           <ol className="workspace-timeline">{item.events.map((event, index) => <li key={`${event.event_type}-${index}`}><strong>{event.to_status}</strong>{event.note ? ` — ${event.note}` : ''}</li>)}</ol>
         </details>
       )}
-      {item.status === 'revision_requested' && !committee && !readOnly && (
-        <form className="workspace-inline-form" onSubmit={resubmit}>
-          <label>{isArabic ? 'ارفع النسخة المعدلة (PDF/Word)' : 'Upload revised PDF/Word'}<input name="file" type="file" accept=".pdf,.doc,.docx" required /></label>
-          <button disabled={busy}>{isArabic ? 'إعادة الإرسال' : 'Resubmit'}</button>
-        </form>
-      )}
-      {item.status === 'approved' && !committee && !readOnly && <button disabled={busy} onClick={() => run(() => workflowApi.publish(item.id))}>{isArabic ? 'نشر البحث في المستودع الوطني' : 'Publish to National Repository'}</button>}
-      {item.status === 'practice_suggested' && !committee && !readOnly && <button disabled={busy} onClick={() => run(() => workflowApi.publishPractice(item.id))}>{isArabic ? 'نشرها كممارسة' : 'Publish as practice'}</button>}
+      {['revision_requested', 'rejected'].includes(item.status) && !committee && !readOnly && <RevisionEditor item={item} isArabic={isArabic} onRefresh={onRefresh} />}
+      {item.status === 'approved' && item.publication_type === 'research' && !committee && !readOnly && <PublicationPayment item={item} isArabic={isArabic} onRefresh={onRefresh} />}
+      {(item.status === 'practice_suggested' || (item.status === 'approved' && item.publication_type === 'practice')) && !committee && !readOnly && <button disabled={busy} onClick={() => run(() => workflowApi.publishPractice(item.id))}>{isArabic ? 'نشرها كممارسة' : 'Publish as practice'}</button>}
       {committee && (
         <div className="workspace-actions-grid">
           <form className="workspace-inline-form" onSubmit={assign}>
-            <label>{isArabic ? 'تعيين محكم' : 'Assign reviewer'}<select name="reviewer_id" required defaultValue=""><option value="" disabled>—</option>{reviewerOptions.map((r) => <option key={r.id} value={r.id}>{r.full_name} — {r.research_field || r.specialization || r.email}</option>)}</select></label>
+            <label>{isArabic ? 'تعيين عضو لجنة تقييم الأبحاث' : 'Assign research evaluator'}<select name="reviewer_id" required defaultValue=""><option value="" disabled>—</option>{reviewerOptions.map((r) => <option key={r.id} value={r.id}>{r.full_name} — {r.research_field || r.specialization || r.email}</option>)}</select></label>
             <button disabled={busy}>{isArabic ? 'تعيين' : 'Assign'}</button>
           </form>
-          <form className="workspace-inline-form" onSubmit={decide}>
-            <label>{isArabic ? 'قرار اللجنة' : 'Committee decision'}<select name="decision" defaultValue="revision"><option value="approve">{isArabic ? 'قبول للنشر' : 'Approve'}</option><option value="revision">{isArabic ? 'طلب تعديلات' : 'Request revision'}</option><option value="practice">{isArabic ? 'اقتراحها كممارسة' : 'Suggest as practice'}</option><option value="reject">{isArabic ? 'رفض' : 'Reject'}</option></select></label>
-            <textarea name="note" placeholder={isArabic ? 'ملاحظات القرار' : 'Decision notes'} maxLength={12000} />
-            <button disabled={busy}>{isArabic ? 'حفظ القرار' : 'Save decision'}</button>
-          </form>
+
         </div>
       )}
       {error && <p className="workspace-error" role="alert">{error}</p>}
@@ -186,6 +166,7 @@ function ReviewerAssignment({ assignment, isArabic, onRefresh }) {
       <label>{isArabic ? 'الملاحظات' : 'Comments'}<textarea name="comments" required minLength={2} maxLength={12000} /></label>
       <button disabled={busy}>{isArabic ? 'إرسال التحكيم' : 'Submit review'}</button>
     </form>}
+    {assignment.status === 'completed' && assignment.submission?.status !== 'published' && <form className="workspace-inline-form" onSubmit={event => { event.preventDefault(); const form = new FormData(event.currentTarget); run(() => workflowApi.decide(assignment.submission.id, { decision: form.get('decision'), note: form.get('note') })) }}><label>{isArabic ? 'قرار لجنة تقييم الأبحاث' : 'Research evaluation decision'}<select name="decision"><option value="approve">{isArabic ? 'قبول' : 'Approve'}</option><option value="revision">{isArabic ? 'تعديل' : 'Revision'}</option><option value="reject">{isArabic ? 'رفض' : 'Reject'}</option><option value="practice">{isArabic ? 'اعتماد كممارسة' : 'Approve as practice'}</option></select></label><textarea name="note" required minLength={2} maxLength={12000} aria-label={isArabic ? 'ملاحظات القرار' : 'Decision notes'} /><button disabled={busy}>{isArabic ? 'اعتماد القرار' : 'Confirm decision'}</button></form>}
     {error && <p className="workspace-error">{error}</p>}
   </article>
 }
@@ -213,8 +194,7 @@ export default function WorkspacePage() {
 
   const workspaceTitle = isArabic ? {
     researcher: 'مساحة عمل الباحث / المعلم',
-    supervisor: 'مساحة عمل المشرف التربوي',
-    reviewer: 'مساحة عمل المحكم',
+    reviewer: 'مساحة عمل عضو لجنة تقييم الأبحاث',
     school_manager: 'مساحة عمل مدير المدرسة',
     directorate_manager: 'مساحة عمل المديرية',
     scientific_committee: 'مساحة عمل اللجنة العلمية',
@@ -223,8 +203,7 @@ export default function WorkspacePage() {
     system_admin: 'مساحة عمل مدير النظام',
   }[data?.role] || copy.title : {
     researcher: 'Teacher / Researcher Workspace',
-    supervisor: 'Educational Supervisor Workspace',
-    reviewer: 'Reviewer Workspace',
+    reviewer: 'Research Evaluation Committee Workspace',
     school_manager: 'School Manager Workspace',
     directorate_manager: 'Directorate Workspace',
     scientific_committee: 'Scientific Committee Workspace',
@@ -241,7 +220,13 @@ export default function WorkspacePage() {
     } catch (err) { setError(err.message) }
   }, [])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => {
+    let active = true
+    Promise.all([workflowApi.workspace(), api('/api/education/catalog')])
+      .then(([workspace, education]) => { if (active) { setData(workspace); setCatalog(education) } })
+      .catch(err => { if (active) setError(err.message) })
+    return () => { active = false }
+  }, [])
 
   async function searchSchools() {
     if (schoolQuery.trim().length < 2) return
@@ -276,18 +261,6 @@ export default function WorkspacePage() {
     } catch (err) { setError(err.message) } finally { setBusy(false) }
   }
 
-  async function submitResearch(event) {
-    event.preventDefault(); const formElement = event.currentTarget; const form = new FormData(formElement); setBusy(true); setError(''); setMessage('')
-    const body = new FormData()
-    for (const key of ['title', 'research_field', 'problem', 'recommendations', 'abstract', 'file']) body.append(key, form.get(key))
-    body.append('form_json', JSON.stringify({
-      keywords: String(form.get('keywords') || '').split(',').map((v) => v.trim()).filter(Boolean),
-      research_question: form.get('research_question') || '', intervention: form.get('intervention') || '', results: form.get('results') || '',
-    }))
-    try { await workflowApi.submitResearch(body); formElement.reset(); setMessage(isArabic ? 'تم رفع البحث وإرساله للمراجعة.' : 'Research submitted for review.'); await load() }
-    catch (err) { setError(err.message) } finally { setBusy(false) }
-  }
-
   async function updateRecommendation(id, status) {
     setBusy(true); setError('')
     try { await workflowApi.updateRecommendation(id, status); await load() }
@@ -312,8 +285,22 @@ export default function WorkspacePage() {
     } catch (err) { setError(err.message) } finally { setBusy(false) }
   }
 
-  const needsAffiliation = useMemo(() => ['researcher', 'supervisor', 'school_manager', 'directorate_manager'].includes(data?.role), [data?.role])
+  const needsAffiliation = useMemo(() => ['researcher', 'school_manager', 'directorate_manager'].includes(data?.role), [data?.role])
   if (!user || !data) return <section className="workspace-page" dir={dir}><p>{error || (isArabic ? 'جارٍ تحميل مساحة العمل…' : 'Loading workspace…')}</p></section>
+
+  const affiliationPanel = needsAffiliation && <section className="workspace-panel"><h2>{copy.affiliation}</h2>
+      {data.affiliation?.approval_status === 'approved' ? <p className="workspace-message">{copy.approved} — {data.affiliation.school_id || data.affiliation.directorate_id}</p> : <form className="workspace-form" onSubmit={submitAffiliation}>
+        <label>{isArabic ? 'المحافظة' : 'Governorate'}<select name="governorate_id" defaultValue={data.affiliation?.governorate_id || ''}><option value="">—</option>{catalog?.governorates?.map((g) => <option key={g.id} value={g.id}>{isArabic ? g.name_ar : g.name_en}</option>)}</select></label>
+        <label>{isArabic ? 'المديرية' : 'Directorate'}<select name="directorate_id" defaultValue={data.affiliation?.directorate_id || ''}><option value="">—</option>{catalog?.directorates?.map((d) => <option key={d.id} value={d.id}>{isArabic ? d.name_ar : d.name_en}</option>)}</select></label>
+        <div className="workspace-school-search"><label>{copy.searchSchool}<input value={schoolQuery} onChange={(e) => setSchoolQuery(e.target.value)} /></label><button type="button" onClick={searchSchools} disabled={busy}>{isArabic ? 'بحث' : 'Search'}</button></div>
+        <label>{isArabic ? 'المدرسة' : 'School'}<select name="school_id" defaultValue={data.affiliation?.school_id || ''}><option value="">—</option>{schools.map((school) => <option key={school.id} value={school.id}>{isArabic ? school.name_ar : school.name_en} — {school.national_code}</option>)}</select></label>
+        <label>{isArabic ? 'التخصص' : 'Specialization'}<input name="specialization" defaultValue={data.affiliation?.specialization || ''} /></label>
+        <label>{isArabic ? 'مجال البحث' : 'Research field'}<input name="research_field" defaultValue={data.affiliation?.research_field || ''} /></label>
+        <button disabled={busy}>{copy.saveAff}</button>
+      </form>}
+    </section>
+
+  if (data.role === 'researcher') return <ResearcherWorkspace key={user.id} user={user} data={data} isArabic={isArabic} dir={dir} affiliation={<>{error && <p role="alert" className="workspace-error">{error}</p>}{message && <p role="status" className="workspace-message">{message}</p>}{affiliationPanel}</>} onRefresh={load} renderResearch={(item) => <ResearchCard item={item} isArabic={isArabic} onRefresh={load} />} />
 
   return <section className="workspace-page" dir={dir}>
     <header className="workspace-hero"><span>PARP</span><h1>{workspaceTitle}</h1><p>{copy.role}: <strong>{roleLabel(data.role, isArabic)}</strong></p></header>
@@ -332,17 +319,7 @@ export default function WorkspacePage() {
       <button className="workspace-export" type="button" onClick={exportReport}>{isArabic ? 'استخراج تقرير CSV' : 'Export CSV report'}</button>
     )}
 
-    {needsAffiliation && <section className="workspace-panel"><h2>{copy.affiliation}</h2>
-      {data.affiliation?.approval_status === 'approved' ? <p className="workspace-message">{copy.approved} — {data.affiliation.school_id || data.affiliation.directorate_id}</p> : <form className="workspace-form" onSubmit={submitAffiliation}>
-        <label>{isArabic ? 'المحافظة' : 'Governorate'}<select name="governorate_id" defaultValue={data.affiliation?.governorate_id || ''}><option value="">—</option>{catalog?.governorates?.map((g) => <option key={g.id} value={g.id}>{isArabic ? g.name_ar : g.name_en}</option>)}</select></label>
-        <label>{isArabic ? 'المديرية' : 'Directorate'}<select name="directorate_id" defaultValue={data.affiliation?.directorate_id || ''}><option value="">—</option>{catalog?.directorates?.map((d) => <option key={d.id} value={d.id}>{isArabic ? d.name_ar : d.name_en}</option>)}</select></label>
-        <div className="workspace-school-search"><label>{copy.searchSchool}<input value={schoolQuery} onChange={(e) => setSchoolQuery(e.target.value)} /></label><button type="button" onClick={searchSchools} disabled={busy}>{isArabic ? 'بحث' : 'Search'}</button></div>
-        <label>{isArabic ? 'المدرسة' : 'School'}<select name="school_id" defaultValue={data.affiliation?.school_id || ''}><option value="">—</option>{schools.map((school) => <option key={school.id} value={school.id}>{isArabic ? school.name_ar : school.name_en} — {school.national_code}</option>)}</select></label>
-        <label>{isArabic ? 'التخصص' : 'Specialization'}<input name="specialization" defaultValue={data.affiliation?.specialization || ''} /></label>
-        <label>{isArabic ? 'مجال البحث' : 'Research field'}<input name="research_field" defaultValue={data.affiliation?.research_field || ''} /></label>
-        <button disabled={busy}>{copy.saveAff}</button>
-      </form>}
-    </section>}
+    {affiliationPanel}
 
     {['school_manager', 'directorate_manager', 'system_admin'].includes(data.role) && data.affiliation_requests?.length > 0 && (
       <section className="workspace-panel">
@@ -358,28 +335,12 @@ export default function WorkspacePage() {
       </section>
     )}
 
-    {data.role === 'researcher' && <>
-      <section className="workspace-panel"><h2>{copy.submit}</h2><form className="workspace-form" onSubmit={submitResearch}>
-        <label>{isArabic ? 'عنوان البحث' : 'Research title'}<input name="title" required minLength={2} /></label>
-        <label>{isArabic ? 'المجال' : 'Field'}<input name="research_field" required minLength={2} defaultValue={data.affiliation?.research_field || ''} /></label>
-        <label>{isArabic ? 'المشكلة' : 'Problem'}<textarea name="problem" required minLength={2} /></label>
-        <label>{isArabic ? 'سؤال البحث' : 'Research question'}<textarea name="research_question" /></label>
-        <label>{isArabic ? 'التدخل' : 'Intervention'}<textarea name="intervention" /></label>
-        <label>{isArabic ? 'الملخص' : 'Abstract'}<textarea name="abstract" /></label>
-        <label>{isArabic ? 'النتائج' : 'Results'}<textarea name="results" /></label>
-        <label>{isArabic ? 'التوصيات' : 'Recommendations'}<textarea name="recommendations" /></label>
-        <label>{isArabic ? 'الكلمات المفتاحية (بفواصل)' : 'Keywords (comma separated)'}<input name="keywords" /></label>
-        <label>{isArabic ? 'ملف البحث PDF أو Word' : 'Research PDF or Word'}<input name="file" type="file" accept=".pdf,.doc,.docx" required /></label>
-        <button disabled={busy}>{isArabic ? 'رفع وإرسال للتحكيم' : 'Upload & submit for review'}</button>
-      </form></section>
-      <section className="workspace-list"><h2>{isArabic ? 'أبحاثي ومراحلها' : 'My research & progress'}</h2>{data.submissions.length ? data.submissions.map((item) => <ResearchCard key={item.id} item={item} isArabic={isArabic} onRefresh={load} />) : <p>{copy.noItems}</p>}</section>
-    </>}
-
+    {['scientific_committee', 'organizing_committee'].includes(data.role) && <ConferenceWorkspace />}
+    {['school_manager', 'directorate_manager', 'decision_maker'].includes(data.role) && <InstitutionWorkspace />}
     {data.role === 'reviewer' && <section className="workspace-list"><h2>{isArabic ? 'طلبات التحكيم' : 'Review assignments'}</h2>{data.assignments.length ? data.assignments.map((item) => <ReviewerAssignment key={item.id} assignment={item} isArabic={isArabic} onRefresh={load} />) : <p>{copy.noItems}</p>}</section>}
 
-    {data.role === 'scientific_committee' && <section className="workspace-list"><h2>{isArabic ? 'إدارة التحكيم والقرارات' : 'Review & decisions'}</h2>{data.submissions.length ? data.submissions.map((item) => <ResearchCard key={item.id} item={item} isArabic={isArabic} onRefresh={load} reviewers={data.reviewers} committee />) : <p>{copy.noItems}</p>}</section>}
+    {data.role === 'system_admin' && <section className="workspace-list"><h2>{isArabic ? 'إدارة التحكيم والقرارات' : 'Review & decisions'}</h2>{data.submissions.length ? data.submissions.map((item) => <ResearchCard key={item.id} item={item} isArabic={isArabic} onRefresh={load} reviewers={data.reviewers} committee />) : <p>{copy.noItems}</p>}</section>}
 
-    {['school_manager', 'directorate_manager', 'supervisor'].includes(data.role) && <section className="workspace-list"><h2>{isArabic ? 'متابعة الباحثين والبحوث' : 'Researcher progress'}</h2>{data.submissions.length ? data.submissions.map((item) => <ResearchCard key={item.id} item={item} isArabic={isArabic} onRefresh={load} readOnly />) : <p>{copy.noItems}</p>}</section>}
 
     {data.role === 'decision_maker' && <div className="workspace-two-columns">
       <section className="workspace-panel"><h2>{isArabic ? 'توصيات المرصد الوطني' : 'National Observatory recommendations'}</h2>

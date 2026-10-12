@@ -205,7 +205,7 @@ export default function LiveDataPanel({ pathname }) {
     const role = workspace.role
     let summary = []
     if (role === 'researcher') summary = [[isArabic ? 'أبحاثي' : 'My research', workspace.submissions?.length || 0], [isArabic ? 'قيد التحكيم' : 'Under review', countBy(workspace.submissions, 'status', 'under_review')]]
-    else if (role === 'scientific_committee') summary = [[isArabic ? 'الأبحاث' : 'Research', workspace.submissions?.length || 0], [isArabic ? 'المحكمون' : 'Reviewers', workspace.reviewers?.length || 0]]
+    else if (role === 'scientific_committee') summary = [[isArabic ? 'الأبحاث' : 'Research', workspace.submissions?.length || 0], [isArabic ? 'عضو لجنة تقييم الأبحاثون' : 'Reviewers', workspace.reviewers?.length || 0]]
     else if (role === 'organizing_committee') summary = [[isArabic ? 'الدور' : 'Role', isArabic ? 'اللجنة المنظمة' : 'Organizing Committee']]
     return <section className="live-data" aria-labelledby="live-conference-title">
       <div className="live-data__heading"><div><span>{isArabic ? 'المسار التشغيلي' : 'Operational workflow'}</span><h2 id="live-conference-title">{isArabic ? 'المؤتمر مرتبط بمساحة العمل' : 'Conference workflow is connected to the workspace'}</h2><p>{roleLabel(role, isArabic)}</p></div></div>

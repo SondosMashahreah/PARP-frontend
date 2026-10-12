@@ -1,3 +1,5 @@
+import { platformApi } from '../../features/platform/platformApi.js'
+import { saveTokens } from '../../features/auth/authApi.js'
 import { useState } from 'react'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
@@ -13,6 +15,7 @@ const STRONG_PASSWORD = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{10,7
 export default function LoginPage() {
   const { isArabic, dir } = useLanguage()
   const { login, register, verifyOtp, resendOtp } = useAuth()
+  const [committee, setCommittee] = useState(false)
   const [mode, setMode] = useState('login')
   const [visible, setVisible] = useState(false)
   const [pendingEmail, setPendingEmail] = useState('')
@@ -48,7 +51,7 @@ export default function LoginPage() {
     const email = String(data.get('email') || pendingEmail).trim().toLowerCase()
     const password = String(data.get('password') || '')
 
-    if (!email.endsWith(DOMAIN)) {
+    if (mode !== 'login' && !email.endsWith(DOMAIN)) {
       setError(copy.domain)
       return
     }
@@ -59,12 +62,16 @@ export default function LoginPage() {
 
     setBusy(true)
     try {
-      if (mode === 'login') {
+      if (mode === 'login' && committee) {
+        const payload = await platformApi.post('/committee/login', { username: data.get('username'), password })
+        saveTokens(payload)
+        window.location.assign('/conference')
+      } else if (mode === 'login') {
         const role = String(data.get('role') || 'researcher')
 const loggedUser = await login(email, password, role)
 const next = new URLSearchParams(window.location.search).get('next')
 window.location.assign(
-  next || (loggedUser?.role === 'system_admin' ? '/dashboard' : '/workspace')
+  (next?.startsWith('/') && !next.startsWith('//') ? next : null) || (loggedUser?.role === 'system_admin' ? '/dashboard' : '/workspace')
 )
       } else if (mode === 'register') {
         const result = await register({
@@ -108,7 +115,7 @@ window.location.assign(
         <span className="login-card__logo"><img src={logo} alt="PARP" width="52" height="52" /></span>
         <span className="login-card__eyebrow">{copy.welcome}</span>
         <h1 id="login-title">{mode === 'login' ? copy.login : mode === 'register' ? copy.register : copy.verify}</h1>
-        <p className="login-card__intro">{copy.intro}</p>
+        <p className="login-card__intro">{mode === 'login' ? (isArabic ? 'ادخل بحسابك المعتمد في المنصة.' : 'Sign in with your platform account.') : copy.intro}</p>
 
         {mode !== 'otp' && (
           <div className="login-card__tabs" role="tablist">
@@ -117,16 +124,17 @@ window.location.assign(
           </div>
         )}
 
+        {mode === 'login' && <label><input type="checkbox" checked={committee} onChange={e => setCommittee(e.target.checked)} />{isArabic ? 'دخول اللجنة المنظمة باسم المستخدم' : 'Organizing committee username login'}</label>}
         <form onSubmit={handleSubmit}>
           {mode === 'register' && <div className="login-card__field"><label htmlFor="full-name">{copy.name}</label><input id="full-name" name="full_name" required minLength={2} maxLength={150} /></div>}
           {mode !== 'otp' ? (
             <>
-              <div className="login-card__field"><label htmlFor="login-email">{copy.email}</label><input id="login-email" name="email" type="email" autoComplete="username" dir="ltr" required maxLength={254} placeholder={`name${DOMAIN}`} /><small>{copy.domain}</small></div>
-              {mode === 'login' && (
+              {mode === 'login' && committee ? <div className="login-card__field"><label htmlFor="committee-username">{isArabic ? 'اسم المستخدم' : 'Username'}</label><input id="committee-username" name="username" required autoComplete="username" /></div> : <div className="login-card__field"><label htmlFor="login-email">{copy.email}</label><input id="login-email" name="email" type="email" autoComplete="username" dir="ltr" required maxLength={254} placeholder={`name${DOMAIN}`} />{mode === 'register' && <small>{copy.domain}</small>}</div>}
+              {mode === 'login' && !committee && (
                 <div className="login-card__field">
                   <label htmlFor="login-role">{copy.role}</label>
                   <select id="login-role" name="role" defaultValue="researcher">
-                    {ROLE_OPTIONS.map((item) => <option key={item.value} value={item.value}>{isArabic ? item.ar : item.en}</option>)}
+                    {ROLE_OPTIONS.filter(item => item.value !== 'organizing_committee').map((item) => <option key={item.value} value={item.value}>{isArabic ? item.ar : item.en}</option>)}
                   </select>
                 </div>
               )}

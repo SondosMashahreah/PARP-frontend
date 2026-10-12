@@ -1,3 +1,4 @@
+import { canAccessPath } from '../../features/auth/roles.js'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import HeaderLogo from './HeaderLogo.jsx'
 import HeaderSearch from './HeaderSearch.jsx'
@@ -42,7 +43,7 @@ export default function Header() {
     ? [['/', 'الرئيسية', 'الرئيسية'], ['/workspace', 'مساحة العمل', 'العمل'], ['/excellence', 'قاعة التميز', 'التميز'], ['/map', 'الخريطة', 'الخريطة'], ['/#contact', 'تواصل معنا', 'تواصل معنا']]
     : [['/', 'Home', 'Home'], ['/workspace', 'Workspace', 'Workspace'], ['/excellence', 'Hall of Excellence', 'Excellence'], ['/map', 'Map', 'Map'], ['/#contact', 'Contact us', 'Contact']]
   const links = isAuthenticated
-    ? memberLinks
+    ? memberLinks.filter(([to]) => to !== '/map' || canAccessPath(user?.role, to))
     : guestLinks.map(([id, label, short]) => [`/#${id}`, label, short])
   const accountName = isAuthenticated
     ? (user?.full_name || (isArabic ? 'الملف الشخصي' : 'Profile'))

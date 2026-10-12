@@ -1,3 +1,4 @@
+import PlatformAdmin from './components/PlatformAdmin.jsx'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ROLE_OPTIONS, roleLabel } from '../../features/auth/roles.js'
 import { useAuth } from '../../features/auth/useAuth.js'
@@ -224,6 +225,7 @@ export default function DashboardPage() {
 
   return (
     <section className="admin-dashboard" dir={isArabic ? 'rtl' : 'ltr'}>
+      <PlatformAdmin />
       <header className="admin-hero">
         <div>
           <span className="admin-eyebrow">{copy.eyebrow}</span>

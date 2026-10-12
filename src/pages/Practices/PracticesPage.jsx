@@ -35,8 +35,8 @@ export default function PracticesPage() {
   return <section className="practices-page" dir={dir} aria-labelledby="practices-title">
     <header className="practices-page__hero">
       <span>{t('بنك المعرفة · من البحوث المنشورة', 'Knowledge bank · From published research')}</span>
-      <h1 id="practices-title">{t('أفضل الممارسات', 'Best Practices')}</h1>
-      <p>{t('هذه الصفحة تعرض فقط الممارسات التي أعادتها اللجنة العلمية كممارسة ثم اختار الباحث نشرها كممارسة داخل المنصة.', 'This page shows only items returned by the Scientific Committee as practices and then published by the researcher as practices.')}</p>
+      <h1 id="practices-title">{t('دفتر الممارسات', 'Practice Notebook')}</h1>
+      <p>{t('ممارسات وافقت عليها لجنة تقييم الأبحاث ونشرها أصحابها. القراءة والنشر مجانيان.', 'Practices approved by the Research Evaluation Committee and published by their authors. Reading and publication are free.')}</p>
     </header>
 
     <div className="practices-page__filters">

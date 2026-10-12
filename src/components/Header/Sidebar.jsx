@@ -25,7 +25,8 @@ const NAV_GROUPS = {
         { to: '/guide', label: 'الدليل الفلسطيني' },
         { to: '/template', label: 'القالب الفلسطيني' },
         { to: '/library', label: 'المكتبة الرقمية' },
-        { to: '/practices', label: 'أفضل الممارسات' },
+        { to: '/practices', label: 'دفتر الممارسات' },
+        { to: '/problems', label: 'بنك المشكلات' },
         { to: '/assistant', label: 'المساعد الذكي' },
       ],
     },
@@ -71,7 +72,8 @@ const NAV_GROUPS = {
         { to: '/guide', label: 'Palestinian Guide' },
         { to: '/template', label: 'Palestinian Template' },
         { to: '/library', label: 'Digital Library' },
-        { to: '/practices', label: 'Best Practices' },
+        { to: '/practices', label: 'Practice Notebook' },
+        { to: '/problems', label: 'Problem bank' },
         { to: '/assistant', label: 'AI Assistant' },
       ],
     },
@@ -111,6 +113,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const groups = NAV_GROUPS[language].map((group) => ({
     ...group,
     items: group.items.filter((item) => {
+      if (item.to === '/map') return isAuthenticated && canAccessPath(user?.role, '/map')
       if (item.to === '/login') return !isAuthenticated
       return !isAuthenticated || canAccessPath(user?.role, item.to)
     }),
