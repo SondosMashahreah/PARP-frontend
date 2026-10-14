@@ -43,7 +43,7 @@ const NAV_GROUPS = {
       items: [
         { to: '/observatory', label: 'المرصد الوطني' },
         { to: '/map', label: 'خريطة المديريات والمدارس' },
-        { to: '/dashboard', label: 'لوحة المؤشرات' },
+        { to: '/dashboard', label: 'لوحة التحكم' },
         { to: '/institutions', label: 'المدارس والمديريات' },
         { to: '/excellence', label: 'قاعة التميز' },
       ],
@@ -113,6 +113,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const groups = NAV_GROUPS[language].map((group) => ({
     ...group,
     items: group.items.filter((item) => {
+      if (item.to === '/workspace' && user?.role === 'system_admin') return false
       if (item.to === '/map') return isAuthenticated && canAccessPath(user?.role, '/map')
       if (item.to === '/login') return !isAuthenticated
       return !isAuthenticated || canAccessPath(user?.role, item.to)

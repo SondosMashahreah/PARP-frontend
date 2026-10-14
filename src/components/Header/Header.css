@@ -67,3 +67,38 @@
   .site-header__nav-short { display: inline; }
 }
 @media (max-width: 380px) { .site-header__nav { gap: 16px; padding-inline: 12px; } }
+
+/* Administrator account navigation; all other account links remain unchanged. */
+.site-header__account-menu {
+  position: relative;
+}
+.site-header__account-menu > button {
+  font: inherit;
+  cursor: pointer;
+}
+.site-header__account-links {
+  position: absolute;
+  top: calc(100% + 12px);
+  inset-inline-end: 0;
+  width: 220px;
+  padding: 8px;
+  border: 1px solid #72536d;
+  border-radius: 13px;
+  background: #281b35;
+  box-shadow: 0 16px 40px #0006;
+  z-index: 100;
+}
+.site-header__account-links a {
+  display: block;
+  padding: 13px;
+  color: #f9ecf4;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.site-header__account-links a:hover,
+.site-header__account-links a:focus-visible {
+  background: #54354f;
+  outline: 2px solid #f0b99a;
+  outline-offset: -2px;
+}
