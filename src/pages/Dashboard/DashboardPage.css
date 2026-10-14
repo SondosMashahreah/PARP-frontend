@@ -7,21 +7,21 @@
 .ac-metric {
   position: relative;
   border-radius: 17px;
-  background: #eeb796;
+  background: #f6dccd;
   color: #342337;
   padding: 20px;
   overflow: hidden;
   min-height: 158px;
-  border: 1px solid #ffd3b5;
+  border: 1px solid #f6dccd;
 }
 .ac-metric:nth-child(4n + 2) {
-  background: #f1c3a6;
+  background: #f6dccd;
 }
 .ac-metric:nth-child(4n + 3) {
-  background: #e5ad93;
+  background: #f6dccd;
 }
 .ac-metric:nth-child(4n) {
-  background: #f5cbb1;
+  background: #f6dccd;
 }
 .ac-metric > div {
   display: flex;
@@ -183,7 +183,7 @@
 .ac-quick-links span {
   font-size: 14px;
   font-weight: 600;
-  color: #f6c6a8;
+  color: #f6dccd;
 }
 .ac-quick-links p {
   font-size: 11px;
@@ -196,7 +196,7 @@
   position: absolute;
   inset-inline-end: 20px;
   bottom: 20px;
-  color: #f2b99a;
+  color: #f6dccd;
 }
 .ac-empty,
 .admin-console .admin-empty {
@@ -259,7 +259,7 @@
   input[type="checkbox"] {
   width: 18px;
   height: 18px;
-  accent-color: #edb797;
+  accent-color: #f6dccd;
 }
 .admin-console :is(.admin-user-form, .admin-user-filters) label {
   display: flex;
@@ -455,7 +455,7 @@
 .ac-timeline li > i {
   width: 9px;
   height: 9px;
-  border: 2px solid #f1bfa1;
+  border: 2px solid #f6dccd;
   border-radius: 50%;
   margin-top: 6px;
   flex-shrink: 0;
@@ -498,7 +498,7 @@
 }
 .ac-news-grid small {
   font-size: 10px;
-  color: #f1bea0;
+  color: #f6dccd;
 }
 @media (max-width: 1250px) {
   .ac-charts {
@@ -580,7 +580,7 @@
   margin-bottom: 20px;
 }
 .ac-file-link {
-  color: #f5c3a6;
+  color: #f6dccd;
   text-decoration: underline !important;
 }
 .ac-event-note {

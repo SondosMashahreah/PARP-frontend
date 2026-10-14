@@ -3,7 +3,7 @@
   --ac-panel: #30223d;
   --ac-line: #51405f;
   --ac-muted: #c1b3cc;
-  --ac-peach: #f0b99a;
+  --ac-peach: #f6dccd;
   min-height: 100dvh;
   background: var(--ac-bg);
   color: #faf5ff;
@@ -104,7 +104,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #edb797;
+  background: #f6dccd;
   color: #382035;
   display: grid;
   place-items: center;

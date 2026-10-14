@@ -35,22 +35,15 @@ export default function AdminLayout({
           <img src={logo} alt="PARP" />
         </span>
         <span>
-          <strong>
-            PARP<span> / </span>ADMIN
-          </strong>
-          <small>{t("مركز إدارة المنصة", "Platform control center")}</small>
-        </span>
-      </RouteLink>
-      <div className="ac-rail-profile">
-        <span className="ac-avatar">
-          {user.full_name?.trim().charAt(0) || "A"}
-        </span>
-        <div>
+  
+                  <div>
           <strong>{user.full_name}</strong>
           <small>{t("مدير النظام", "System administrator")}</small>
         </div>
-        <span className="ac-role-dot" aria-hidden="true" />
-      </div>
+          
+                </span>
+      </RouteLink>
+
       <p className="ac-nav-label">{t("مساحة الإدارة", "MANAGEMENT")}</p>
       <nav aria-label={t("أقسام لوحة التحكم", "Dashboard navigation")}>
         {adminSections.map((item, i) => (

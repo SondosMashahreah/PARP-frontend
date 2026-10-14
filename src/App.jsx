@@ -121,6 +121,15 @@ function App() {
       </>
     );
 
+    if (pathname === "/login") {
+  return (
+    <>
+      {content}
+      <RouteEffects />
+    </>
+  );
+}
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main-content">
