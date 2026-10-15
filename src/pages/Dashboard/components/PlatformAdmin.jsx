@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+﻿import { useCallback, useState } from "react";
 import { useLanguage } from "../../../i18n/useLanguage.js";
 import { ROLE_OPTIONS } from "../../../features/auth/roles.js";
 import { platformApi } from "../../../features/platform/platformApi.js";
@@ -74,11 +74,10 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
               className="admin-user-form"
               onSubmit={(e) =>
                 submit(e, "/users", "post", (d) => ({
-                  ...d,
-                  conference_id: d.conference_id
-                    ? Number(d.conference_id)
-                    : null,
-                  username: d.username || null,
+                  full_name: d.full_name,
+                  email: d.email,
+                  role: d.role,
+                  password: d.password,
                 }))
               }
             >
@@ -102,7 +101,9 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                 >
-                  {ROLE_OPTIONS.map((r) => (
+                  {ROLE_OPTIONS.filter(
+                    (r) => r.value !== "organizing_committee",
+                  ).map((r) => (
                     <option key={r.value} value={r.value}>
                       {isArabic ? r.ar : r.en}
                     </option>
@@ -123,35 +124,7 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
                   autoComplete="new-password"
                 />
               </label>
-              {role === "organizing_committee" && (
-                <>
-                  <label>
-                    {t("اسم المستخدم", "Username")}
-                    <input
-                      name="username"
-                      required
-                      pattern="[a-zA-Z0-9_.-]{3,80}"
-                    />
-                  </label>
-                  <label>
-                    {t("المؤتمر", "Conference")}
-                    <select name="conference_id" required defaultValue="">
-                      <option value="">—</option>
-                      {conferences.data?.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.title}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <p>
-                    {t(
-                      "يغيّر عضو اللجنة كلمة المرور عند أول دخول.",
-                      "The committee member changes the password on first sign-in.",
-                    )}
-                  </p>
-                </>
-              )}
+
               <button disabled={busy || payments.loading}>
                 {t("إنشاء الحساب", "Create account")}
               </button>
@@ -160,37 +133,33 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
           <details>
             <summary>
               {t(
-                "إعداد أو إعادة تعيين حساب لجنة منظمة موجود",
-                "Configure or reset an existing organizing account",
+                "إنشاء حساب لجنة منظمة",
+                "Create organizing committee account",
               )}
             </summary>
             <p>
               {t(
-                "استخدمي رقم المستخدم من جدول المستخدمين. هذا يحافظ على الحساب ومساهماته.",
-                "Use the user ID from the accounts table. Existing history is preserved.",
+                "هذا الحساب مستقل عن مستخدمي المنصة ولا يحتاج إلى بريد إلكتروني.",
+                "This account is independent from platform users and does not require email.",
               )}
             </p>
             <form
               className="admin-user-form"
-              onSubmit={(e) => {
-                const id = new FormData(e.currentTarget).get("user_id");
-                submit(e, `/users/${id}/committee`, "put", (d) => ({
+              onSubmit={(e) =>
+                submit(e, "/committee/accounts", "post", (d) => ({
                   username: d.username,
                   conference_id: Number(d.conference_id),
                   password: d.password,
-                }));
-              }}
+                }))
+              }
             >
-              <label>
-                {t("رقم المستخدم", "User ID")}
-                <input name="user_id" type="number" min="1" required />
-              </label>
               <label>
                 {t("اسم المستخدم", "Username")}
                 <input
                   name="username"
-                  pattern="[a-zA-Z0-9_.-]{3,80}"
+                  pattern="[A-Za-z0-9._\\-]{3,80}"
                   required
+                  autoComplete="off"
                 />
               </label>
               <label>
@@ -205,7 +174,7 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
                 </select>
               </label>
               <label>
-                {t("كلمة مرور مؤقتة", "Temporary password")}
+                {t("كلمة المرور", "Password")}
                 <input
                   type="password"
                   name="password"
@@ -216,10 +185,7 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
                 />
               </label>
               <button disabled={busy || payments.loading}>
-                {t(
-                  "حفظ وإلزام تغيير كلمة المرور",
-                  "Save and require password change",
-                )}
+                {t("إنشاء حساب اللجنة", "Create committee account")}
               </button>
             </form>
           </details>
