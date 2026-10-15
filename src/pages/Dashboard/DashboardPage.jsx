@@ -12,6 +12,7 @@ import {
 import AdminLayout from "../../layouts/AdminLayout/AdminLayout.jsx";
 import { AdminError, AdminLoading } from "./components/AdminUi.jsx";
 import AdminOverview from "./sections/AdminOverview.jsx";
+import AdminExcellence from "./sections/AdminExcellence.jsx";
 import AdminUsers from "./sections/AdminUsers.jsx";
 import AdminNews from "./sections/AdminNews.jsx";
 import AdminReviews from "./sections/AdminReviews.jsx";
@@ -71,6 +72,7 @@ function Dashboard() {
         <AdminOverview data={resource.data} ar={ar} />
       )}
       <div key={`${section}-${revision}`}>
+        {section === "excellence" && <AdminExcellence ar={ar} />}
         {section === "users" && <AdminUsers />}
         {section === "news" && <AdminNews ar={ar} />}{" "}
         {section === "reviews" && <AdminReviews ar={ar} />}{" "}

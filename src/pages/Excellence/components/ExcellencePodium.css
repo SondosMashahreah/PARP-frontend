@@ -1,0 +1,107 @@
+.ex-podium{min-width:0;text-align:center;isolation:isolate}.ex-podium__scene{position:relative;aspect-ratio:1;perspective:900px;transition:transform .6s cubic-bezier(.2,.8,.2,1);isolation:isolate}.ex-podium__art{position:absolute;inset:0;background:url('../../../assets/excellence/podium.png') center/contain no-repeat;mask-image:radial-gradient(ellipse 70% 75% at 50% 51%,#000 59%,transparent 94%);pointer-events:none}.ex-podium__portrait{position:absolute;left:24%;right:24%;top:12%;height:49%;display:flex;align-items:flex-end;justify-content:center;z-index:2;overflow:hidden;mask-image:linear-gradient(#000 87%,transparent 100%)}.ex-podium__portrait img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 0 13px #ba55ef55);border-radius:42% 42% 3% 3%}.ex-podium__initial{width:80%;height:75%;display:grid;place-items:center;font-size:5rem;font-family:serif;background:radial-gradient(ellipse,#5c2b69,#1b102b);color:#ffe1ac;border-radius:48% 48% 0 0}.ex-podium__plaque{position:absolute;z-index:4;top:64%;left:22%;right:22%;height:15%;color:#e9ddee;text-shadow:0 2px 9px #08020c;display:flex;align-items:center;flex-direction:column;justify-content:center}.ex-podium__plaque h2{color:#ffdda0;font-size:clamp(15px,1.3vw,21px);line-height:1.35;margin:0;font-weight:650;overflow-wrap:anywhere;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ex-podium__diamond{font-size:13px;color:#d9a95d;line-height:1;margin:2px 0;display:flex;align-items:center;gap:10px}.ex-podium__diamond:before,.ex-podium__diamond:after{content:'';height:1px;width:40px;background:linear-gradient(90deg,transparent,#b057a8,transparent)}.ex-podium__plaque a,.ex-podium__plaque p{font-size:clamp(11px,.95vw,14px);line-height:1.35;color:#e4d7ed;text-decoration:none;margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;overflow-wrap:anywhere}.ex-podium__plaque a:hover{color:#ffe3aa;text-decoration:underline}.ex-podium__plaque a:focus-visible{outline:2px solid #ffe3aa;outline-offset:4px;border-radius:4px}.ex-podium__caption{display:flex;justify-content:center;align-items:center;gap:12px;color:#ae9abf;padding:0 20px;font-size:11px;line-height:1.7;margin-top:-4px}.ex-podium__caption span{color:#e9c788;letter-spacing:1px;border-inline-end:1px solid #63465a;padding-inline-end:12px;flex-shrink:0}.ex-podium__caption p{margin:0}.ex-podium__mist{position:absolute;inset:24% 6% 14%;background:radial-gradient(ellipse at 18% 65%,#b249e64a,transparent 33%),radial-gradient(ellipse at 84% 45%,#af32eb44,transparent 36%);filter:blur(17px);animation:ex-mist 9s ease-in-out infinite alternate;pointer-events:none;z-index:1}.ex-podium__orbit{position:absolute;inset:56% 9% 5%;border-radius:50%;transform:rotateX(67deg);border:1px solid #f8bd7044;pointer-events:none;z-index:3}.ex-podium__orbit i{position:absolute;inset:0;border-radius:50%;animation:ex-orbit 16s linear infinite}.ex-podium__orbit i:before{content:'';position:absolute;left:50%;top:-2px;width:9px;height:9px;background:#fff3d0;border-radius:50%;box-shadow:0 0 9px 3px #ffbb6b,0 0 22px 4px #ff7fc6}.ex-podium:nth-child(3n+2) .ex-podium__mist{animation-delay:-3s}.ex-podium:nth-child(3n) .ex-podium__orbit i{animation-delay:-7s}.ex-motion-paused .ex-podium *{animation-play-state:paused!important}.ex-podium:hover .ex-podium__scene{transform:translateY(-5px) rotateX(2deg)}@keyframes ex-mist{to{transform:translateY(-10px) scale(1.08);opacity:.5}}@keyframes ex-orbit{to{transform:rotate(360deg)}}@media(max-width:650px){.ex-podium__plaque h2{font-size:20px}.ex-podium__plaque a,.ex-podium__plaque p{font-size:13px}}@media(prefers-reduced-motion:reduce){.ex-podium *{animation:none!important;transition:none!important}.ex-podium:hover .ex-podium__scene{transform:none}}
+.ex-podium__portrait {
+  left: 25%;
+  right: auto;
+  top: 11%;
+  width: 50%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.ex-podium__portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+  filter: none;
+}
+
+.ex-podium__initial {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.ex-podium__portrait {
+  left: 20%;
+  top: 3%;
+  width: 60%;
+  right: auto;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.ex-podium__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.ex-podium__portrait {
+  left: 22%;
+  top: 5%;
+  width: 56%;
+  right: auto;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.ex-podium__portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 0;
+  filter: none;
+}
+
+.ex-podium__portrait {
+  left: 22%;
+  right: auto;
+  top: 7.2%;
+  width: 55.5%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+
+  /* إبقاء الصورة خلف مستوى سطح المنصة */
+  clip-path: inset(0 0 9% 0);
+
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+.ex-podium__portrait img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 0;
+  filter: none;
+}
+
+.ex-podium__initial {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.ex-podium__portrait {
+  clip-path: none;
+}

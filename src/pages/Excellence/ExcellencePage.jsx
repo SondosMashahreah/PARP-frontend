@@ -1,9 +1,21 @@
+import { useCallback, useState } from 'react'
 import { useLanguage } from '../../i18n/useLanguage.js'
-import PlatformPageFrame from '../../components/platform/PlatformPageFrame.jsx'
-import { content } from './ExcellencePage.content.js'
+import { useLocation } from '../../routing/useLocation.js'
+import { useAdminResource } from '../../features/admin/useAdminResource.js'
+import { excellenceApi } from '../../features/excellence/excellenceApi.js'
+import ExcellencePodium from './components/ExcellencePodium.jsx'
+import ExcellenceResearcher from './components/ExcellenceResearcher.jsx'
+import ExcellenceAbstract from './components/ExcellenceAbstract.jsx'
 import './ExcellencePage.css'
-
-export default function ExcellencePage() {
-  const { isArabic } = useLanguage()
-  return <PlatformPageFrame page={content[isArabic ? 'ar' : 'en']}></PlatformPageFrame>
+const loadFilters=()=>excellenceApi.filters()
+function Hall({ar}) {
+ const [filters,setFilters]=useState({q:'',year:'',conference_id:'',offset:0}),[paused,setPaused]=useState(false)
+ const load=useCallback(()=>excellenceApi.list({...filters,limit:24}),[filters]), resource=useAdminResource(load), options=useAdminResource(loadFilters)
+ const t=(a,e)=>ar?a:e
+ return <div className={`ex-hall ${paused?'ex-motion-paused':''}`}><header className="ex-hero"><span className="ex-kicker">PARP / HALL OF EXCELLENCE</span><span className="ex-emblem" aria-hidden="true">✦</span><h1>{t('للبحث أثر. وللتميّز مكان.','Research creates impact. Excellence belongs here.')}</h1><p>{t('نحتفي بالباحثين الذين يحوّلون الأفكار إلى ممارسات تصنع فرقاً في التعليم.','Celebrating researchers who turn ideas into practices that make a difference in education.')}</p><div className="ex-hero-rule" aria-hidden="true"><i/>◇<i/></div></header>
+ <form className="ex-filters" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);setFilters({q:String(f.get('q')).trim(),year:f.get('year'),conference_id:f.get('conference_id'),offset:0})}} onReset={()=>setFilters({q:'',year:'',conference_id:'',offset:0})}><label className="ex-search"><span>{t('الباحث أو البحث','Researcher or research')}</span><input name="q" type="search" maxLength={150} placeholder={t('ابحث بالاسم أو بعنوان البحث…','Search a name or research title…')}/></label><label><span>{t('السنة','Year')}</span><select name="year" defaultValue=""><option value="">{t('كل السنوات','All years')}</option>{options.data?.years.map(y=><option key={y}>{y}</option>)}</select></label><label><span>{t('المؤتمر','Conference')}</span><select name="conference_id" defaultValue=""><option value="">{t('كل المؤتمرات','All conferences')}</option>{options.data?.conferences.map(c=><option key={c.id} value={c.id}>{ar?c.title:c.title_en} · {c.year}</option>)}</select></label><button type="submit">{t('بحث','Search')}</button><button type="reset" className="ex-reset">{t('مسح','Reset')}</button></form>
+ <div className="ex-results-line"><span>{resource.data&&!resource.loading?`${resource.data.total} ${t('باحثاً متميزاً','distinguished researchers')}`:t('قاعة التميز','Hall of excellence')}</span><button type="button" aria-pressed={paused} onClick={()=>setPaused(p=>!p)}>{paused?t('تشغيل الحركة','Enable motion'):t('إيقاف الحركة','Pause motion')}</button></div>
+ {options.error&&<p role="alert">{t('تعذر تحميل خيارات التصنيف.','Could not load filter options.')} <button onClick={options.reload}>{t('إعادة المحاولة','Retry')}</button></p>}{resource.error&&<div className="ex-empty" role="alert"><p>{t('تعذر تحميل قاعة التميز.','Could not load the hall.')}</p><button onClick={resource.reload}>{t('إعادة المحاولة','Retry')}</button></div>}{resource.loading?<p className="ex-empty" role="status">{t('نجهّز منصات التميّز…','Preparing the hall…')}</p>:!resource.error&&<><div className="ex-grid">{resource.data?.items.map(entry=><ExcellencePodium key={entry.id} entry={entry} ar={ar}/>)}</div>{!resource.data?.items.length&&<div className="ex-empty"><span aria-hidden="true">✧</span><h2>{t('كل إنجاز يستحق أن يُروى','Every achievement deserves a story')}</h2><p>{t('لا توجد بطاقات مطابقة حالياً. ستظهر هنا الأبحاث التي تُضاف إلى قاعة التميز.','No matching entries yet. Research added to the hall will appear here.')}</p></div>}</>}
+ {resource.data?.total>24&&<nav className="ex-pagination" aria-label={t('صفحات النتائج','Result pages')}><button disabled={resource.loading||filters.offset===0} onClick={()=>setFilters(f=>({...f,offset:f.offset-24}))}>{t('السابق','Previous')}</button><span>{Math.floor(filters.offset/24)+1} / {Math.ceil(resource.data.total/24)}</span><button disabled={resource.loading||filters.offset+24>=resource.data.total} onClick={()=>setFilters(f=>({...f,offset:f.offset+24}))}>{t('التالي','Next')}</button></nav>}</div>
 }
+export default function ExcellencePage(){const {isArabic:ar,dir}=useLanguage(),{search}=useLocation(),id=new URLSearchParams(search).get('entry'),researcher=new URLSearchParams(search).get('researcher');return <div className="excellence-page" dir={dir}>{researcher&&/^\d+$/.test(researcher)?<ExcellenceResearcher key={researcher} id={researcher} ar={ar}/>:id&&/^\d+$/.test(id)?<ExcellenceAbstract key={id} id={id} ar={ar}/>:<Hall ar={ar}/>}</div>}

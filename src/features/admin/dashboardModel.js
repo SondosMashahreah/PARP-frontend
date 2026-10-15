@@ -1,5 +1,6 @@
 export const adminSections = [
   { id: "overview", ar: "الإحصائيات", en: "Overview", icon: "overview" },
+  { id: "excellence", ar: "قاعة التميز", en: "Hall of excellence", icon: "excellence" },
   { id: "users", ar: "المستخدمون", en: "Users", icon: "users" },
   { id: "news", ar: "الأخبار", en: "News", icon: "news" },
   {

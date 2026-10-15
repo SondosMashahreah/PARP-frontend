@@ -28,6 +28,7 @@ const PUBLIC_PATHS = new Set([
   "/news",
   "/practices",
   "/repository",
+  "/excellence",
 ]);
 
 function App() {
