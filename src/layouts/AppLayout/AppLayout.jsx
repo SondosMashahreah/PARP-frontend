@@ -2,12 +2,15 @@ import { useLanguage } from '../../i18n/useLanguage.js'
 import Footer from '../../components/Footer/Footer.jsx'
 import Header from '../../components/Header/Header.jsx'
 import './AppLayout.css'
+import { useLocation } from '../../routing/useLocation.js'
 
 export default function AppLayout({ children }) {
   const { isArabic } = useLanguage()
+  const { pathname } = useLocation()
+  const isAssistant = pathname === '/assistant'
 
   return (
-    <div className="app-layout">
+    <div className={`app-layout ${isAssistant ? 'app-layout--assistant' : ''}`}>
       <Header />
       <main
         id="main-content"
@@ -17,7 +20,7 @@ export default function AppLayout({ children }) {
       >
         {children}
       </main>
-      <Footer />
+      {!isAssistant && <Footer />}
     </div>
   )
 }

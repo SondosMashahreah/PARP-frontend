@@ -70,6 +70,7 @@ export default function CompactNewsSlider({
   })
 
   const handlePointerDown = (event) => {
+    if (event.target.closest('a, button, input')) return
     if (event.pointerType === 'mouse' && event.button !== 0) return
     pointerStartRef.current = event.clientX
     setIsDragging(true)
@@ -177,7 +178,7 @@ export default function CompactNewsSlider({
                     </div>
                     <h3 dir="auto">{item.title}</h3>
                     {role === 'active' && (
-                      <RouteLink className="parp-news__story-link" to="/news">
+                      <RouteLink className="parp-news__story-link" to={item.href || `/news?article=${encodeURIComponent(item.id)}`}>
                         <span>عرض التفاصيل</span>
                         <span aria-hidden="true">←</span>
                       </RouteLink>

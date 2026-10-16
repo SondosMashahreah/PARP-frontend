@@ -19,11 +19,11 @@ test('Opposite-language research query opens the corresponding research record',
   assert.equal(ar.to, '/repository#r3')
   assert.notEqual(ar.title, en.title)
 })
-test('News and all eight journey results have distinct destinations', () => {
+test('Journey destinations are distinct and static search never invents news', () => {
   const steps = searchIndex.filter((item) => item.type === 'journey')
   assert.equal(new Set(steps.map((item) => item.to)).size, 8)
   assert.equal(steps[7].to, '/#journey-step-8')
-  assert.ok(searchPlatform('شراكات').some((item) => item.to === '/news#news-4'))
+  assert.equal(searchIndex.filter(item => item.type === 'news').length, 0)
   assert.equal(new Set(searchIndex.map((item) => item.id)).size, searchIndex.length)
 })
 test('Empty, punctuation-only and unmatched searches return no invented results', () => {

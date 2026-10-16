@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useNews } from '../../features/news/useNews.js'
+import { displayNews } from '../../features/news/newsApi.js'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { searchPlatform } from '../../features/search/application/searchPlatform.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
@@ -9,7 +11,8 @@ import './SearchPage.css'
 export default function SearchPage({ query = '' }) {
   const { language, isArabic, dir } = useLanguage()
   const [input, setInput] = useState(query)
-  const results = searchPlatform(query, { language })
+  const { data: news, loading: newsLoading, error: newsError } = useNews({ q: query, limit: 100 })
+  const results = [...searchPlatform(query, { language }), ...(query.trim() ? news?.items || [] : []).map(row => { const item = displayNews(row, isArabic); return { id: `news:${item.id}`, type: 'news', title: item.title, description: item.excerpt, to: item.href } })]
   const types = isArabic ? { page: 'صفحة', news: 'خبر', research: 'بحث', journey: 'رحلة الباحث' } : { page: 'Page', news: 'News', research: 'Research', journey: 'Research journey' }
   function submit(event) { event.preventDefault(); navigate(`/search?q=${encodeURIComponent(input.trim())}`) }
   return <section className="search-page" dir={dir} aria-labelledby="search-title">
@@ -22,6 +25,8 @@ export default function SearchPage({ query = '' }) {
       <button type="submit" aria-label={isArabic ? 'بحث' : 'Search'}><Icon name="search" /><span>{isArabic ? 'بحث' : 'Search'}</span></button>
     </form>
     {query.trim() ? <>
+      {newsLoading && <p role="status">{isArabic ? 'جاري البحث في الأخبار…' : 'Searching news…'}</p>}
+      {newsError && <p role="status">{isArabic ? 'نتائج الأخبار غير متاحة حالياً.' : 'News results are temporarily unavailable.'}</p>}
       <p className="search-page__count" role="status">{isArabic ? `${results.length} نتيجة لـ` : `${results.length} results for`} <bdi>“{query}”</bdi></p>
       {results.length ? <ol className="search-page__results">{results.map((result) => <li key={result.id}>
         <RouteLink to={result.to}><small>{types[result.type]}</small><h2>{result.title}</h2><p>{result.description}</p><span className="search-page__arrow" aria-hidden="true">{isArabic ? '←' : '→'}</span></RouteLink>

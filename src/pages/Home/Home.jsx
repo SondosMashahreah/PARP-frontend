@@ -1,8 +1,7 @@
 import SpaceJourney from '../../components/SpaceJourney/SpaceJourney.jsx'
 import SpaceJourneyEn from '../../components/SpaceJourney/SpaceJourney.en.jsx'
-import { getLatestNews } from '../../features/news/application/getLatestNews.js'
-import { newsRepository } from '../../features/news/data/newsRepository.js'
-import { newsRepositoryEn } from '../../features/news/data/newsRepository.en.js'
+import { useNews } from '../../features/news/useNews.js'
+import { displayNews } from '../../features/news/newsApi.js'
 import LatestNewsSlider from '../../features/news/presentation/LatestNewsSlider/CompactNewsSlider.jsx'
 import LatestNewsSliderEn from '../../features/news/presentation/LatestNewsSlider/CompactNewsSlider.en.jsx'
 import { getPlatformStats } from '../../features/platform/data/platformStats.js'
@@ -15,11 +14,13 @@ import './Home.css'
 
 export default function Home() {
   const { language, isArabic, dir } = useLanguage()
-  const latestNews = getLatestNews(isArabic ? newsRepository : newsRepositoryEn)
-  const stats = getPlatformStats(language)
+  const { data: news, loading: newsLoading, error: newsError } = useNews({ limit: 12 })
+  const latestNews = (news?.items || []).map(row => displayNews(row, isArabic))
+  const stats = getPlatformStats(language, news?.total ?? null)
   return (
     <>
       <div id="news">
+        {(newsLoading || newsError || news?.total === 0) && <p role="status" style={{ textAlign: 'center', padding: 32 }}>{newsLoading ? (isArabic ? 'جاري تحميل الأخبار…' : 'Loading news…') : newsError ? (isArabic ? 'الأخبار غير متاحة حالياً.' : 'News is temporarily unavailable.') : (isArabic ? 'لا توجد أخبار منشورة حالياً.' : 'No news published yet.')}</p>}
         {isArabic ? <LatestNewsSlider items={latestNews} autoplay autoplayDelay={4200} /> : <LatestNewsSliderEn items={latestNews} autoplay autoplayDelay={4200} />}
       </div>
       <section className="home-stats" id="stats" dir={dir} aria-labelledby="home-stats-title">

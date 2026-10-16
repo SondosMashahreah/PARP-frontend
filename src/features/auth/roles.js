@@ -12,7 +12,7 @@ export const ROLE_OPTIONS = [
 export const ROLE_VALUES = ROLE_OPTIONS.map((role) => role.value)
 
 // Pages that every authenticated account can use regardless of role.
-const SHARED_AUTH_PATHS = ['/', '/about', '/search', '/profile', '/support', '/repository', '/excellence', '/practices']
+const SHARED_AUTH_PATHS = ['/', '/about', '/news', '/search', '/profile', '/support', '/repository', '/excellence', '/practices', '/assistant']
 
 // Navigation access mirrors the responsibilities defined for each role in the PARP plan.
 // Action-level authorization is still enforced by the backend; this map only controls UI navigation.
@@ -22,7 +22,7 @@ const ACCESS = {
     '/library', '/assistant', '/practices', '/news', '/problems',
   ],
   reviewer: ['/workspace', '/repository', '/guide', '/library'],
-  school_manager: ['/workspace', '/institutions', '/repository', '/excellence', '/practices'],
+  school_manager: ['/workspace', '/institutions', '/repository', '/excellence', '/practices', '/assistant'],
   directorate_manager: ['/workspace', '/institutions', '/map', '/repository', '/excellence', '/training', '/practices'],
   scientific_committee: ['/workspace', '/repository', '/guide', '/template', '/conference', '/practices'],
   organizing_committee: ['/workspace', '/conference', '/news', '/excellence'],
