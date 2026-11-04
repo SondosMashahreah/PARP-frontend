@@ -18,6 +18,8 @@ export default function AdminOverview({ data, ar }) {
     [t("الأعمال المنشورة", "Published works"), statuses.published, "reviews"],
     [t("المديريات", "Directorates"), edu.directorates, "school"],
     [t("المدارس", "Schools"), edu.schools, "school"],
+    [t("مديريات لها أبحاث منشورة", "Directorates with published research"), edu.published_directorates, "school"],
+    [t("مدارس لها أبحاث منشورة", "Schools with published research"), edu.published_schools, "school"],
     [
       t("تقييمات بانتظار الإنجاز", "Reviews awaiting completion"),
       m.reviews_waiting,

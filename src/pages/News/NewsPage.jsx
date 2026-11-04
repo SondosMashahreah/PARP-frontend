@@ -6,6 +6,7 @@ import { useNews } from '../../features/news/useNews.js'
 import { displayNews } from '../../features/news/newsApi.js'
 import './NewsPage.css'
 import './LiveNews.css'
+import NewsGallery from './components/NewsGallery.jsx'
 import './NewsFullWidth.css'
 
 export default function NewsPage() {
@@ -24,7 +25,7 @@ export default function NewsPage() {
     {article && <article className="live-news__article">
       <span className="live-news__category">{article.category}</span><h1>{article.title}</h1>
       <time dateTime={article.publishedAt}>{date(article.publishedAt)}</time>
-      {article.image && <img className="live-news__hero" src={article.image} alt={article.imageAlt} />}
+      <NewsGallery images={article.images} title={article.title} ar={ar} />
       {article.excerpt && <p className="live-news__intro">{article.excerpt}</p>}
       <div className="live-news__body">{article.body}</div>
     </article>}
