@@ -67,6 +67,7 @@ export default function Header() {
         ["stats", "المنصة بالأرقام", "أرقامنا"],
         ["space-journey", "رحلة الباحث", "رحلتك"],
         ["platform-values", "عن المنصة", "عن المنصة"],
+        ["/excellence", "قاعة التميز", "التميز"],
         ["contact", "تواصل معنا", "تواصل معنا"],
       ]
     : [
@@ -74,6 +75,7 @@ export default function Header() {
         ["stats", "Platform stats", "Stats"],
         ["space-journey", "Research journey", "Journey"],
         ["platform-values", "About PARP", "About"],
+        ["/excellence", "Hall of Excellence", "Excellence"],
         ["contact", "Contact us", "Contact"],
       ];
   const memberLinks = isArabic
@@ -105,7 +107,9 @@ export default function Header() {
               ]
             : link,
         )
-    : guestLinks.map(([id, label, short]) => [`/#${id}`, label, short]);
+    : guestLinks.map(([id, label, short]) => [
+        id.startsWith('/') ? id : `/#${id}`, label, short,
+      ]);
   const accountName = isAuthenticated
     ? user?.full_name || (isArabic ? "الملف الشخصي" : "Profile")
     : isArabic

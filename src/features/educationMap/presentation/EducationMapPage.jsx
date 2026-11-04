@@ -15,6 +15,7 @@ import {
 import { mapStrings, schoolTypeLabel } from './strings.js'
 import MapCanvas from './MapCanvas.jsx'
 import './EducationMap.css'
+import './MapFullScreen.css'
 
 const INITIAL_FILTERS = {
   q: '',
@@ -336,6 +337,11 @@ function Directory({
             <button className="education-map__clear" onClick={clear}>
               {copy.clear}
             </button>
+          </details>
+          <details className="education-map__sources-toggle">
+            <summary>{language === 'ar' ? 'مصادر البيانات' : 'Data sources'}</summary>
+            <p>{copy.sourceNote}</p>
+            <p>{copy.directoryNote}</p>
           </details>
           <div
             className="education-map__results"

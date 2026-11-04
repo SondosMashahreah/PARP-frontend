@@ -8,6 +8,7 @@ import {
   localizedName,
   EMPTY_GEOJSON,
 } from '../domain/geography.js'
+import { governorateLabelPoint } from '../domain/governorateLabels.js'
 
 export default function MapCanvas({
   geography,
@@ -347,6 +348,25 @@ export default function MapCanvas({
         : '#4a2c64',
     )
   }, [ready, geography, directorateGeography, counts])
+  // Accessible names are taken from imported governorate polygons. HTML markers
+  // avoid external glyph/font dependencies and never intercept map interaction.
+  useEffect(() => {
+    if (!ready || !mapRef.current) return undefined
+    const markers = geography.features.flatMap((feature) => {
+      const point = governorateLabelPoint(feature)
+      const name = localizedName(feature.properties, language)
+      if (!point || !name) return []
+      const element = document.createElement('span')
+      element.className = 'education-map__governorate-label'
+      element.dir = language === 'ar' ? 'rtl' : 'ltr'
+      element.textContent = name
+      element.setAttribute('aria-hidden', 'true')
+      const marker = new maplibregl.Marker({ element, anchor: 'center' })
+        .setLngLat(point).addTo(mapRef.current)
+      return [marker]
+    })
+    return () => markers.forEach((marker) => marker.remove())
+  }, [ready, geography, language])
   useEffect(() => {
     if (ready) mapRef.current.getSource('schools').setData(points)
   }, [ready, points])
