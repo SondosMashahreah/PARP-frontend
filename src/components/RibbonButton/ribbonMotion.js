@@ -8,6 +8,13 @@ export const easeInOut = (value) => {
   return t * t * (3 - 2 * t)
 }
 
+// Forward flight starts with an unextended strip; the return retracts it and
+// rewinds the circle rim through exactly the reverse eased progress.
+export function ribbonFlightProgress(time, returning = false) {
+  const p = easeInOut(time)
+  return { extension: returning ? 1 - p : p, progress: returning ? 1 - p : 1 }
+}
+
 // One clock drives both the rolling rim and the continuous strip of ribbon.
 export function ribbonLoopProgress(elapsed) {
   const time = ((elapsed % RIBBON_CYCLE_MS) + RIBBON_CYCLE_MS) % RIBBON_CYCLE_MS

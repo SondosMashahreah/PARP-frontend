@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { RIBBON_CYCLE_MS, ribbonLoopProgress, ribbonOpeningProgress, ribbonGeometry } from '../src/components/RibbonButton/ribbonMotion.js'
+import { RIBBON_CYCLE_MS, ribbonLoopProgress, ribbonOpeningProgress, ribbonFlightProgress, ribbonGeometry } from '../src/components/RibbonButton/ribbonMotion.js'
 
 test('The ribbon holds, unwraps fully, holds for reading and rewinds without a cycle jump', () => {
   assert.equal(ribbonLoopProgress(0), 0)
@@ -72,5 +72,20 @@ test('The page ribbon extends its tail without scaling or moving the circle', ()
     assert.ok(page.start < button.start)
     assert.ok(page.start > 0)
     assert.equal(page.end, button.end)
+  }
+})
+
+test('Closing the poster reverses the flight strip and circle rotation back to the idle button', () => {
+  assert.deepEqual(ribbonFlightProgress(0, true), { extension: 1, progress: 1 })
+  assert.deepEqual(ribbonFlightProgress(1, true), { extension: 0, progress: 0 })
+  assert.deepEqual(ribbonFlightProgress(0, false), { extension: 0, progress: 1 })
+  assert.deepEqual(ribbonFlightProgress(1, false), { extension: 1, progress: 1 })
+  for (let step = 0; step <= 100; step++) {
+    const t = step / 100
+    const forward = ribbonFlightProgress(t)
+    const backward = ribbonFlightProgress(1 - t, true)
+    assert.ok(Math.abs(forward.extension - backward.extension) < 1e-10)
+    assert.equal(backward.extension, backward.progress)
+    assert.ok(forward.extension >= 0 && forward.extension <= 1)
   }
 })

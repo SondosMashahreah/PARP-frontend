@@ -4,6 +4,25 @@
 .ribbon-document { position: relative; --paper-edge: rgb(var(--accent-rgb) / 48%); }
 .ribbon-document__header { position: relative; z-index: 2; margin-bottom: calc(-1 * var(--paper-overlap, 40px)); pointer-events: none; }
 .ribbon-document[data-phase='flying'] .ribbon-document__header { visibility: hidden; }
+/* Transparent hit area precisely over the drawn circle, not the whole ribbon. */
+.ribbon-document__close {
+  position: absolute;
+  left: var(--ribbon-circle-x);
+  top: var(--ribbon-circle-y);
+  width: var(--ribbon-circle-hit);
+  height: var(--ribbon-circle-hit);
+  padding: 0;
+  transform: translate(-50%, -50%);
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.ribbon-document__close:hover { border-color: rgb(var(--accent-rgb) / 45%); }
+.ribbon-document__close:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
+.ribbon-document__close:disabled { cursor: default; pointer-events: none; }
+
 .ribbon-document__paper {
   position: relative;
   z-index: 1;
@@ -36,6 +55,10 @@
 .ribbon-document[data-phase='flying'] .ribbon-document__paper { clip-path: inset(0 -16px 100%); }
 .ribbon-document[data-phase='unrolling'] .ribbon-document__paper { animation: ribbon-paper-open 960ms cubic-bezier(.2, .65, .25, 1) both; }
 .ribbon-document[data-phase='unrolling'] .ribbon-document__roller { animation: ribbon-roller-descend 960ms cubic-bezier(.2, .65, .25, 1) both; }
+.ribbon-document[data-phase='closing'] .ribbon-document__paper { animation: ribbon-paper-close 960ms cubic-bezier(.5, 0, .75, .35) both; }
+.ribbon-document[data-phase='closing'] .ribbon-document__roller { animation: ribbon-roller-ascend 960ms cubic-bezier(.5, 0, .75, .35) both; }
+@keyframes ribbon-paper-close { from { clip-path: inset(0 -16px -30px); } to { clip-path: inset(0 -16px 100%); } }
+@keyframes ribbon-roller-ascend { from { top: 100%; } to { top: 0; } }
 @keyframes ribbon-paper-open { from { clip-path: inset(0 -16px 100%); } to { clip-path: inset(0 -16px -30px); } }
 @keyframes ribbon-roller-descend { from { top: 0; } to { top: 100%; } }
 @media (max-width: 600px) {
