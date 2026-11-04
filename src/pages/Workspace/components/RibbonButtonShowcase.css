@@ -1,0 +1,14 @@
+.ribbon-showcase { position: relative; margin: 24px 0 40px; padding: 28px 0 12px; border-block: 1px solid var(--color-border); }
+.ribbon-showcase__heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 12px; }
+.ribbon-showcase__eyebrow { color: var(--color-accent); font-size: .68rem; letter-spacing: .1em; }
+.ribbon-showcase__heading h2 { margin: 5px 0; font-size: clamp(1.3rem, 3vw, 1.85rem); font-weight: 650; }
+.ribbon-showcase__heading p { margin: 0; color: var(--color-text-muted); font-size: .84rem; }
+.ribbon-showcase__pause { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0; min-height: 44px; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 999px; color: var(--color-text-muted); background: transparent; font-size: .75rem; cursor: pointer; }
+.ribbon-showcase__pause:hover { color: var(--color-text); border-color: var(--color-accent); }
+.ribbon-showcase__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 24px; margin-top: 16px; }
+@media (max-width: 720px) {
+  .ribbon-showcase__grid { grid-template-columns: 1fr; gap: 0; }
+  .ribbon-showcase__heading { align-items: start; gap: 12px; padding-inline: 2px; }
+  .ribbon-showcase__heading p { max-width: 210px; }
+  .ribbon-showcase__pause { font-size: .68rem; padding-inline: 10px; }
+}

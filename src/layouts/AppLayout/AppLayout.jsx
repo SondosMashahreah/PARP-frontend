@@ -3,6 +3,7 @@ import Footer from '../../components/Footer/Footer.jsx'
 import Header from '../../components/Header/Header.jsx'
 import './AppLayout.css'
 import { useLocation } from '../../routing/useLocation.js'
+import { RibbonNavigationProvider } from '../../components/RibbonButton/RibbonNavigation.jsx'
 
 export default function AppLayout({ children }) {
   const { isArabic } = useLanguage()
@@ -10,6 +11,7 @@ export default function AppLayout({ children }) {
   const isAssistant = pathname === '/assistant'
 
   return (
+    <RibbonNavigationProvider>
     <div className={`app-layout ${isAssistant ? 'app-layout--assistant' : ''}`}>
       <Header />
       <main
@@ -22,5 +24,6 @@ export default function AppLayout({ children }) {
       </main>
       {!isAssistant && <Footer />}
     </div>
+    </RibbonNavigationProvider>
   )
 }

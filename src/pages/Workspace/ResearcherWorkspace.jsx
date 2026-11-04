@@ -11,6 +11,8 @@ import {
 } from '../../features/researcher/workspaceSections.js'
 import WorkspaceHub from './components/WorkspaceHub.jsx'
 import ResearchEditor from './components/ResearchEditor.jsx'
+import RibbonButtonShowcase from './components/RibbonButtonShowcase.jsx'
+import { RibbonPage } from '../../components/RibbonButton/RibbonNavigation.jsx'
 import './ResearcherWorkspace.css'
 
 export default function ResearcherWorkspace({
@@ -80,6 +82,7 @@ export default function ResearcherWorkspace({
     .filter((item) => filter === 'all' || item.status === filter)
   return (
     <section className="workspace-page researcher-workspace" dir={dir}>
+      <RibbonPage>
       <header className="workspace-hero">
         <span>PARP / {t('مساحة العمل', 'WORKSPACE')}</span>
         <h1>{titles[section]}</h1>
@@ -116,6 +119,7 @@ export default function ResearcherWorkspace({
             name={user.full_name}
             isArabic={isArabic}
           />
+          <RibbonButtonShowcase role={data.role} isArabic={isArabic} />
           <details className="researcher-affiliation">
             <summary>
               {t(
@@ -400,6 +404,7 @@ export default function ResearcherWorkspace({
           )}
         </div>
       )}
+      </RibbonPage>
     </section>
   )
 }

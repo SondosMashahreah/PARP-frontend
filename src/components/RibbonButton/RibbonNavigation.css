@@ -1,0 +1,47 @@
+.ribbon-flight { position: fixed; inset: 0; z-index: 90; pointer-events: auto; }
+.ribbon-flight__veil { position: absolute; inset: 0; background: rgb(var(--background-rgb) / 94%); }
+.ribbon-flight__button { position: absolute; will-change: top, left, width; }
+.ribbon-document { position: relative; --paper-edge: rgb(var(--accent-rgb) / 48%); }
+.ribbon-document__header { position: relative; z-index: 2; margin-bottom: calc(-1 * var(--paper-overlap, 40px)); pointer-events: none; }
+.ribbon-document[data-phase='flying'] .ribbon-document__header { visibility: hidden; }
+.ribbon-document__paper {
+  position: relative;
+  z-index: 1;
+  width: calc(100% - var(--paper-start, 102px) - var(--paper-end, 12px));
+  margin-inline-end: var(--paper-end, 12px);
+  margin-inline-start: var(--paper-start, 102px);
+  border: 1px solid var(--paper-edge);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(100deg, rgb(var(--accent-rgb) / 5%), transparent 25% 75%, rgb(var(--accent-rgb) / 4%)), var(--color-surface);
+  box-shadow: inset 12px 0 28px rgb(0 0 0 / 8%), 0 24px 64px rgb(0 0 0 / 16%);
+  transform-origin: top;
+}
+.ribbon-document__content { padding: clamp(20px, 4vw, 48px); }
+.ribbon-document__content .workspace-hero { margin-bottom: 24px; }
+.ribbon-document__content .workspace-hero h1 { font-size: clamp(1.6rem, 3.5vw, 2.5rem); }
+.ribbon-document__content .workspace-hero > span { font-size: .72rem; }
+.ribbon-document__content .researcher-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ribbon-document__roller {
+  position: absolute;
+  inset-inline: -5px;
+  top: 100%;
+  height: 13px;
+  border: 1px solid #9867bc;
+  border-radius: 999px;
+  background: linear-gradient(#c194e0, #583574 38%, #261632 65%, #a575c7);
+  box-shadow: 0 9px 16px rgb(0 0 0 / 24%);
+  transform: translateY(-50%);
+}
+.ribbon-document[data-phase='flying'] .ribbon-document__paper { clip-path: inset(0 -16px 100%); }
+.ribbon-document[data-phase='unrolling'] .ribbon-document__paper { animation: ribbon-paper-open 960ms cubic-bezier(.2, .65, .25, 1) both; }
+.ribbon-document[data-phase='unrolling'] .ribbon-document__roller { animation: ribbon-roller-descend 960ms cubic-bezier(.2, .65, .25, 1) both; }
+@keyframes ribbon-paper-open { from { clip-path: inset(0 -16px 100%); } to { clip-path: inset(0 -16px -30px); } }
+@keyframes ribbon-roller-descend { from { top: 0; } to { top: 100%; } }
+@media (max-width: 600px) {
+  .ribbon-document__content { padding: 24px 14px; }
+  .ribbon-document__content .researcher-tiles { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ribbon-document__paper, .ribbon-document__roller { animation: none !important; clip-path: none !important; }
+}
