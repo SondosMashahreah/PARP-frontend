@@ -1,18 +1,21 @@
 export const RIBBON_CYCLE_MS = 10400
-export const RIBBON_FLIGHT_MS = 820
 export const RIBBON_PAPER_MS = 960
+export const RIBBON_REEL_MS = 720
+
+// The reel and poster form a reversible cycle in a single page.
+export const ribbonNextPhase = (phase) => ({
+  'ribbon-opening': 'unrolling',
+  unrolling: 'ready',
+  ready: 'closing',
+  closing: 'ribbon-closing',
+  'ribbon-closing': 'closed',
+  closed: 'ribbon-opening',
+})[phase]
 
 export const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 export const easeInOut = (value) => {
   const t = clamp(value)
   return t * t * (3 - 2 * t)
-}
-
-// Forward flight starts with an unextended strip; the return retracts it and
-// rewinds the circle rim through exactly the reverse eased progress.
-export function ribbonFlightProgress(time, returning = false) {
-  const p = easeInOut(time)
-  return { extension: returning ? 1 - p : p, progress: returning ? 1 - p : 1 }
 }
 
 // One clock drives both the rolling rim and the continuous strip of ribbon.

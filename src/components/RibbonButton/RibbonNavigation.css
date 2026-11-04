@@ -1,9 +1,6 @@
-.ribbon-flight { position: fixed; inset: 0; z-index: 90; pointer-events: auto; }
-.ribbon-flight__veil { position: absolute; inset: 0; background: rgb(var(--background-rgb) / 94%); }
-.ribbon-flight__button { position: absolute; will-change: top, left, width; }
+/* The ribbon is now always attached to its section page; no flight overlay. */
 .ribbon-document { position: relative; --paper-edge: rgb(var(--accent-rgb) / 48%); }
 .ribbon-document__header { position: relative; z-index: 2; margin-bottom: calc(-1 * var(--paper-overlap, 40px)); pointer-events: none; }
-.ribbon-document[data-phase='flying'] .ribbon-document__header { visibility: hidden; }
 /* Transparent hit area precisely over the drawn circle, not the whole ribbon. */
 .ribbon-document__close {
   position: absolute;
@@ -21,8 +18,7 @@
 }
 .ribbon-document__close:hover { border-color: rgb(var(--accent-rgb) / 45%); }
 .ribbon-document__close:focus-visible { outline: 3px solid var(--color-focus); outline-offset: 3px; }
-.ribbon-document__close:disabled { cursor: default; pointer-events: none; }
-
+.ribbon-document__close[aria-disabled='true'] { cursor: progress; }
 .ribbon-document__paper {
   position: relative;
   z-index: 1;
@@ -52,7 +48,8 @@
   box-shadow: 0 9px 16px rgb(0 0 0 / 24%);
   transform: translateY(-50%);
 }
-.ribbon-document[data-phase='flying'] .ribbon-document__paper { clip-path: inset(0 -16px 100%); }
+/* Reeling the silk happens first/last. No paper is shown until the reel opens. */
+.ribbon-document:is([data-phase='closed'], [data-phase='ribbon-opening'], [data-phase='ribbon-closing']) .ribbon-document__paper { display: none; }
 .ribbon-document[data-phase='unrolling'] .ribbon-document__paper { animation: ribbon-paper-open 960ms cubic-bezier(.2, .65, .25, 1) both; }
 .ribbon-document[data-phase='unrolling'] .ribbon-document__roller { animation: ribbon-roller-descend 960ms cubic-bezier(.2, .65, .25, 1) both; }
 .ribbon-document[data-phase='closing'] .ribbon-document__paper { animation: ribbon-paper-close 960ms cubic-bezier(.5, 0, .75, .35) both; }

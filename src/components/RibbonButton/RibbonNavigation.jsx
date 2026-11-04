@@ -1,211 +1,65 @@
-import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { appHref, navigate } from '../../routing/navigation.js'
+import { useCallback, useContext, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { navigate } from '../../routing/navigation.js'
 import { useLocation } from '../../routing/useLocation.js'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { RibbonArtwork } from './RibbonButton.jsx'
 import { RibbonNavigationContext } from './ribbonNavigationContext.js'
 import { ribbonSelectionForRoute } from './ribbonRoutes.js'
-import { easeInOut, ribbonFlightProgress, ribbonGeometry, RIBBON_FLIGHT_MS, RIBBON_PAPER_MS } from './ribbonMotion.js'
+import { easeInOut, ribbonGeometry, RIBBON_REEL_MS, RIBBON_PAPER_MS, ribbonNextPhase } from './ribbonMotion.js'
 import './RibbonNavigation.css'
 
-function originButton(to) {
-  const href = appHref(to)
-  return [...document.querySelectorAll('a.ribbon-button[href]')]
-    .find((element) => element.getAttribute('href') === href)
-}
-
-function RibbonFlight({ selection, returning = false, returnFrom, onLanded, onCancel }) {
-  const source = returning ? returnFrom : selection.source
-  const [position, setPosition] = useState(() => ({ ...source, extension: returning ? 1 : 0, progress: 1 }))
-  useLayoutEffect(() => {
-    let frame
-    let started
-    let destination
-    let attempts = 0
-    const tick = (now) => {
-      if (!destination) {
-        const target = returning ? originButton(selection.to) : document.querySelector('[data-ribbon-destination]')
-        // Wait for the real destination and the route's scroll reset.
-        attempts++
-        if (!target || attempts < 4) {
-          if (attempts > 180) { onCancel(); return }
-          frame = requestAnimationFrame(tick)
-          return
-        }
-        if (returning) target.scrollIntoView({ behavior: 'instant', block: 'center' })
-        destination = target.getBoundingClientRect()
-        started = now
-      }
-      const raw = Math.min(1, (now - started) / RIBBON_FLIGHT_MS)
-      const p = easeInOut(raw)
-      const motion = ribbonFlightProgress(raw, returning)
-      setPosition({
-        left: source.left + (destination.left - source.left) * p,
-        top: source.top + (destination.top - source.top) * p - Math.sin(raw * Math.PI) * 28,
-        width: source.width + (destination.width - source.width) * p,
-        extension: motion.extension,
-        progress: motion.progress,
-      })
-      if (raw < 1) frame = requestAnimationFrame(tick)
-      else onLanded()
-    }
-    frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
-  }, [onCancel, onLanded, returning, selection, source])
-
-  return createPortal(<div className="ribbon-flight" aria-hidden="true">
-    <div className="ribbon-flight__veil" />
-    <div className="ribbon-flight__button" style={{ left: position.left, top: position.top, width: position.width }}>
-      <RibbonArtwork {...selection} progress={position.progress} width={position.width} extension={position.extension} />
-    </div>
-  </div>, document.body)
-}
-
+// Navigation happens only once, after the home button completes its own loop.
+// There is no full-screen flight overlay or delayed destination lookup.
 export function RibbonNavigationProvider({ children }) {
   const { pathname, search, hash } = useLocation()
   const { isArabic } = useLanguage()
   const route = `${pathname}${search}${hash}`
   const fallback = useMemo(() => ribbonSelectionForRoute(route, isArabic), [route, isArabic])
-  const [selection, setSelection] = useState(null)
-  // When loading a deep link or using an older shortcut, no RibbonButton has
-  // reserved a flight. Show the real section inside a ribbon nonetheless.
-  const [fallbackOpeningRoute, setFallbackOpeningRoute] = useState(() =>
-    ribbonSelectionForRoute(route, isArabic) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? route : null
-  )
-  const [returnFrom, setReturnFrom] = useState(null)
-  const [phase, setPhase] = useState('ready')
-  const locked = useRef(false)
+  const [activeSelection, setActiveSelection] = useState(null)
+  const reserved = useRef(null)
+
+  const related = Boolean(activeSelection && (
+    route === activeSelection.to || activeSelection.relatedRoutes?.includes(route)
+  ))
+  const selection = related
+    ? ribbonSelectionForRoute(activeSelection.to, isArabic) || activeSelection
+    : fallback
+
+  // Preserve the same poster while moving among its child pages (e.g. drafts).
+  useEffect(() => {
+    if (!related) setActiveSelection(fallback)
+  }, [fallback, related])
+
   const reserve = useCallback((to) => {
-    if (locked.current) return false
-    locked.current = to
+    if (reserved.current) return false
+    reserved.current = to
     return true
   }, [])
   const release = useCallback((to) => {
-    if (locked.current === to) locked.current = false
+    if (reserved.current === to) reserved.current = null
   }, [])
-  const open = useCallback((next, reducedMotion) => {
-    if (locked.current && locked.current !== next.to) return
-    locked.current = reducedMotion ? false : next.to
-    setSelection(next)
-    setPhase(reducedMotion ? 'ready' : 'flying')
+  const open = useCallback((next) => {
+    if (reserved.current && reserved.current !== next.to) return
+    reserved.current = null
+    setActiveSelection(next)
     navigate(next.to)
   }, [])
-  const land = useCallback(() => setPhase('unrolling'), [])
-  const finish = useCallback(() => { locked.current = false; setPhase('ready') }, [])
-  const reset = useCallback(() => {
-    locked.current = false
-    setSelection(null)
-    setReturnFrom(null)
-    setPhase('ready')
-  }, [])
-  const matches = selection?.to === route || Boolean(selection?.relatedRoutes?.includes(route))
-  const inferred = !selection ? fallback : null
-  const shownSelection = matches ? selection : inferred
-  const isFallbackOpening = Boolean(inferred && fallbackOpeningRoute === route)
-  const shownPhase = matches ? phase : isFallbackOpening ? 'unrolling' : 'ready'
 
-  // A direct URL or any of the original workspace shortcuts should unfold
-  // the actual page, not bypass the ribbon because no selection was stored.
-  useLayoutEffect(() => {
-    if (selection || !fallback || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setFallbackOpeningRoute(null)
-    } else {
-      setFallbackOpeningRoute(route)
-    }
-  }, [fallback, route, selection])
-
-  useEffect(() => {
-    if (!fallbackOpeningRoute) return
-    const timeout = window.setTimeout(() => setFallbackOpeningRoute(null), RIBBON_PAPER_MS)
-    return () => window.clearTimeout(timeout)
-  }, [fallbackOpeningRoute])
-
-  const close = useCallback(() => {
-    const active = shownSelection
-    if (!active || shownPhase !== 'ready' || locked.current) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const to = active.to
-      reset()
-      navigate('/workspace')
-      requestAnimationFrame(() => requestAnimationFrame(() => originButton(to)?.focus({ preventScroll: true })))
-      return
-    }
-    locked.current = active.to
-    // Promote an inferred/direct-link selection to a real selection so that
-    // the closing and return-flight phases keep their source information.
-    setSelection(active)
-    setPhase('closing')
-  }, [reset, shownPhase, shownSelection])
-
-  const beginReturn = useCallback(() => {
-    const header = document.querySelector('[data-ribbon-destination]')
-    if (!header) {
-      reset()
-      navigate('/workspace')
-      return
-    }
-    const rect = header.getBoundingClientRect()
-    setReturnFrom({ left: rect.left, top: rect.top, width: rect.width })
-    setPhase('returning')
-    navigate('/workspace')
-  }, [reset])
-
-  const completeReturn = useCallback(() => {
-    const button = originButton(selection?.to)
-    reset()
-    button?.focus({ preventScroll: true })
-  }, [reset, selection])
-
-  useEffect(() => {
-    if (phase === 'ready') {
-      if (!selection || matches) return
-      // Leaving the ribbon routes normally must not leave a stale selection.
-      const frame = requestAnimationFrame(reset)
-      return () => cancelAnimationFrame(frame)
-    }
-    if (phase === 'returning') {
-      if (route !== '/workspace') {
-        const frame = requestAnimationFrame(reset)
-        return () => cancelAnimationFrame(frame)
-      }
-      const timeout = window.setTimeout(reset, 6000)
-      return () => window.clearTimeout(timeout)
-    }
-    // Browser navigation or an unrelated route cancels the animation.
-    if (!matches || (phase === 'flying' && selection?.to !== route)) {
-      const frame = requestAnimationFrame(reset)
-      return () => cancelAnimationFrame(frame)
-    }
-    const callback = phase === 'unrolling' ? finish : phase === 'closing' ? beginReturn : reset
-    const timeout = window.setTimeout(callback, phase === 'unrolling' || phase === 'closing' ? RIBBON_PAPER_MS : 3500)
-    return () => window.clearTimeout(timeout)
-  }, [beginReturn, finish, matches, phase, reset, route, selection])
-
-  const value = useMemo(() => ({
-    open, reserve, release, close,
-    selection: shownSelection,
-    phase: shownPhase,
-    busy: phase !== 'ready' || isFallbackOpening,
-  }), [close, isFallbackOpening, open, phase, release, reserve, shownPhase, shownSelection])
-
-  return <RibbonNavigationContext.Provider value={value}>
-    {children}
-    {matches && phase === 'flying' && <RibbonFlight selection={selection} onLanded={land} onCancel={reset} />}
-    {phase === 'returning' && returnFrom && <RibbonFlight selection={selection} returning returnFrom={returnFrom} onLanded={completeReturn} onCancel={reset} />}
-  </RibbonNavigationContext.Provider>
+  const value = useMemo(() => ({ open, reserve, release, selection, busy: false }), [open, reserve, release, selection])
+  return <RibbonNavigationContext.Provider value={value}>{children}</RibbonNavigationContext.Provider>
 }
 
-export function RibbonPage({ children }) {
-  const navigation = useContext(RibbonNavigationContext)
+function RibbonDocument({ children, selection }) {
   const element = useRef(null)
   const content = useRef(null)
-  const selection = navigation?.selection
-  const phase = navigation?.phase || 'ready'
+  const paperId = useId()
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const [phase, setPhase] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'ready' : 'ribbon-opening')
+  const [progress, setProgress] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0)
 
   useLayoutEffect(() => {
-    if (!selection) return
     const root = element.current
+    if (!root) return
     const update = () => {
       const g = ribbonGeometry(1, root.getBoundingClientRect().width, 1)
       root.style.setProperty('--paper-start', `${g.width - g.end}px`)
@@ -219,25 +73,105 @@ export function RibbonPage({ children }) {
     const observer = new ResizeObserver(update)
     observer.observe(root)
     return () => observer.disconnect()
-  }, [selection])
+  }, [selection.isArabic])
 
   useEffect(() => {
-    if (!selection || phase !== 'ready') return
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReducedMotion(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion) {
+      if (phase === 'ribbon-opening' || phase === 'unrolling') {
+        setProgress(1)
+        setPhase('ready')
+      } else if (phase === 'closing' || phase === 'ribbon-closing') {
+        setProgress(0)
+        setPhase('closed')
+      }
+      return
+    }
+
+    if (phase === 'ribbon-opening' || phase === 'ribbon-closing') {
+      const isOpening = phase === 'ribbon-opening'
+      let frame
+      let started
+      const tick = (time) => {
+        if (started === undefined) started = time
+        const elapsed = Math.min(1, (time - started) / RIBBON_REEL_MS)
+        setProgress(isOpening ? easeInOut(elapsed) : 1 - easeInOut(elapsed))
+        if (elapsed >= 1) setPhase(ribbonNextPhase(phase))
+        else frame = requestAnimationFrame(tick)
+      }
+      frame = requestAnimationFrame(tick)
+      return () => cancelAnimationFrame(frame)
+    }
+
+    if (phase === 'unrolling' || phase === 'closing') {
+      const timeout = window.setTimeout(() => setPhase(ribbonNextPhase(phase)), RIBBON_PAPER_MS)
+      return () => window.clearTimeout(timeout)
+    }
+  }, [phase, reducedMotion])
+
+  useEffect(() => {
+    if (phase !== 'ready') return
     const heading = content.current?.querySelector('h1')
     heading?.setAttribute('tabindex', '-1')
     heading?.focus({ preventScroll: true })
-  }, [phase, selection])
+  }, [phase])
 
-  if (!selection) return children
-  return <div ref={element} className="ribbon-document" data-phase={phase} aria-busy={phase !== 'ready' || undefined}>
+  const toggle = () => {
+    if (phase !== 'ready' && phase !== 'closed') return
+    if (reducedMotion) {
+      const opening = phase === 'closed'
+      setProgress(opening ? 1 : 0)
+      setPhase(opening ? 'ready' : 'closed')
+    } else {
+      setPhase(ribbonNextPhase(phase))
+    }
+  }
+
+  const paperVisible = phase === 'ready' || phase === 'unrolling' || phase === 'closing'
+  const busy = phase !== 'ready' && phase !== 'closed'
+  const closed = phase === 'closed' || phase === 'ribbon-opening'
+  const actionLabel = closed
+    ? selection.isArabic ? `فتح ${selection.label}` : `Open ${selection.label}`
+    : selection.isArabic ? `لف ${selection.label}` : `Roll up ${selection.label}`
+
+  return <div ref={element} className="ribbon-document" data-phase={phase} aria-busy={busy || undefined}>
     <div className="ribbon-document__header" data-ribbon-destination>
-      <RibbonArtwork {...selection} progress={1} extension={1} />
-      <button className="ribbon-document__close" type="button" onClick={navigation.close} disabled={phase !== 'ready'} aria-label={selection.isArabic ? `إغلاق ${selection.label} والعودة لمساحة العمل` : `Close ${selection.label} and return to workspace`} title={selection.isArabic ? 'لف البوستر والعودة' : 'Roll up and return'} />
+      <RibbonArtwork {...selection} progress={progress} extension={1} />
+      <button
+        className="ribbon-document__close"
+        type="button"
+        onClick={toggle}
+        aria-controls={paperId}
+        aria-expanded={paperVisible}
+        aria-disabled={busy}
+        aria-label={actionLabel}
+        title={actionLabel}
+      />
     </div>
-    <p className="visually-hidden" role="status">{phase === 'closing' ? selection.isArabic ? `جارٍ إغلاق ${selection.label}…` : `Closing ${selection.label}…` : phase !== 'ready' ? selection.isArabic ? `جارٍ فتح ${selection.label}…` : `Opening ${selection.label}…` : ''}</p>
-    <div className="ribbon-document__paper">
+    <p className="visually-hidden" role="status">
+      {phase === 'closing' || phase === 'ribbon-closing'
+        ? selection.isArabic ? `جارٍ لف ${selection.label}…` : `Rolling up ${selection.label}…`
+        : phase === 'unrolling' || phase === 'ribbon-opening'
+          ? selection.isArabic ? `جارٍ فتح ${selection.label}…` : `Opening ${selection.label}…`
+          : ''}
+    </p>
+    <div id={paperId} className="ribbon-document__paper" aria-hidden={!paperVisible}>
       <div ref={content} className="ribbon-document__content" inert={phase !== 'ready'}>{children}</div>
       <div className="ribbon-document__roller" aria-hidden="true" />
     </div>
   </div>
+}
+
+export function RibbonPage({ children }) {
+  const selection = useContext(RibbonNavigationContext)?.selection
+  if (!selection) return children
+  // Keep the same document mounted on child routes; another root section starts
+  // a new opening sequence. Closing/reopening never navigates or remounts forms.
+  return <RibbonDocument key={selection.to} selection={selection}>{children}</RibbonDocument>
 }
