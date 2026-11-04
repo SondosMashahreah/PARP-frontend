@@ -18,7 +18,7 @@ export default function RibbonButtonShowcase({ role, isArabic }) {
   const [paused, setPaused] = useState(false)
   const sections = visibleSections(role).slice(0, 4)
   if (!sections.length) return null
-  return <section className="ribbon-showcase" aria-labelledby="ribbon-showcase-title">
+  return <section className="ribbon-showcase" dir={isArabic ? 'rtl' : 'ltr'} aria-labelledby="ribbon-showcase-title">
     <div className="ribbon-showcase__heading">
       <div>
         <span className="ribbon-showcase__eyebrow">{isArabic ? 'تجربة جديدة' : 'A NEW EXPERIENCE'}</span>

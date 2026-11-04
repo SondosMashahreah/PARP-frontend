@@ -29,20 +29,37 @@ test('Clicking during any part of the loop continues from the current position a
   }
 })
 
-test('The connected strip, rim and label coordinates remain inside narrow and wide layouts', () => {
+test('The circle stays in place while only the continuous ribbon extends and rewinds', () => {
   for (const width of [288, 358, 540, 1180]) {
-    let previousX = 0
+    const closed = ribbonGeometry(0, width)
+    const opened = ribbonGeometry(1, width)
+    let previousStart = closed.cx
     for (let step = 0; step <= 100; step++) {
       const geometry = ribbonGeometry(step / 100, width)
-      assert.ok(geometry.cx >= previousX)
+      assert.equal(geometry.cx, closed.cx)
+      assert.equal(geometry.end, closed.cx)
+      assert.ok(geometry.start <= previousStart + 1e-10)
+      assert.ok(geometry.start >= opened.start - 1e-10)
       assert.ok(geometry.cx - geometry.outer >= 0)
       assert.ok(geometry.cx + geometry.outer <= width)
       assert.ok(geometry.cy + geometry.outer < geometry.height)
       assert.ok(!/NaN|Infinity/.test(geometry.path))
-      previousX = geometry.cx
+      previousStart = geometry.start
     }
-    assert.equal(ribbonGeometry(0, width).cx, ribbonGeometry(1, width).start)
-    assert.equal(ribbonGeometry(1, width).cx, ribbonGeometry(1, width).end)
+    assert.equal(closed.start, closed.cx)
+    assert.ok(opened.start < closed.start)
+    assert.notEqual(closed.path, opened.path)
+  }
+})
+
+test('Arabic keeps the stationary circle on the right; English mirrors it to the left', () => {
+  for (const width of [288, 358, 540, 1180]) {
+    const geometry = ribbonGeometry(.5, width)
+    const arabicCircleX = geometry.cx
+    const englishCircleX = geometry.width - geometry.cx
+    assert.ok(arabicCircleX > geometry.width / 2)
+    assert.ok(englishCircleX < geometry.width / 2)
+    assert.equal(arabicCircleX + englishCircleX, geometry.width)
   }
 })
 

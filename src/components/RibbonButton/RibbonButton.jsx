@@ -32,9 +32,9 @@ export function RibbonArtwork({ label, caption, symbol = '01', icon = 'research'
   const id = useId().replaceAll(':', '')
   const g = ribbonGeometry(progress, actualWidth, extension)
   const x = isArabic ? g.cx : g.width - g.cx
-  const tailX = isArabic ? g.start : g.width - g.end
-  const tailWidth = g.end - g.start
-  const revealX = isArabic ? g.start : g.width - g.cx
+  const tailX = isArabic ? g.start : g.width - g.cx
+  const tailWidth = g.cx - g.start
+  const revealX = tailX
   const lines = label.length > 12 && label.includes(' ')
     ? [label.slice(0, label.lastIndexOf(' ')), label.slice(label.lastIndexOf(' ') + 1)]
     : [label]

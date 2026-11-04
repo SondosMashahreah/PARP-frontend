@@ -33,9 +33,13 @@ export function ribbonGeometry(progress, containerWidth, extension = 0) {
   const inner = 62 * scale
   const radius = 64 * scale
   const motionStart = outer + 14 * scale
-  const start = motionStart + (12 * scale - motionStart) * clamp(extension)
+  // The circle is anchored at the ribbon's right end for RTL artwork.
+  // RibbonArtwork mirrors the same coordinates for English, anchoring it left.
   const end = width - motionStart
-  const cx = motionStart + (end - motionStart) * p
+  const cx = end
+  // Only the free end of the ribbon moves as the coil unwinds/rewinds.
+  const fullyOpenStart = motionStart + (12 * scale - motionStart) * clamp(extension)
+  const start = cx + (fullyOpenStart - cx) * p
   const cy = 108 * scale
   const sweep = (Math.PI * 2 - 0.14) * (1 - p) + 0.025
   const angle = Math.PI / 2 - sweep
