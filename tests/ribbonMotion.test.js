@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { ribbonSelectionForRoute } from '../src/components/RibbonButton/ribbonRoutes.js'
 import { RIBBON_CYCLE_MS, ribbonLoopProgress, ribbonOpeningProgress, ribbonFlightProgress, ribbonGeometry } from '../src/components/RibbonButton/ribbonMotion.js'
 
 test('The ribbon holds, unwraps fully, holds for reading and rewinds without a cycle jump', () => {
@@ -87,5 +88,33 @@ test('Closing the poster reverses the flight strip and circle rotation back to t
     assert.ok(Math.abs(forward.extension - backward.extension) < 1e-10)
     assert.equal(backward.extension, backward.progress)
     assert.ok(forward.extension >= 0 && forward.extension <= 1)
+  }
+})
+
+test('Ribbon frame is available for direct URLs, refresh and old workspace shortcuts', () => {
+  assert.equal(ribbonSelectionForRoute('/workspace', true), null)
+  assert.equal(ribbonSelectionForRoute('/workspace#certificates', true), null)
+  assert.equal(ribbonSelectionForRoute('/other#research', true), null)
+  const sections = {
+    research: 'research',
+    new: 'research',
+    drafts: 'research',
+    decisions: 'research',
+    tracking: 'tracking',
+    practices: 'practices',
+    'new-practice': 'practices',
+    training: 'training',
+  }
+  for (const [hash, owner] of Object.entries(sections)) {
+    const arabic = ribbonSelectionForRoute(`/workspace#${hash}`, true)
+    const english = ribbonSelectionForRoute(`/workspace#${hash}`, false)
+    assert.equal(arabic.to, `/workspace#${owner}`)
+    assert.equal(english.to, arabic.to)
+    assert.ok(arabic.isArabic)
+    assert.equal(english.isArabic, false)
+    assert.ok(arabic.label && arabic.caption && arabic.symbol)
+    assert.ok(english.label && english.caption && english.symbol)
+    assert.ok(arabic.icon === owner)
+    if (hash !== owner) assert.ok(arabic.relatedRoutes.includes(`/workspace#${hash}`))
   }
 })

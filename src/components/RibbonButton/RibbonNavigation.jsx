@@ -2,8 +2,10 @@ import { useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, u
 import { createPortal } from 'react-dom'
 import { appHref, navigate } from '../../routing/navigation.js'
 import { useLocation } from '../../routing/useLocation.js'
+import { useLanguage } from '../../i18n/useLanguage.js'
 import { RibbonArtwork } from './RibbonButton.jsx'
 import { RibbonNavigationContext } from './ribbonNavigationContext.js'
+import { ribbonSelectionForRoute } from './ribbonRoutes.js'
 import { easeInOut, ribbonFlightProgress, ribbonGeometry, RIBBON_FLIGHT_MS, RIBBON_PAPER_MS } from './ribbonMotion.js'
 import './RibbonNavigation.css'
 
@@ -62,8 +64,15 @@ function RibbonFlight({ selection, returning = false, returnFrom, onLanded, onCa
 
 export function RibbonNavigationProvider({ children }) {
   const { pathname, search, hash } = useLocation()
+  const { isArabic } = useLanguage()
   const route = `${pathname}${search}${hash}`
+  const fallback = useMemo(() => ribbonSelectionForRoute(route, isArabic), [route, isArabic])
   const [selection, setSelection] = useState(null)
+  // When loading a deep link or using an older shortcut, no RibbonButton has
+  // reserved a flight. Show the real section inside a ribbon nonetheless.
+  const [fallbackOpeningRoute, setFallbackOpeningRoute] = useState(() =>
+    ribbonSelectionForRoute(route, isArabic) && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? route : null
+  )
   const [returnFrom, setReturnFrom] = useState(null)
   const [phase, setPhase] = useState('ready')
   const locked = useRef(false)
@@ -91,19 +100,43 @@ export function RibbonNavigationProvider({ children }) {
     setPhase('ready')
   }, [])
   const matches = selection?.to === route || Boolean(selection?.relatedRoutes?.includes(route))
+  const inferred = !selection ? fallback : null
+  const shownSelection = matches ? selection : inferred
+  const isFallbackOpening = Boolean(inferred && fallbackOpeningRoute === route)
+  const shownPhase = matches ? phase : isFallbackOpening ? 'unrolling' : 'ready'
+
+  // A direct URL or any of the original workspace shortcuts should unfold
+  // the actual page, not bypass the ribbon because no selection was stored.
+  useLayoutEffect(() => {
+    if (selection || !fallback || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setFallbackOpeningRoute(null)
+    } else {
+      setFallbackOpeningRoute(route)
+    }
+  }, [fallback, route, selection])
+
+  useEffect(() => {
+    if (!fallbackOpeningRoute) return
+    const timeout = window.setTimeout(() => setFallbackOpeningRoute(null), RIBBON_PAPER_MS)
+    return () => window.clearTimeout(timeout)
+  }, [fallbackOpeningRoute])
 
   const close = useCallback(() => {
-    if (!selection || !matches || phase !== 'ready' || locked.current) return
+    const active = shownSelection
+    if (!active || shownPhase !== 'ready' || locked.current) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const to = selection.to
+      const to = active.to
       reset()
       navigate('/workspace')
       requestAnimationFrame(() => requestAnimationFrame(() => originButton(to)?.focus({ preventScroll: true })))
       return
     }
-    locked.current = selection.to
+    locked.current = active.to
+    // Promote an inferred/direct-link selection to a real selection so that
+    // the closing and return-flight phases keep their source information.
+    setSelection(active)
     setPhase('closing')
-  }, [matches, phase, reset, selection])
+  }, [reset, shownPhase, shownSelection])
 
   const beginReturn = useCallback(() => {
     const header = document.querySelector('[data-ribbon-destination]')
@@ -151,10 +184,10 @@ export function RibbonNavigationProvider({ children }) {
 
   const value = useMemo(() => ({
     open, reserve, release, close,
-    selection: matches ? selection : null,
-    phase: matches ? phase : 'ready',
-    busy: phase !== 'ready',
-  }), [close, matches, open, phase, release, reserve, selection])
+    selection: shownSelection,
+    phase: shownPhase,
+    busy: phase !== 'ready' || isFallbackOpening,
+  }), [close, isFallbackOpening, open, phase, release, reserve, shownPhase, shownSelection])
 
   return <RibbonNavigationContext.Provider value={value}>
     {children}
