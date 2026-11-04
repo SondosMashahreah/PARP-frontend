@@ -43,7 +43,15 @@ export default function PartnerSocialBar() {
             rel="noopener noreferrer"
             aria-label={`${partner.name} — ${isArabic ? 'رابط خارجي' : 'External link'}`}
             title={partner.name}
-          ><img src={partner.logo} alt="" decoding="async" /></a>)}
+          >
+            <span className="partner-social-bar__partner-mark">
+              <img src={partner.logo} alt="" decoding="async" />
+            </span>
+            <span className="partner-social-bar__partner-copy">
+              <strong>{partner.name}</strong>
+              <small>{partner.shortName}</small>
+            </span>
+          </a>)}
         </nav>
         <nav className="partner-social-bar__socials" aria-label={isArabic ? 'شبكات التواصل الاجتماعي' : 'Social media'}>
           {socialLinks.map((link) => <a
