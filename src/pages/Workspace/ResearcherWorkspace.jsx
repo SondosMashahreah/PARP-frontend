@@ -11,7 +11,6 @@ import {
 } from '../../features/researcher/workspaceSections.js'
 import WorkspaceHub from './components/WorkspaceHub.jsx'
 import ResearchEditor from './components/ResearchEditor.jsx'
-import RibbonButtonShowcase from './components/RibbonButtonShowcase.jsx'
 import { RibbonPage } from '../../components/RibbonButton/RibbonNavigation.jsx'
 import './ResearcherWorkspace.css'
 
@@ -119,7 +118,6 @@ export default function ResearcherWorkspace({
             name={user.full_name}
             isArabic={isArabic}
           />
-          <RibbonButtonShowcase role={data.role} isArabic={isArabic} />
           <details className="researcher-affiliation">
             <summary>
               {t(

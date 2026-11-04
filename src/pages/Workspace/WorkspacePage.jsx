@@ -8,8 +8,11 @@ import { api } from '../../features/auth/authApi.js'
 import { ROLE_OPTIONS, roleLabel } from '../../features/auth/roles.js'
 import { workflowApi } from '../../features/workflow/workflowApi.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
+import RibbonButton from '../../components/RibbonButton/RibbonButton.jsx'
+import { ribbonSelectionForRoute } from '../../components/RibbonButton/ribbonRoutes.js'
 import './WorkspacePage.css'
 import ResearcherWorkspace from './ResearcherWorkspace.jsx'
+import './components/WorkspaceRibbonLayout.css'
 import RevisionEditor from './components/RevisionEditor.jsx'
 
 const STATUS_AR = {
@@ -65,13 +68,16 @@ function WorkspaceShortcuts({ role, isArabic }) {
   return (
     <section className="workspace-panel workspace-shortcuts">
       <h2>{isArabic ? 'وصول سريع' : 'Quick access'}</h2>
-      <div className="workspace-shortcuts__grid">
-        {items.map(([to, ar, en]) => (
-          <RouteLink className="workspace-shortcut" to={to} key={to}>
-            <span>{isArabic ? ar : en}</span>
-            <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
-          </RouteLink>
-        ))}
+      <div className="workspace-shortcuts__grid workspace-shortcuts__grid--ribbon">
+        {items.map(([to, ar, en], index) => {
+          const selection = ribbonSelectionForRoute(to, isArabic)
+          return selection
+            ? <RibbonButton key={to} {...selection} offset={index * 650} />
+            : <RouteLink className="workspace-shortcut" to={to} key={to}>
+                <span>{isArabic ? ar : en}</span>
+                <span aria-hidden="true">{isArabic ? '←' : '→'}</span>
+              </RouteLink>
+        })}
       </div>
     </section>
   )

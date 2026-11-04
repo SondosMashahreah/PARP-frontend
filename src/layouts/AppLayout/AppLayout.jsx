@@ -3,7 +3,7 @@ import Footer from '../../components/Footer/Footer.jsx'
 import Header from '../../components/Header/Header.jsx'
 import './AppLayout.css'
 import { useLocation } from '../../routing/useLocation.js'
-import { RibbonNavigationProvider } from '../../components/RibbonButton/RibbonNavigation.jsx'
+import { RibbonNavigationProvider, RibbonPage } from '../../components/RibbonButton/RibbonNavigation.jsx'
 
 export default function AppLayout({ children }) {
   const { isArabic } = useLanguage()
@@ -20,7 +20,7 @@ export default function AppLayout({ children }) {
         tabIndex={-1}
         aria-label={isArabic ? 'محتوى المنصة' : 'Platform content'}
       >
-        {children}
+        {pathname === '/workspace' ? children : <RibbonPage>{children}</RibbonPage>}
       </main>
       {!isAssistant && <Footer />}
     </div>

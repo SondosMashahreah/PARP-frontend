@@ -1,0 +1,11 @@
+
+/* Reuse the same six circular ribbon buttons in the researcher hub. */
+.researcher-hub.researcher-hub--ribbon { display: block; padding: 20px 0 32px; }
+.researcher-hub--ribbon .researcher-hub__center { position: static; transform: none; margin: 0 auto 22px; }
+.researcher-hub__ribbon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 22px; }
+.researcher-hub__ribbon-grid .ribbon-button { min-width: 0; }
+@media (max-width: 700px) { .researcher-hub__ribbon-grid { grid-template-columns: 1fr; } }
+
+/* Circular ribbon shortcuts need more room than the previous flat pills. */
+.workspace-shortcuts__grid.workspace-shortcuts__grid--ribbon { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 20px; }
+@media (max-width: 650px) { .workspace-shortcuts__grid.workspace-shortcuts__grid--ribbon { grid-template-columns: 1fr; } }
