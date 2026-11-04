@@ -20,7 +20,7 @@ export default function AppLayout({ children }) {
         tabIndex={-1}
         aria-label={isArabic ? 'محتوى المنصة' : 'Platform content'}
       >
-        {pathname === '/workspace' ? children : <RibbonPage>{children}</RibbonPage>}
+        {pathname === '/workspace' || pathname === '/news' ? children : <RibbonPage>{children}</RibbonPage>}
       </main>
       {!isAssistant && <Footer />}
     </div>

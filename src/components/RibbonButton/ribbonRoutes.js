@@ -43,7 +43,6 @@ const platformSections = {
   '/observatory': ['المرصد الوطني', 'National observatory', 'بيانات تدعم القرار', 'Data for better decisions', 'tracking'],
   '/institutions': ['المؤسسات', 'Institutions', 'المدارس والمديريات', 'Schools and directorates', 'tracking'],
   '/excellence': ['قاعة التميز', 'Hall of excellence', 'إنجازات تستحق التقدير', 'Celebrate achievement', 'training'],
-  '/news': ['الأخبار والفعاليات', 'News and events', 'ما يحدث في المنصة', 'Explore the latest', 'research'],
   '/support': ['الدعم والمساندة', 'Support', 'نحن هنا للمساعدة', 'We are here to help', 'practices'],
   '/practices': ['دفتر الممارسات', 'Practice notebook', 'خبرات وتجارب ميدانية', 'Shared field experience', 'practices'],
   '/problems': ['بنك المشكلات', 'Problem bank', 'من المشكلة إلى الحل', 'From problems to solutions', 'tracking'],

@@ -1,0 +1,37 @@
+/* News is a regular full-width page, without the ribbon poster layout.
+   These rules intentionally follow LiveNews.css and affect only /news. */
+.live-news {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding: clamp(24px, 3vw, 52px) clamp(16px, 3vw, 56px) clamp(40px, 5vw, 80px);
+}
+
+/* Fill the available space with responsive article cards. */
+.live-news__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: clamp(16px, 2vw, 28px);
+}
+.live-news__grid article {
+  min-width: 0;
+}
+
+/* Article details and their hero image no longer sit in a narrow center column. */
+.live-news__article {
+  width: 100%;
+  max-width: none;
+  margin: clamp(24px, 3vw, 44px) 0;
+}
+.live-news__hero {
+  max-height: min(72svh, 760px);
+}
+
+@media (max-width: 600px) {
+  .live-news {
+    padding-inline: 16px;
+  }
+  .live-news__grid {
+    grid-template-columns: 1fr;
+  }
+}

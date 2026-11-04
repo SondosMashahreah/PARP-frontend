@@ -6,6 +6,7 @@ import { useNews } from '../../features/news/useNews.js'
 import { displayNews } from '../../features/news/newsApi.js'
 import './NewsPage.css'
 import './LiveNews.css'
+import './NewsFullWidth.css'
 
 export default function NewsPage() {
   const { isArabic: ar, dir } = useLanguage()
