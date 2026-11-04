@@ -2,6 +2,8 @@ import { RouteLink } from '../../../../routing/clientRouter.jsx'
 import { useAuth } from '../../../auth/useAuth.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './CompactNewsSlider.css'
+import './CompactNewsActive.css'
+import { activeNewsSummary } from './activeNewsSummary.js'
 
 function formatArabicDate(value) {
   if (!value) return ''
@@ -34,6 +36,8 @@ export default function CompactNewsSlider({
   const [failedImages, setFailedImages] = useState(() => new Set())
   const [requestedIndex, setActiveIndex] = useState(0)
   const activeIndex = slides.length ? requestedIndex % slides.length : 0
+  const activeStory = slides[activeIndex]
+  const activeSummary = activeNewsSummary(activeStory)
   const [paused, setPaused] = useState(false)
   const pointerStartRef = useRef(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -108,6 +112,11 @@ export default function CompactNewsSlider({
 
           <p className="parp-news__eyebrow">من المنصة</p>
           <h2 id="news-title">آخر الأخبار</h2>
+          <div className="parp-news__active-summary" key={activeStory.id || activeIndex}
+            aria-live={paused ? 'polite' : 'off'} aria-atomic="true">
+            <h3 className="parp-news__active-title" dir="auto">{activeStory.title}</h3>
+            <p className="parp-news__active-excerpt" dir="auto">{activeSummary}</p>
+          </div>
           <p className="parp-news__lead">
             حوّل رحلتك البحثية إلى تجربة معرفية ملهمة.
           </p>

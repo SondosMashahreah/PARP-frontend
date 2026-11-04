@@ -12,7 +12,17 @@ import {
 import WorkspaceHub from './components/WorkspaceHub.jsx'
 import ResearchEditor from './components/ResearchEditor.jsx'
 import { RibbonPage } from '../../components/RibbonButton/RibbonNavigation.jsx'
+import RibbonButton from '../../components/RibbonButton/RibbonButton.jsx'
 import './ResearcherWorkspace.css'
+import './ResearchRibbonTiles.css'
+
+// Reuse the existing RibbonButton for all four research destinations.
+const researchRibbonDetails = {
+  new: { icon: 'research', ar: 'ابدأ بحثك خطوة بخطوة', en: 'Start your research step by step' },
+  drafts: { icon: 'research', ar: 'أكمل مسوداتك المحفوظة', en: 'Continue your saved drafts' },
+  decisions: { icon: 'tracking', ar: 'قرارات اللجنة وملاحظاتها', en: 'Committee decisions and feedback' },
+  tracking: { icon: 'tracking', ar: 'تابع مراحل مراجعة بحثك', en: 'Follow the review of your work' },
+}
 
 export default function ResearcherWorkspace({
   user,
@@ -135,21 +145,21 @@ export default function ResearcherWorkspace({
           aria-label={t('أقسام البحوث', 'Research sections')}
         >
           {researchSections.map((item, index) => (
-            <RouteLink
-              className={section === item.id ? 'is-active' : ''}
+            <RibbonButton
               key={item.id}
               to={`/workspace#${item.id}`}
-              aria-current={section === item.id ? 'page' : undefined}
-              onClick={() => {
+              label={isArabic ? item.ar : item.en}
+              caption={isArabic ? researchRibbonDetails[item.id].ar : researchRibbonDetails[item.id].en}
+              icon={researchRibbonDetails[item.id].icon}
+              symbol={String(index + 1).padStart(2, '0')}
+              isArabic={isArabic}
+              offset={index * 650}
+              onOpen={() => {
                 setSelected(null)
                 setFilter('all')
+                navigate(`/workspace#${item.id}`)
               }}
-            >
-              <span className="researcher-tiles__icon" aria-hidden="true">
-                {['＋', '▤', '✓', '◷'][index]}
-              </span>
-              <span>{isArabic ? item.ar : item.en}</span>
-            </RouteLink>
+            />
           ))}
         </nav>
       )}

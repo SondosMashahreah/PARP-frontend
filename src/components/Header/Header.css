@@ -49,6 +49,12 @@
 }
 .site-header__nav a:hover, .site-header__nav a:focus-visible { color: var(--color-text); border-bottom-color: var(--color-accent); }
 .site-header__nav-short { display: none; }
+/* Balanced side columns center search across RTL and LTR headers. */
+@media (min-width: 1051px) {
+  .site-header__inner { grid-template-columns: minmax(0, 1fr) minmax(270px, 540px) minmax(0, 1fr); }
+  .site-header .header-search-wrap { width: 100%; justify-self: center; }
+  .site-header__actions { justify-self: end; }
+}
 @media (max-width: 1050px) {
   .site-header__inner { grid-template-columns: 1fr auto; grid-template-areas: 'logo actions' 'search search'; gap: 12px 24px; }
   .site-header .header-logo { grid-area: logo; }
