@@ -609,3 +609,19 @@
 @media (prefers-reduced-motion: reduce) {
   .parp-news__button--primary::before { display: none; }
 }
+
+/* News carousel: supplied lavender waves behind each news photograph.
+   Shared by both the Arabic and English carousel components. */
+.parp-news__story-media {
+  background-color: #d7b1f1;
+  background-image: url('./news-lavender-waves.webp');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Keep the original photo uncropped; reveal the lavender artwork in its
+   empty letterbox areas instead of the previous solid black background. */
+.parp-news__story-media img {
+  background: transparent;
+}
