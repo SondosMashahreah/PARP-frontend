@@ -2,7 +2,7 @@ import logo from '../Header/img/logo.png'
 import Icon from '../ui/Icon.jsx'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
-import { footerLinks, footerPartners } from './footerData.js'
+import { footerLinks } from './footerData.js'
 import './Footer.css'
 
 export default function Footer() {
@@ -29,15 +29,6 @@ export default function Footer() {
             <RouteLink to="/#contact"><Icon name="mail" />{isArabic ? 'اكتب لنا رسالة' : 'Write us a message'}<span aria-hidden="true">{isArabic ? '←' : '→'}</span></RouteLink>
           </div>
         </div>
-        <section className="site-footer__partners" aria-labelledby="footer-partners-title">
-          <h2 id="footer-partners-title">{isArabic ? 'شركاؤنا' : 'Our partners'}</h2>
-          <div className="site-footer__partners-grid">
-            {footerPartners[language].map((partner) => <a className="site-footer__partner" key={partner.id} href={partner.href} target="_blank" rel="noreferrer">
-              <span className={`site-footer__partner-mark site-footer__partner-mark--${partner.id}`}><img src={partner.logo} alt="" loading="lazy" decoding="async" /></span>
-              <span className="site-footer__partner-name"><strong>{partner.name}</strong><small>{partner.shortName}</small></span>
-            </a>)}
-          </div>
-        </section>
         <div className="site-footer__bottom"><p>© {new Date().getFullYear()} PARP. {isArabic ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}</p><p>{subtitle}</p></div>
       </div>
     </footer>

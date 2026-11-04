@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import "./App.css";
 import AppLayout from "./layouts/AppLayout/AppLayout.jsx";
+import PartnerSocialBar from "./components/Footer/PartnerSocialBar.jsx";
 import Home from "./pages/Home/Home.jsx";
 import NotFound from "./pages/NotFound/NotFoundPage.jsx";
 import { useLanguage } from "./i18n/useLanguage.js";
@@ -119,6 +120,7 @@ function App() {
       <>
         {content}
         <RouteEffects />
+        <PartnerSocialBar />
       </>
     );
 
@@ -127,6 +129,7 @@ function App() {
     <>
       {content}
       <RouteEffects />
+      <PartnerSocialBar />
     </>
   );
 }
@@ -140,6 +143,7 @@ function App() {
         {content}
         <RouteEffects />
       </AppLayout>
+      <PartnerSocialBar />
     </div>
   );
 }

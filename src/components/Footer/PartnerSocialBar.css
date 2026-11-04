@@ -1,0 +1,76 @@
+/* Compact, persistent partners/social dock. The spacer keeps page bottoms readable. */
+:root { --partner-social-bar-height: 56px; }
+.partner-social-bar__spacer { height: calc(var(--partner-social-bar-height) + env(safe-area-inset-bottom, 0px)); flex: none; }
+.partner-social-bar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 35;
+  min-height: calc(var(--partner-social-bar-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid var(--color-border-strong);
+  background: rgb(var(--background-rgb) / 95%);
+  box-shadow: 0 -8px 28px rgb(0 0 0 / 16%);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+.partner-social-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(var(--content-width), calc(100% - 64px));
+  min-height: var(--partner-social-bar-height);
+  margin-inline: auto;
+}
+.partner-social-bar__partners,
+.partner-social-bar__socials { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.partner-social-bar__partner {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 43px;
+  padding: 4px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: #fff;
+  transition: border-color .2s, transform .2s;
+}
+.partner-social-bar__partner--university { background: #070707; }
+.partner-social-bar__partner img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.partner-social-bar__partner--university img { transform: scale(1.3); }
+.partner-social-bar__partner--museum img { transform: scale(1.55); }
+.partner-social-bar__partner:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+.partner-social-bar__social {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+  transition: filter .2s, transform .2s;
+}
+.partner-social-bar__social svg { width: 23px; height: 23px; }
+.partner-social-bar__social--facebook { background: #1877f2; }
+.partner-social-bar__social--youtube { background: #ff0033; }
+.partner-social-bar__social--instagram { background: linear-gradient(135deg, #feda75 0%, #fa7e1e 25%, #d62976 55%, #962fbf 80%, #4f5bd5 100%); }
+.partner-social-bar__social:hover { filter: brightness(1.14); transform: translateY(-2px); }
+.partner-social-bar :is(a):focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+@media (max-width: 600px) {
+  :root { --partner-social-bar-height: 52px; }
+  .partner-social-bar__inner { width: calc(100% - 24px); gap: 8px; }
+  .partner-social-bar__partners, .partner-social-bar__socials { gap: 5px; }
+  .partner-social-bar__partner { width: 38px; height: 36px; border-radius: 7px; padding: 3px; }
+  .partner-social-bar__social { width: 34px; height: 34px; border-radius: 8px; }
+  .partner-social-bar__social svg { width: 21px; height: 21px; }
+}
+@media (max-width: 360px) {
+  .partner-social-bar__partners, .partner-social-bar__socials { gap: 3px; }
+  .partner-social-bar__partner { width: 34px; height: 34px; }
+  .partner-social-bar__social { width: 32px; height: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .partner-social-bar__partner, .partner-social-bar__social { transition: none; }
+}
