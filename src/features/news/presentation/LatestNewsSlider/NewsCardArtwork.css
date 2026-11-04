@@ -1,0 +1,85 @@
+/* The same lavender-waves artwork is shared by Arabic and English news cards.
+   Put the image once behind the whole pill instead of painting the photo and
+   the text half as unrelated dark rectangles. */
+.parp-news .parp-news__story-card {
+  background-color: #6e3e98;
+  background-image:
+    linear-gradient(180deg,
+      rgb(79 27 119 / 26%) 0%,
+      rgb(85 30 129 / 5%) 33%,
+      rgb(92 31 135 / 8%) 47%,
+      rgb(81 25 115 / 40%) 63%,
+      rgb(51 16 76 / 82%) 83%,
+      rgb(29 9 48 / 98%) 100%),
+    url('./news-lavender-waves.webp');
+  background-position: center, center;
+  background-size: cover, 100% 100%;
+  background-repeat: no-repeat;
+  border-color: #c88eea;
+}
+
+/* Leave visible lavender silk above and below every news image.
+   The image is still contained, so portraits and landscape photos are not cropped. */
+.parp-news .parp-news__story-media {
+  height: 58%;
+  background: transparent;
+}
+
+.parp-news .parp-news__story-media::after {
+  display: none;
+}
+
+.parp-news .parp-news__story-media img {
+  top: 24%;
+  bottom: auto;
+  width: 100%;
+  height: 59%;
+  object-fit: contain;
+  object-position: center;
+  background: transparent;
+}
+
+.parp-news .parp-news__fallback {
+  top: 24%;
+  bottom: auto;
+  height: 59%;
+  background: transparent;
+}
+
+/* The title, date, and button sit on the same artwork, with a dark-violet
+   fade for legibility rather than the former opaque black lower panel. */
+.parp-news .parp-news__story-copy {
+  height: 42%;
+  padding-top: clamp(12px, 3vw, 24px);
+  background: transparent;
+}
+
+.parp-news .parp-news__story-meta,
+.parp-news .parp-news__story-copy h3 {
+  color: #fff6ff;
+  text-shadow: 0 1px 9px rgb(27 6 44 / 65%);
+}
+
+.parp-news .parp-news__story-meta span {
+  color: #fff6ff;
+}
+
+.parp-news .parp-news__story-link {
+  border-color: #d9a4f4;
+  background: linear-gradient(125deg, #8040b0, #9a39d9);
+  color: #fff;
+  box-shadow: 0 5px 18px rgb(40 12 68 / 25%);
+}
+
+.parp-news .parp-news__story-link:hover,
+.parp-news .parp-news__story-link:focus-visible {
+  border-color: #f0ceff;
+  background: linear-gradient(125deg, #a256cf, #812dc1);
+  color: #fff;
+}
+
+@media (max-width: 640px) {
+  .parp-news .parp-news__story-copy {
+    padding-top: 11px;
+  }
+}

@@ -3,6 +3,7 @@ import { useAuth } from '../../../auth/useAuth.js'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './CompactNewsSlider.css'
 import './CompactNewsActive.css'
+import './NewsCardArtwork.css'
 import { activeNewsSummary } from './activeNewsSummary.js'
 
 function formatArabicDate(value) {
