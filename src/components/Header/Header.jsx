@@ -66,12 +66,14 @@ export default function Header() {
         ["news", "آخر الأخبار", "الأخبار"],
         ["stats", "المنصة بالأرقام", "أرقامنا"],
         ["space-journey", "رحلة الباحث", "رحلتك"],
+        ["platform-values", "عن المنصة", "عن المنصة"],
         ["contact", "تواصل معنا", "تواصل معنا"],
       ]
     : [
         ["news", "Latest news", "News"],
         ["stats", "Platform stats", "Stats"],
         ["space-journey", "Research journey", "Journey"],
+        ["platform-values", "About PARP", "About"],
         ["contact", "Contact us", "Contact"],
       ];
   const memberLinks = isArabic
@@ -80,6 +82,7 @@ export default function Header() {
         ["/workspace", "مساحة العمل", "العمل"],
         ["/excellence", "قاعة التميز", "التميز"],
         ["/map", "الخريطة", "الخريطة"],
+        ["/#platform-values", "عن المنصة", "عن المنصة"],
         ["/#contact", "تواصل معنا", "تواصل معنا"],
       ]
     : [
@@ -87,6 +90,7 @@ export default function Header() {
         ["/workspace", "Workspace", "Workspace"],
         ["/excellence", "Hall of Excellence", "Excellence"],
         ["/map", "Map", "Map"],
+        ["/#platform-values", "About PARP", "About"],
         ["/#contact", "Contact us", "Contact"],
       ];
   const links = isAuthenticated

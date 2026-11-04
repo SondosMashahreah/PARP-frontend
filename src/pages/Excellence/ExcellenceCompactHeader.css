@@ -1,0 +1,37 @@
+/* Hall of Excellence: preserve the existing gold title and subtitle,
+   replacing only the single star with the supplied transparent five stars. */
+.excellence-page .ex-hero {
+  max-width: 950px;
+  padding: 28px 12px 14px;
+}
+
+.excellence-page .ex-emblem {
+  display: block;
+  width: clamp(155px, 18vw, 210px);
+  height: auto;
+  margin: 14px auto 4px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 11px rgba(225, 164, 81, .22));
+}
+
+.excellence-page .ex-hero h1 {
+  /* Intentionally keep the original font size, gold gradient and weight. */
+  margin: 8px 0 8px;
+}
+
+.excellence-page .ex-hero p {
+  max-width: 720px;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+.excellence-page .ex-hero-rule { margin: 13px auto 4px; }
+.excellence-page .ex-filters { margin-top: 8px; }
+.excellence-page[dir="rtl"] .ex-kicker { letter-spacing: .04em; }
+
+@media (max-width: 650px) {
+  .excellence-page .ex-hero { padding: 18px 8px 12px; }
+  .excellence-page .ex-emblem { margin: 11px auto 4px; }
+  .excellence-page .ex-hero h1 { margin: 6px 0 8px; }
+  .excellence-page .ex-hero-rule { margin: 10px auto 2px; }
+}

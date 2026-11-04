@@ -1,0 +1,62 @@
+/* The header link lands below the sticky navigation in either language. */
+#platform-values { scroll-margin-top: calc(var(--header-height, 130px) + 16px); }
+
+/* Compact six-point horizontal network, including narrow portrait phones.
+   The JS uses the corresponding MOBILE_POSITIONS below 1025px. */
+@media (max-width: 1024px) {
+  .values-network {
+    margin-block: 28px 44px;
+    padding-inline: clamp(10px, 3vw, 24px);
+  }
+  .values-network__stage {
+    height: clamp(230px, 44vw, 390px);
+    width: 100%;
+    margin-top: 16px;
+  }
+  .values-network__hub {
+    top: 50%;
+    width: clamp(60px, 9vw, 96px);
+  }
+  .values-network__seal {
+    width: clamp(49px, 7.5vw, 80px);
+    height: clamp(49px, 7.5vw, 80px);
+    margin-bottom: 7px;
+  }
+  .values-network__seal::before { inset: -6px; }
+  .values-network__seal img { width: 70%; height: 70%; }
+  .values-network__hub strong {
+    padding-left: .12em;
+    letter-spacing: .12em;
+    font-size: clamp(.56rem, 1.5vw, .8rem);
+  }
+  .values-network__hub > span {
+    font-size: clamp(.48rem, 1.15vw, .68rem);
+    margin-top: 3px;
+  }
+  .values-network__node {
+    left: var(--mx);
+    top: var(--my);
+    max-width: 38%;
+    min-height: 34px;
+    padding: clamp(5px, 1.1vw, 10px) clamp(6px, 1.3vw, 13px);
+    gap: clamp(3px, .7vw, 7px);
+    border-radius: 999px;
+    line-height: 1.35;
+    font-size: clamp(.63rem, 1.6vw, .94rem);
+    text-align: center;
+    white-space: normal;
+  }
+  .values-network__dot {
+    width: 6px;
+    height: 6px;
+    flex-basis: 6px;
+  }
+  .values-network__threads line { stroke-width: .7; }
+}
+
+@media (max-width: 380px) {
+  .values-network__node { max-width: 37%; font-size: .59rem; padding-inline: 5px; }
+  .values-network__hub { width: 56px; }
+  .values-network__seal { width: 45px; height: 45px; }
+  .values-network__hub > span { font-size: .45rem; }
+}

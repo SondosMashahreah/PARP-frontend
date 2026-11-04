@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useLanguage } from '../../../i18n/useLanguage.js'
 import { RouteLink } from '../../../routing/clientRouter.jsx'
 import { platformPages } from '../../../pages/Platform/platformPages.js'
@@ -7,11 +6,11 @@ import logo from '../../../components/Header/img/logo.png'
 import { MOBILE_POSITIONS, NETWORK_EDGES, NETWORK_POSITIONS } from '../domain/network.js'
 import { useValuesNetwork } from './useValuesNetwork.js'
 import './ValuesNetwork.css'
+import './ValuesNetworkCompact.css'
 
 export default function ValuesNetwork() {
   const { language, isArabic, dir } = useLanguage()
-  const [paused, setPaused] = useState(false)
-  const stage = useValuesNetwork(paused, language)
+  const stage = useValuesNetwork(false, language)
   const page = (isArabic ? platformPages : platformPagesEn)['/about']
   const values = page.sections.find((section) => section.title === (isArabic ? 'قيم المنصة' : 'Platform values')).items
   return (
@@ -42,12 +41,6 @@ export default function ValuesNetwork() {
           </li>)}
         </ul>
       </div>
-      <footer className="values-network__footer">
-        <p>{isArabic ? 'اسحب قيمة برفق وشاهدها تعود… أو اضغط لتعرف أكثر عن المنصة.' : 'Drag a value and watch it spring back. Select it to discover PARP.'}</p>
-        <button type="button" aria-pressed={paused} onClick={() => setPaused((value) => !value)}>
-          <span aria-hidden="true">{paused ? '▷' : 'Ⅱ'}</span> {isArabic ? (paused ? 'تشغيل الحركة' : 'إيقاف الحركة') : (paused ? 'Resume motion' : 'Pause motion')}
-        </button>
-      </footer>
     </section>
   )
 }

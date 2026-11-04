@@ -18,7 +18,7 @@ export function useValuesNetwork(paused, language) {
         links[i].style.left = '0px'; links[i].style.top = '0px'
         links[i].style.transform = `translate3d(${n.x}px, ${n.y}px, 0) translate(-50%, -50%)`
       })
-      const center = [width / 2, height * (mobile ? 0.15 : 0.49)]
+      const center = [width / 2, height * (mobile ? 0.5 : 0.49)]
       const segments = nodes.map((n) => [center, [n.x, n.y]])
       NETWORK_EDGES.forEach(([a, b]) => segments.push([[nodes[a].x, nodes[a].y], [nodes[b].x, nodes[b].y]]))
       segments.forEach(([a, b], i) => {
@@ -26,7 +26,7 @@ export function useValuesNetwork(paused, language) {
       })
     }
     function resize() {
-      width = host.clientWidth; height = host.clientHeight; mobile = window.matchMedia('(max-width: 720px)').matches
+      width = host.clientWidth; height = host.clientHeight; mobile = window.matchMedia('(max-width: 1024px)').matches
       const positions = mobile ? MOBILE_POSITIONS : NETWORK_POSITIONS
       nodes.forEach((n, i) => {
         n.w = links[i].offsetWidth; n.h = links[i].offsetHeight

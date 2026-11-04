@@ -50,3 +50,13 @@
 @media (prefers-reduced-motion: reduce) {
   .app-shell::after { animation: none; opacity: 0.65; }
 }
+
+/* Use the supplied alternate silk only on a landscape mobile/tablet.
+   Portrait devices and desktop continue to use violet-silk.png. */
+@media (max-width: 1024px) and (orientation: landscape) and (pointer: coarse) {
+  .app-shell::before {
+    background-image: url('./assets/violet-silk-landscape.webp');
+    background-position: center;
+    background-size: 100% 100%;
+  }
+}

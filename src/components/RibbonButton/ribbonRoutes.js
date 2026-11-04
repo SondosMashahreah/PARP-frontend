@@ -33,18 +33,13 @@ const relatedRoutes = {
 // Forms (login/account), admin tools, maps and the assistant keep their existing
 // focused layouts and action controls. Only navigation surfaces use ribbons.
 const platformSections = {
-  '/about': ['عن المنصة', 'About PARP', 'رؤيتنا ورسالتنا', 'Our vision and mission', 'research'],
   '/conference': ['المؤتمر الوطني', 'National conference', 'شارك المعرفة والتجارب', 'Share research and ideas', 'practices'],
-  '/repository': ['المستودع الوطني', 'National repository', 'أبحاث ومعرفة موثوقة', 'Explore the research', 'research'],
   '/guide': ['الدليل الفلسطيني', 'Palestinian guide', 'خطوات البحث الإجرائي', 'Action research guidance', 'research'],
   '/template': ['القالب الفلسطيني', 'Palestinian template', 'من الفكرة إلى البحث', 'From ideas to research', 'research'],
   '/training': ['التدريب', 'Training', 'تعلم خطوة بخطوة', 'Learn step by step', 'training'],
   '/library': ['المكتبة الرقمية', 'Digital library', 'معرفة بين يديك', 'Knowledge at hand', 'research'],
   '/observatory': ['المرصد الوطني', 'National observatory', 'بيانات تدعم القرار', 'Data for better decisions', 'tracking'],
   '/institutions': ['المؤسسات', 'Institutions', 'المدارس والمديريات', 'Schools and directorates', 'tracking'],
-  '/excellence': ['قاعة التميز', 'Hall of excellence', 'إنجازات تستحق التقدير', 'Celebrate achievement', 'training'],
-  '/support': ['الدعم والمساندة', 'Support', 'نحن هنا للمساعدة', 'We are here to help', 'practices'],
-  '/practices': ['دفتر الممارسات', 'Practice notebook', 'خبرات وتجارب ميدانية', 'Shared field experience', 'practices'],
   '/problems': ['بنك المشكلات', 'Problem bank', 'من المشكلة إلى الحل', 'From problems to solutions', 'tracking'],
 }
 
