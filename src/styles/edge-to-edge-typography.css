@@ -1,0 +1,169 @@
+/* PARP full-bleed + bilingual typography patch.
+   Reviewed against main @ edca43d16ccbf0d8a596102252156a8214a88917.
+   Outer PAGE gutters are removed; spacing inside forms, cards, and navigation
+   controls stays intact for usability. The ribbon's animated paper geometry
+   is intentionally left untouched. */
+
+/* Layout variables shared by the Arabic and English versions. */
+:root {
+  --content-width: 100%;
+  --page-inline-gutter: 0px;
+}
+
+html {
+  scrollbar-gutter: auto;
+}
+
+html[lang="ar"] {
+  --font-sans: 'Amiri', 'Noto Naskh Arabic', Georgia, serif;
+}
+
+html[lang="en"] {
+  --font-sans: 'Times New Roman', Times, serif;
+}
+
+html body,
+html body :is(button, input, select, textarea) {
+  font-family: var(--font-sans);
+}
+
+/* Components with a hard-coded Segoe UI or Noto font should also use the
+   currently selected language's family (including the admin dashboard). */
+html body :is(.admin-console, .latest-news) {
+  font-family: var(--font-sans);
+}
+
+/* Enforce Amiri on Arabic text even in modules that set a custom font. */
+html[lang="ar"] body :is(
+  h1, h2, h3, h4, h5, h6, p, a, span, small, strong, b, em,
+  li, dt, dd, label, legend, summary, time, button, input, select,
+  textarea, th, td, blockquote
+) {
+  font-family: 'Amiri', 'Noto Naskh Arabic', Georgia, serif;
+}
+
+/* Bold Times New Roman in the English interface, even where older modules
+   assigned lighter weights. Scope to text controls; leave SVG/icon geometry,
+   chart artwork, and code/preformatted text untouched. */
+html[lang="en"] body {
+  font-weight: 700;
+}
+html[lang="en"] body :is(
+  h1, h2, h3, h4, h5, h6, p, a, span, small, strong, b, em,
+  li, dt, dd, label, legend, summary, time, button, input, select,
+  textarea, th, td, blockquote
+) {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 700;
+}
+
+/* Explicit English labels inside the Arabic UI, e.g. PARP NEWS. */
+html[lang="ar"] [lang="en"] {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 700;
+}
+
+/* Width = viewport's available layout width, not a centered 960–1450px
+   content container or calc(100% - 32/48/64/96px). This intentionally
+   targets page-level shells, not cards, modals, maps, or button internals. */
+html body :is(
+  #root, .app-shell, .app-layout, .app-layout__main,
+  .site-header__inner, .partner-social-bar__inner, .site-footer__inner,
+  .parp-news, .latest-news__content, .home-stats, .home-contact,
+  .platform-page, .practices-page, .search-page, .workspace-page,
+  .live-news, .education-map, .excellence-page, .ex-hall,
+  .repository-catalog, .ac-main
+) {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+/* Remove only *outer* side padding; card and form padding is retained. */
+html body :is(
+  .site-header__inner, .site-header__nav, .partner-social-bar__inner,
+  .site-footer__inner, .live-news, .education-map,
+  .excellence-page, .repository-catalog, .ac-main,
+  .ac-topbar
+) {
+  padding-inline: 0;
+}
+
+/* A few page subsections had their own narrower centered max-width. */
+html body :is(
+  .ex-hero, .ex-filters, .ex-results-line, .ex-abstract,
+  .platform-page__hero-copy
+) {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+}
+
+/* On both languages, let paragraphs flow naturally instead of manually
+   inserting line breaks. Pretty wrapping avoids tiny orphan words. */
+html body :is(
+  .app-layout__main, .site-footer, .admin-console
+) :is(p, h1, h2, h3, h4, h5, h6) {
+  overflow-wrap: break-word;
+}
+
+html body :is(.app-layout__main, .site-footer, .admin-console) p {
+  text-wrap: pretty;
+}
+
+html body :is(.app-layout__main, .site-footer, .admin-console)
+:is(h1, h2, h3, h4, h5, h6) {
+  text-wrap: balance;
+}
+
+/* Critical homepage fix: both the dynamic Arabic and English news summaries
+   fill their column; balanced titles and visually even paragraph lines.
+   Justification applies to full lines only, not the short final line. */
+html body .parp-news__active-summary,
+html body .parp-news__active-title,
+html body .parp-news__active-excerpt {
+  width: 100%;
+  max-width: none;
+}
+
+html body .parp-news__active-title {
+  text-wrap: balance;
+  line-height: 1.45;
+}
+
+html body .parp-news__active-excerpt {
+  text-wrap: balance;
+  text-align: justify;
+  text-align-last: start;
+  text-justify: inter-word;
+  line-height: 1.85;
+  hyphens: auto;
+}
+
+/* Other long-form content follows the same treatment, without changing
+   element order or any localized content / network data. */
+html body :is(
+  .platform-page__hero p, .platform-page__card p,
+  .live-news__intro, .live-news__body,
+  .home-stats__heading p, .home-contact__intro > p,
+  .site-footer__brand p, .site-footer__contact p
+) {
+  max-width: none;
+  text-align: justify;
+  text-align-last: start;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+/* Narrow phones: never impose a fixed word count or nowrap on long news. */
+@media (max-width: 640px) {
+  html body .parp-news__shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  html body .parp-news__active-summary {
+    min-width: 0;
+  }
+  html body .parp-news__active-excerpt {
+    text-wrap: pretty;
+  }
+}
