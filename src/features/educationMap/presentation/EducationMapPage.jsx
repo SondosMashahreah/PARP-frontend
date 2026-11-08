@@ -12,6 +12,7 @@ import {
   localizedName,
   withSchoolCounts,
 } from '../domain/geography.js'
+import { historicalPalestineSource } from '../data/historicalPalestine.js'
 import { mapStrings, schoolTypeLabel } from './strings.js'
 import MapCanvas from './MapCanvas.jsx'
 import './EducationMap.css'
@@ -342,6 +343,9 @@ function Directory({
             <summary>{language === 'ar' ? 'مصادر البيانات' : 'Data sources'}</summary>
             <p>{copy.sourceNote}</p>
             <p>{copy.directoryNote}</p>
+            <a href={historicalPalestineSource} target="_blank" rel="noreferrer">
+              {copy.contextSource} ↗
+            </a>
           </details>
           <div
             className="education-map__results"
@@ -484,26 +488,6 @@ function Directory({
             onSchool={chooseSchool}
             onViewport={setViewport}
           />
-          <div className="education-map__map-footer">
-            {counts ? (
-              <div className="education-map__legend">
-                <span>{copy.legend}</span>
-                <i />
-                <span>
-                  {format(0)} —{' '}
-                  {format(
-                    Math.max(
-                      0,
-                      ...catalog.governorates.map((g) => g.school_count),
-                    ),
-                  )}
-                </span>
-              </div>
-            ) : (
-              <span>{copy.schoolHint}</span>
-            )}
-            <span>{copy.loaded}</span>
-          </div>
           {points.error && (
             <p className="education-map__notice" role="alert">
               {copy.pointError}{' '}

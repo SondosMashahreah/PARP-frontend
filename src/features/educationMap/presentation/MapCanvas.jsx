@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { historicalPalestineUrl, historicalPalestineBounds, historicalPalestineSource } from '../data/historicalPalestine.js'
+import { historicalPalestineUrl, historicalPalestineBounds } from '../data/historicalPalestine.js'
 import {
   geometryBounds,
   hasCoordinates,
@@ -485,10 +485,6 @@ export default function MapCanvas({
       >
         {copy.historicalContext}
       </span>
-    </div>
-    <div className="education-map__context-note" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-      <span>{copy.historicalContextNote}</span>
-      <a href={historicalPalestineSource} target="_blank" rel="noreferrer">{copy.contextSource} ↗</a>
     </div>
     </>
   )
