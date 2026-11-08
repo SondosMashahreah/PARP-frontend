@@ -74,7 +74,7 @@ export default function ResearcherWorkspace({
     'new-practice': t('ممارسة جديدة', 'New practice'),
     conference: t('مشاركاتي في المؤتمر', 'Conference participations'),
     home: t('مساحة عمل الباحث / المعلم', 'Teacher / Researcher Workspace'),
-    research: t('بحوثي', 'My research'),
+    research: t('أبحاثي', 'My research'),
     new: t('بحث جديد', 'New research'),
     drafts: t('مسوداتي', 'My drafts'),
     decisions: t('القرارات والملاحظات', 'Decisions & feedback'),
