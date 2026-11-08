@@ -1,13 +1,12 @@
-/* PARP full-bleed + bilingual typography patch.
-   Reviewed against main @ edca43d16ccbf0d8a596102252156a8214a88917.
-   Outer PAGE gutters are removed; spacing inside forms, cards, and navigation
-   controls stays intact for usability. The ribbon's animated paper geometry
-   is intentionally left untouched. */
+/* PARP bilingual typography and precise 0.5 cm outer gutters.
+   Corrective update for the previously applied full-bleed patch.
+   Keeps each page's main frame inside the viewport and restores the
+   original news headline/summary measure. */
 
 /* Layout variables shared by the Arabic and English versions. */
 :root {
   --content-width: 100%;
-  --page-inline-gutter: 0px;
+  --page-inline-gutter: 0.5cm;
 }
 
 html {
@@ -63,41 +62,64 @@ html[lang="ar"] [lang="en"] {
   font-weight: 700;
 }
 
-/* Width = viewport's available layout width, not a centered 960–1450px
-   content container or calc(100% - 32/48/64/96px). This intentionally
-   targets page-level shells, not cards, modals, maps, or button internals. */
-html body :is(
-  #root, .app-shell, .app-layout, .app-layout__main,
-  .site-header__inner, .partner-social-bar__inner, .site-footer__inner,
-  .parp-news, .latest-news__content, .home-stats, .home-contact,
-  .platform-page, .practices-page, .search-page, .workspace-page,
-  .live-news, .education-map, .excellence-page, .ex-hall,
-  .repository-catalog, .ac-main
-) {
+/* Keep full-screen backgrounds and wrappers edge-to-edge, but give ALL
+   page-level content frames exactly 0.5 cm on both inline sides. */
+html body :is(#root, .app-shell, .app-layout, .app-layout__main) {
   width: 100%;
   max-width: none;
   margin-inline: 0;
+}
+
+html body :is(
+  .site-header__inner, .partner-social-bar__inner, .site-footer__inner,
+  .parp-news, .latest-news__content, .home-stats, .home-contact,
+  .platform-page, .practices-page, .search-page, .workspace-page,
+  .live-news, .education-map,
+  .repository-catalog, .ac-main
+) {
+  width: calc(100% - 1cm);
+  max-width: none;
+  margin-inline: auto;
+}
+
+/* The dark background of the excellence page still fills the viewport;
+   only its content gets the 0.5 cm inset. */
+html body .excellence-page {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: var(--page-inline-gutter);
+}
+
+/* Excellence hall is nested inside a page that already has gutters. */
+html body .excellence-page .ex-hall {
+  width: 100%;
+  max-width: none;
+  margin-inline: auto;
+}
+
+/* The repository catalog is sometimes nested in a standard page shell. */
+html body .platform-page .repository-catalog {
+  width: 100%;
 }
 
 /* Remove only *outer* side padding; card and form padding is retained. */
 html body :is(
-  .site-header__inner, .site-header__nav, .partner-social-bar__inner,
+  .site-header__inner, .partner-social-bar__inner,
   .site-footer__inner, .live-news, .education-map,
-  .excellence-page, .repository-catalog, .ac-main,
-  .ac-topbar
+  .repository-catalog, .ac-main
 ) {
   padding-inline: 0;
 }
 
-/* A few page subsections had their own narrower centered max-width. */
-html body :is(
-  .ex-hero, .ex-filters, .ex-results-line, .ex-abstract,
-  .platform-page__hero-copy
-) {
-  width: 100%;
-  max-width: none;
-  margin-inline: 0;
+/* Top navigation and admin toolbar are full-width bands, so inset only
+   their actionable contents. Avoid double-insetting the header's inner grid. */
+html body :is(.site-header__nav, .ac-topbar) {
+  padding-inline: var(--page-inline-gutter);
 }
+
+/* Editorial blocks inside a full-width page retain their readable measure;
+   overriding their original max-width made titles and paragraphs span too far. */
 
 /* On both languages, let paragraphs flow naturally instead of manually
    inserting line breaks. Pretty wrapping avoids tiny orphan words. */
@@ -116,28 +138,46 @@ html body :is(.app-layout__main, .site-footer, .admin-console)
   text-wrap: balance;
 }
 
-/* Critical homepage fix: both the dynamic Arabic and English news summaries
-   fill their column; balanced titles and visually even paragraph lines.
-   Justification applies to full lines only, not the short final line. */
-html body .parp-news__active-summary,
-html body .parp-news__active-title,
-html body .parp-news__active-excerpt {
+/* Restore the compact story-copy area shown in the original news hero.
+   On large screens it sits within its grid column instead of stretching
+   a headline or paragraph across half the entire viewport. */
+html body .parp-news__content {
+  width: min(100%, 560px);
+  min-width: 0;
+  justify-self: center;
+  text-align: start;
+}
+
+html body .parp-news__active-summary {
   width: 100%;
-  max-width: none;
+  min-width: 0;
 }
 
 html body .parp-news__active-title {
+  width: auto;
+  max-width: 36ch;
   text-wrap: balance;
-  line-height: 1.45;
+  text-align: start;
+  line-height: 1.5;
 }
 
 html body .parp-news__active-excerpt {
+  width: auto;
+  max-width: 54ch;
+  text-wrap: pretty;
+  text-align: start;
+  text-align-last: auto;
+  line-height: 1.9;
+  hyphens: manual;
+  overflow-wrap: break-word;
+}
+
+/* The heading itself is kept prominent, but never allowed to spill into
+   the physical edge of the screen. */
+html body .parp-news__content h2 {
+  max-width: 100%;
   text-wrap: balance;
-  text-align: justify;
-  text-align-last: start;
-  text-justify: inter-word;
-  line-height: 1.85;
-  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 /* Other long-form content follows the same treatment, without changing
@@ -149,21 +189,25 @@ html body :is(
   .site-footer__brand p, .site-footer__contact p
 ) {
   max-width: none;
-  text-align: justify;
-  text-align-last: start;
+  text-align: start;
   text-wrap: pretty;
   overflow-wrap: break-word;
 }
 
-/* Narrow phones: never impose a fixed word count or nowrap on long news. */
-@media (max-width: 640px) {
+/* Natural RTL/LTR alignment and responsive text wrapping on phones. */
+@media (max-width: 900px) {
+  html body .parp-news__content {
+    width: 100%;
+    justify-self: stretch;
+  }
   html body .parp-news__shell {
     grid-template-columns: minmax(0, 1fr);
   }
-  html body .parp-news__active-summary {
-    min-width: 0;
-  }
+}
+
+@media (max-width: 640px) {
+  html body .parp-news__active-title,
   html body .parp-news__active-excerpt {
-    text-wrap: pretty;
+    max-width: 100%;
   }
 }
