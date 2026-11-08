@@ -5,6 +5,7 @@ import { useAuth } from "../../features/auth/useAuth.js";
 import { adminSections } from "../../features/admin/dashboardModel.js";
 import { AdminIcon } from "../../pages/Dashboard/components/AdminUi.jsx";
 import logo from "../../components/Header/img/logo.png";
+import Notifications from "../../components/Header/Notifications.jsx";
 import "./AdminLayout.css";
 export default function AdminLayout({
   section,
@@ -15,6 +16,7 @@ export default function AdminLayout({
   const { isArabic: ar, dir, toggleLanguage } = useLanguage();
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const dialog = useRef(null);
   const t = (a, e) => (ar ? a : e);
   useEffect(() => {
@@ -118,6 +120,11 @@ export default function AdminLayout({
             <strong>{ar ? current.ar : current.en}</strong>
           </div>
           <div className="ac-topbar-actions">
+            <Notifications
+              isOpen={notificationsOpen}
+              onToggle={() => setNotificationsOpen((current) => !current)}
+              onClose={() => setNotificationsOpen(false)}
+            />
             <button
               type="button"
               onClick={toggleLanguage}
