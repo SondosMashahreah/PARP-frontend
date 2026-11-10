@@ -132,7 +132,7 @@ export function requiredMissing(content) {
     if (!item.required) return false
     const value = content[item.key]
     if (item.key === 'sample_size') return !Number.isInteger(Number(value)) || Number(value) < 1
-    if (item.key === 'researchers') return !Array.isArray(value) || !value.length || value.some((r) => !r.full_name?.trim() || !r.school?.trim() || !r.directorate?.trim())
+    if (item.key === 'researchers') return !Array.isArray(value) || !value.length || value.some((r) => !r.full_name?.trim() || !r.school?.trim() || !r.directorate?.trim()) || (content.researchers_mode === 'linked' && (value.some((r) => !Number.isInteger(r.user_id) || r.user_id < 1) || new Set(value.map((r) => r.user_id)).size !== value.length))
     if (item.key === 'action_plan_steps') return !Array.isArray(value) || !value.some((s) => s.activity?.trim())
     if (item.key === 'research_instruments') return !Array.isArray(value) || !value.some((s) => s.name?.trim())
     if (['title', 'research_field', 'problem', 'abstract'].includes(item.key)) return String(value || '').trim().length < 2

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { researcherApi } from '../../../features/researcher/researcherApi.js'
 import { workflowApi } from '../../../features/workflow/workflowApi.js'
 import { ACTION_RESEARCH_SECTIONS, prepareContent, requiredMissing, STANDARD_VERSION } from '../../../features/researcher/actionResearchStandard.js'
+import RegisteredResearchersField from './RegisteredResearchersField.jsx'
 import './ActionResearchEditor.css'
 
 const RECORD_TEMPLATES = {
@@ -35,7 +36,8 @@ function GroupField({ type, value, onChange, isArabic, title }) {
       <div className="ards-entry__heading"><strong>{title} {index + 1}</strong><button type="button" className="ards-quiet" disabled={type === 'researchers' && values.length === 1} onClick={() => onChange(values.filter((_, i) => index !== i))}>{isArabic ? 'إزالة' : 'Remove'}</button></div>
       <div className="ards-entry__grid">{labels.map(([key, ar, en]) => <label key={key}>
         <span>{isArabic ? ar : en}{type === 'researchers' ? ' *' : ''}</span>
-        <input value={entry?.[key] || ''} maxLength={key === 'activity' || key === 'description' ? 4000 : 300}
+        <input type={type === 'steps' && key === 'date' ? 'date' : 'text'}
+          value={entry?.[key] || ''} maxLength={key === 'activity' || key === 'description' ? 4000 : 300}
           onChange={(e) => onChange(values.map((row, i) => i === index ? { ...row, [key]: e.target.value } : row))} />
       </label>)}</div>
     </div>)}
@@ -54,7 +56,8 @@ function FieldControl({ field, value, onChange, isArabic }) {
         : field.type === 'number' ? <input id={id} type="number" min="1" step="1" value={value ?? ''} onChange={(e) => onChange(e.target.value === '' ? null : Number(e.target.value))} />
           : field.type === 'date' ? <input id={id} type="date" value={value || ''} onChange={common.onChange} />
             : field.type === 'list' ? <ListField label={label} value={value} onChange={onChange} isArabic={isArabic} />
-              : ['researchers', 'steps', 'instruments'].includes(field.type) ? <GroupField type={field.type} title={label} value={value} onChange={onChange} isArabic={isArabic} />
+              : field.type === 'researchers' ? <RegisteredResearchersField value={value} onChange={onChange} isArabic={isArabic} />
+                : ['steps', 'instruments'].includes(field.type) ? <GroupField type={field.type} title={label} value={value} onChange={onChange} isArabic={isArabic} />
                 : <input {...common} type="text" />}
   </div>
 }
@@ -62,18 +65,41 @@ function FieldControl({ field, value, onChange, isArabic }) {
 /** Same editor for new drafts and revised, already-submitted ARDS research. */
 export default function ActionResearchEditor({ draft, submission, isArabic, onSaved, onSubmitted, onRefresh }) {
   const [record, setRecord] = useState(draft || null)
-  const [content, setContent] = useState(() => prepareContent(submission?.standard_data || draft?.content))
+  const [content, setContent] = useState(() => prepareContent({
+    ...(!draft && !submission ? { researchers_mode: 'linked' } : {}),
+    ...(submission?.standard_data || draft?.content || {}),
+  }))
   const [step, setStep] = useState(0)
   const [file, setFile] = useState(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [dirty, setDirty] = useState(false)
+  const [affiliationNotice, setAffiliationNotice] = useState('')
   const t = (ar, en) => isArabic ? ar : en
   const section = ACTION_RESEARCH_SECTIONS[step]
   const missing = useMemo(() => requiredMissing(content), [content])
   const complete = ACTION_RESEARCH_SECTIONS.filter((part) => !part.fields.some((f) => missing.some((m) => m.key === f.key))).length
   const isRevision = Boolean(submission)
+
+  // New studies begin with the currently logged-in researcher, if approved.
+  useEffect(() => {
+    if (draft || submission) return undefined
+    let alive = true
+    researcherApi.myResearcherProfile().then((response) => {
+      if (!alive) return
+      if (!response.researcher) {
+        setAffiliationNotice('unavailable')
+        return
+      }
+      setContent((previous) => {
+        const rows = previous.researchers || []
+        if (rows.length !== 1 || rows[0]?.user_id || rows[0]?.full_name?.trim()) return previous
+        return { ...previous, researchers: [response.researcher] }
+      })
+    }).catch(() => { if (alive) setAffiliationNotice('unavailable') })
+    return () => { alive = false }
+  }, [draft, submission])
 
   useEffect(() => {
     if (!dirty) return
@@ -89,7 +115,7 @@ export default function ActionResearchEditor({ draft, submission, isArabic, onSa
   // Translation is derived only from the stable isArabic prop.
   }, [dirty, isArabic])
 
-  function update(key, value) { setContent((previous) => ({ ...previous, [key]: value })); setDirty(true); setMessage('') }
+  function update(key, value) { setContent((previous) => ({ ...previous, [key]: value, ...(key === 'researchers' && value.some((item) => item.user_id) ? { researchers_mode: 'linked' } : {}) })); setDirty(true); setMessage('') }
   function goTo(next) { setStep(next); setError(''); setMessage('') }
 
   async function save(submit = false) {
@@ -156,6 +182,10 @@ export default function ActionResearchEditor({ draft, submission, isArabic, onSa
         <div className="ards-section-head"><small>{t('القسم', 'SECTION')} {String(step + 1).padStart(2, '0')} / 09</small>
           <h3>{isArabic ? section.ar : section.en}</h3><p>{isArabic ? section.descriptionAr : section.descriptionEn}</p></div>
         <form onSubmit={(e) => { e.preventDefault(); save(true) }}>
+          {step === 0 && affiliationNotice && <p className="ards-researcher__warning" role="status">{
+            t('تعذّر العثور على ارتباط مدرستك ومديريتك المعتمد. راجعي بيانات ارتباط حسابك، ثم اختاري الباحث من القائمة بعد اعتمادها.',
+              'Your account has no approved school/directorate profile. Update your affiliation before submission.')
+          }</p>}
           <div className="ards-fields">{section.fields.map((field) => <FieldControl key={field.key} field={field} value={content[field.key]} onChange={(value) => update(field.key, value)} isArabic={isArabic} />)}</div>
           {step === 8 && <div className="ards-upload">
             <label htmlFor="ards-research-file">{t('ملف البحث الأصلي (PDF أو Word، بحد أقصى 25MB)', 'Original research file (PDF or Word, max 25MB)')}</label>
