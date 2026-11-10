@@ -6,6 +6,7 @@ import LatestNewsSlider from '../../features/news/presentation/LatestNewsSlider/
 import LatestNewsSliderEn from '../../features/news/presentation/LatestNewsSlider/CompactNewsSlider.en.jsx'
 import { getPlatformStats } from '../../features/platform/data/platformStats.js'
 import ContactForm from '../../features/contact/presentation/ContactForm.jsx'
+import { CONTACT_EMAIL } from '../../features/contact/application/contactMessage.js'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import Icon from '../../components/ui/Icon.jsx'
@@ -43,7 +44,7 @@ export default function Home() {
           <span className="home-section-eyebrow">{isArabic ? 'لنبقَ على تواصل' : 'Let’s stay connected'}</span>
           <h2 id="contact-title">{isArabic ? 'كل فكرة تبدأ بمحادثة.' : 'Every idea starts with a conversation.'}</h2>
           <p>{isArabic ? 'عندك سؤال، اقتراح أو فكرة للتعاون؟ اكتب لنا، ويسعد فريق المنصة بمساعدتك في خطوتك القادمة.' : 'Have a question, a suggestion, or an idea for collaboration? Write to us. The platform team is here to help with your next step.'}</p>
-          <a className="home-contact__email" href="mailto:info.meetmath@alquds.edu"><Icon name="mail" /><span dir="ltr">info.meetmath@alquds.edu</span></a>
+          <a className="home-contact__email" href={`mailto:${CONTACT_EMAIL}`}><Icon name="mail" /><span dir="ltr">{CONTACT_EMAIL}</span></a>
           <small>{isArabic ? 'متحف الرياضيات · جامعة القدس · أبو ديس، فلسطين' : 'Meet Math Museum · Al-Quds University · Abu Dis, Palestine'}</small>
         </div>
         <div className="home-contact__form"><ContactForm /></div>

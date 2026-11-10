@@ -13,7 +13,7 @@ test('Validation trims fields and rejects blank names, invalid email and oversiz
 test('Draft encodes Arabic, ampersands and line breaks without adding recipients', () => {
   const data = validateContact(message).data
   const url = new URL(contactMailto(data))
-  assert.equal(url.pathname, 'info.meetmath@alquds.edu')
+  assert.equal(url.pathname, 'parp@alquds.edu')
   assert.equal(url.searchParams.get('subject'), data.subject)
   assert.ok(url.searchParams.get('body').includes(data.message))
   assert.ok(url.searchParams.get('body').includes('\n'))

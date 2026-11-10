@@ -1,4 +1,4 @@
-export const CONTACT_EMAIL = 'info.meetmath@alquds.edu'
+export const CONTACT_EMAIL = 'parp@alquds.edu'
 
 export function validateContact(values) {
   const data = Object.fromEntries(['name', 'email', 'subject', 'message'].map((key) => [key, String(values[key] || '').trim()]))

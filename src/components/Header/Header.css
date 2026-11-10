@@ -108,3 +108,16 @@
   outline: 2px solid #f0b99a;
   outline-offset: -2px;
 }
+
+/* Logged-in avatar: replace only the person icon; keep account button layout. */
+.site-header__avatar {
+  display: block;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgb(var(--neutral-rgb) / 30%);
+  background: var(--color-primary-soft);
+}

@@ -12,6 +12,22 @@ import { useAuth } from "../../features/auth/useAuth.js";
 import { roleLabel } from "../../features/auth/roles.js";
 import "./Header.css";
 
+// Render the profile photo where available, with the original icon as a fallback.
+// A key based on avatar_url resets the fallback after a profile-photo change.
+function HeaderAvatar({ url }) {
+  const [failed, setFailed] = useState(false);
+  if (!url || failed) return <Icon name="user" />;
+  return (
+    <img
+      className="site-header__avatar"
+      src={url}
+      alt=""
+      decoding="async"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 export default function Header() {
   const [activePanel, setActivePanel] = useState(null);
   const closePanel = useCallback(() => setActivePanel(null), []);
@@ -157,7 +173,7 @@ export default function Header() {
                   )
                 }
               >
-                <Icon name="user" />
+                <HeaderAvatar key={user?.avatar_url || "default"} url={isAuthenticated ? user?.avatar_url : null} />
                 <span className="site-header__account-text">
                   <span className="site-header__account-name">
                     {accountName}
@@ -190,7 +206,7 @@ export default function Header() {
                 title={accountLabel}
                 onClick={closePanel}
               >
-                <Icon name="user" />
+                <HeaderAvatar key={user?.avatar_url || "default"} url={isAuthenticated ? user?.avatar_url : null} />
                 {isAuthenticated ? (
                   <span className="site-header__account-text">
                     <span className="site-header__account-name">
