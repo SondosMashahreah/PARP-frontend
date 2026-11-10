@@ -26,3 +26,11 @@
 .repository-catalog__empty { text-align:center; padding:3rem; border:1px dashed var(--color-border,#ccd); border-radius:18px; color:var(--color-text-muted,#667); }
 @media(max-width:850px) { .repository-catalog__filters { grid-template-columns:1fr 1fr; }.repository-catalog__filters label:first-child { grid-column:1 / -1; }.repository-catalog__list { grid-template-columns:1fr; } }
 @media(max-width:480px) { .repository-catalog__filters { grid-template-columns:1fr; }.repository-catalog__filters label:first-child { grid-column:auto; }.repository-catalog__card { padding:18px; } }
+
+/* V13: separate abstract and published-file actions. */
+.repository-catalog__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-block: 2px; }
+.repository-catalog__action { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 15px; border: 1px solid var(--color-border-strong); border-radius: 11px; font: inherit; font-size: .84rem; font-weight: 750; cursor: pointer; background: var(--color-primary-soft); color: var(--color-text); text-decoration: none; }
+.repository-catalog__action--primary { background: var(--gradient-button); border-color: var(--color-accent); }
+.repository-catalog__action:hover { filter: brightness(1.14); }
+.repository-catalog__action:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.repository-catalog__abstract { padding: 14px; border: 1px solid var(--color-border); border-radius: 12px; white-space: pre-wrap; }

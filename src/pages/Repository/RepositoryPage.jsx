@@ -10,6 +10,8 @@ export default function RepositoryPage() {
   const [q, setQ] = useState('')
   const [year, setYear] = useState('')
   const [field, setField] = useState('')
+  const [expanded, setExpanded] = useState([])
+  const apiOrigin = (import.meta.env.VITE_API_URL || 'http://localhost:8000').replace(/\/$/, '')
   const t = (ar, en) => isArabic ? ar : en
   useEffect(() => {
     let active = true
@@ -55,7 +57,15 @@ export default function RepositoryPage() {
           {r.academic_year && <span className="repository-catalog__tag repository-catalog__tag--outline">{r.academic_year}</span>}
         </div>
         <h2>{isArabic ? r.title : (r.title_en || r.title)}</h2>
-        <p className="repository-catalog__abstract">{r.abstract || t('لا يوجد ملخص لهذا السجل القديم.', 'No abstract available for this legacy record.')}</p>
+        <div className="repository-catalog__actions">
+          <button type="button" className="repository-catalog__action" aria-expanded={expanded.includes(r.id)} aria-controls={`research-abstract-${r.id}`} onClick={() => setExpanded(current => current.includes(r.id) ? current.filter(id => id !== r.id) : [...current, r.id])}>
+            {expanded.includes(r.id) ? t('إخفاء الملخص', 'Hide abstract') : t('عرض الملخص', 'View abstract')}
+          </button>
+          <a className="repository-catalog__action repository-catalog__action--primary" href={`${apiOrigin}/api/workflow/repository/${encodeURIComponent(r.id)}/file`} target="_blank" rel="noopener noreferrer" aria-label={`${t('عرض البحث كاملًا', 'Open full research')}: ${r.title}`}>
+            {t('عرض البحث كاملًا', 'Open full research')}
+          </a>
+        </div>
+        {expanded.includes(r.id) && <p id={`research-abstract-${r.id}`} className="repository-catalog__abstract">{r.abstract || t('لا يوجد ملخص لهذا السجل القديم.', 'No abstract available for this legacy record.')}</p>}
         <div className="repository-catalog__authors"><strong>{t('الباحثون', 'Researchers')}</strong>
           {r.researchers?.length ? <ul>{r.researchers.map((person, i) => <li key={i}>
             <span>{person.full_name}</span><small>{[person.school, person.directorate].filter(Boolean).join(' · ')}</small>
@@ -65,7 +75,7 @@ export default function RepositoryPage() {
           {r.subject_area && <span>{t('المبحث:', 'Subject:')} {r.subject_area}</span>}
           {r.target_grades?.length > 0 && <span>{t('الصفوف:', 'Grades:')} {r.target_grades.join(', ')}</span>}
         </div>}
-        <footer>{t('الملخص متاح مجاناً. الوصول للملف الكامل غير مفعل حتى اعتماد بوابة الدفع.', 'Abstract is free. Full-text access remains disabled until payment integration is approved.')}</footer>
+        <footer>{t('الملخص والملف الكامل متاحان للأبحاث المنشورة فقط، بعد اعتمادها ونشرها.', 'Abstract and full file are available only for approved, published research.')}</footer>
       </article>)}
     </div>
     {items && !filtered.length && <div className="repository-catalog__empty">{t('لا توجد أبحاث مطابقة.', 'No matching research.')}</div>}

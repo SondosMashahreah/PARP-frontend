@@ -3,7 +3,7 @@ import { researchBandTotals, researchBands, researchColor, RESEARCH_BEIGE } from
 const translations = {
   ar: {
     heading: 'إحصائيات الأبحاث حسب المحافظة', note: 'أبحاث مسجّلة في المنصة، وليست تقديرات سكانية أو أعداد مدارس.',
-    scope: 'النتائج ضمن نطاق مديريتك المعتمدة فقط.', total: 'إجمالي الأبحاث', active: 'محافظات فيها أبحاث',
+    scope: 'النتائج ضمن نطاق مديريتك المعتمدة فقط.', nationalPublished: 'خريطة الأبحاث المنشورة في جميع محافظات فلسطين، بغضّ النظر عن مديرية حسابك.', total: 'إجمالي الأبحاث', active: 'محافظات فيها أبحاث',
     published: 'أبحاث منشورة', unknown: 'غير محدد المحافظة', legend: 'مفتاح الخريطة',
     zero: 'لا توجد أبحاث — نفس البيج', range: 'بحث', regions: 'محافظات', list: 'ترتيب المحافظات',
     share: 'من الأبحاث محددة المحافظة', empty: 'لا توجد أبحاث مسجّلة في هذا النطاق بعد؛ تظهر المحافظات كلها بالبيج.',
@@ -13,7 +13,7 @@ const translations = {
   },
   en: {
     heading: 'Research by governorate', note: 'Registered PARP research, not estimated populations or school counts.',
-    scope: 'Results are limited to your approved directorate.', total: 'Registered research', active: 'Governorates with research',
+    scope: 'Results are limited to your approved directorate.', nationalPublished: 'Published research across Palestine, regardless of the directorate of your account.', total: 'Registered research', active: 'Governorates with research',
     published: 'Published research', unknown: 'Unassigned governorate', legend: 'Map legend',
     zero: 'No research — same beige', range: 'research', regions: 'governorates', list: 'Governorate ranking',
     share: 'of assigned research', empty: 'No research has been registered in this scope; all governorates remain beige.',
@@ -54,6 +54,7 @@ export default function ResearchStatsPanel({ stats, language, selectedId, onSele
       <h2>{t.heading}</h2>
       <p>{t.note}</p>
       {data?.scope === 'directorate' && <p className="research-stats__scope">{t.scope}</p>}
+      {data?.scope === 'national_published' && <p className="research-stats__scope">{t.nationalPublished}</p>}
     </header>
     {stats.loading ? <p role="status" className="research-stats__message">{t.loading}</p>
       : stats.error ? <div className="research-stats__message" role="alert"><p>{t.unavailable}</p><button type="button" onClick={onRetry}>{t.retry}</button></div>

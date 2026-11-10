@@ -1,7 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { usePlatformData } from '../../features/platform/usePlatformData.js'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { useAuth } from '../../features/auth/useAuth.js'
+import { api } from '../../features/auth/authApi.js'
+import { RouteLink } from '../../routing/clientRouter.jsx'
 import './InstitutionWorkspace.css'
 
 const normal = (value) => String(value || '').toLocaleLowerCase().normalize('NFKD').replace(/[\u064b-\u065f\u0640]/g, '').replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').trim()
@@ -16,6 +18,15 @@ export default function InstitutionWorkspace() {
   const [directorate, setDirectorate] = useState('')
   const [school, setSchool] = useState('')
   const [search, setSearch] = useState('')
+  const [nationalPublished, setNationalPublished] = useState(null)
+  useEffect(() => {
+    if (user?.role !== 'directorate_manager') return undefined
+    let active = true
+    api('/api/education/research/governorates')
+      .then(value => { if (active && value.scope === 'national_published') setNationalPublished(value) })
+      .catch(() => { if (active) setNationalPublished(null) })
+    return () => { active = false }
+  }, [user?.role])
 
   const directory = useMemo(() => {
     if (!data) return null
@@ -68,6 +79,12 @@ export default function InstitutionWorkspace() {
       <h1 id="institution-title">{t('المديريات والمدارس والبحوث', 'Directorates, schools & research')}</h1>
       <p>{scope}. {t('ابحث باسم المدرسة أو المديرية، أو اختر مديرية لعرض مدارسها وإحصائياتها الفعلية.', 'Search schools or directorates by name, or select a directorate to explore its schools and verified statistics.')}</p>
     </header>
+
+    {user?.role === 'directorate_manager' && nationalPublished && <aside className="institution-national-publications" aria-label={t('الأبحاث المنشورة على مستوى الوطن', 'National published research')}>
+      <div><span>{t('الأبحاث المنشورة على مستوى الوطن', 'Published research nationwide')}</span><strong>{nationalPublished.total_research.toLocaleString(isArabic ? 'ar-PS' : 'en-GB')}</strong></div>
+      <p>{t('هذا الرقم يشمل جميع المديريات. الإحصائيات والجدول أدناه يخصان مديريتك المعتمدة فقط، لذلك قد يظلان صفرًا إذا كان البحث تابعًا لمديرية أخرى.', 'This is the nationwide published count. The institution metrics and table below remain restricted to your approved directorate, and may be zero when the research belongs elsewhere.')}</p>
+      <RouteLink to="/repository">{t('عرض الأبحاث في المستودع', 'Browse published research')}</RouteLink>
+    </aside>}
 
     <div className="institution-filters" role="search" aria-label={t('البحث في المؤسسات', 'Search institutions')}>
       <label>{t('ابحث عن مدرسة أو مديرية', 'Search school or directorate')}

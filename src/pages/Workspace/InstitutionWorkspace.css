@@ -96,3 +96,11 @@
 .institution-conference a { color: var(--color-accent); }
 @media(max-width: 1000px) { .institution-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .institution-overview .institution-metrics { grid-template-columns: repeat(3, minmax(110px, 1fr)); } }
 @media(max-width: 650px) { .institution-filters { grid-template-columns: 1fr; padding: 16px; } .institution-overview .institution-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } .institution-overview .institution-donut { margin-inline: auto; } }
+
+/* Separate public countrywide publication total from private directorate metrics. */
+.institution-national-publications { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-bottom: 20px; padding: 18px 22px; border-radius: 18px; border: 1px solid var(--color-border-strong); background: linear-gradient(120deg, rgb(var(--accent-rgb) / 17%), var(--surface-glass)); }
+.institution-national-publications > div { display: grid; gap: 5px; }
+.institution-national-publications span { font-size: .86rem; color: var(--color-text-muted); }
+.institution-national-publications strong { color: var(--color-text); font-size: 2rem; font-variant-numeric: tabular-nums; }
+.institution-national-publications p { flex: 1; min-width: min(100%, 260px); margin: 0; color: var(--color-text-muted); font-size: .82rem; line-height: 1.8; }
+.institution-national-publications a { color: var(--color-accent); font-weight: 750; white-space: nowrap; text-decoration-thickness: 1px; text-underline-offset: 4px; }
