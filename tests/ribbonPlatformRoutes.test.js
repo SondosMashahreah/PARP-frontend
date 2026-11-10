@@ -2,9 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { ribbonSelectionForRoute } from '../src/components/RibbonButton/ribbonRoutes.js'
 
-const pages = ['/about', '/conference', '/repository', '/guide', '/template',
-  '/training', '/library', '/observatory', '/institutions', '/excellence',
-  '/news', '/support', '/practices', '/problems']
+const pages = ['/conference', '/guide', '/template', '/training', '/library',
+  '/observatory', '/institutions', '/problems']
 
 test('Public platform destinations use the existing reusable ribbon poster', () => {
   for (const to of pages) {
@@ -30,8 +29,9 @@ test('Workspace researcher cards include all six links and child routes', () => 
 })
 
 test('Action forms, accounts and complex pages are not wrapped in ribbons', () => {
-  for (const path of ['/', '/workspace', '/login', '/account', '/profile', '/map', '/assistant', '/dashboard', '/search?q=a']) {
+  for (const path of ['/', '/workspace', '/login', '/account', '/profile', '/map', '/assistant', '/dashboard', '/search?q=a',
+    '/about', '/repository', '/excellence', '/news', '/support', '/practices']) {
     assert.equal(ribbonSelectionForRoute(path, true), null)
   }
-  assert.equal(ribbonSelectionForRoute('/news#latest', true).to, '/news')
+  assert.equal(ribbonSelectionForRoute('/news#latest', true), null)
 })

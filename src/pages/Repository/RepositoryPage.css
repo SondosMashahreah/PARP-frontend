@@ -1,5 +1,28 @@
 @import '../../components/platform/PlatformPage.css';
 @import '../../components/platform/PlatformExperience.css';
 
-/* Styles specific to Repository belong here. Shared design stays in components/platform. */
-.repository-catalog{max-width:1100px;margin:3rem auto;padding:1.5rem}.repository-catalog article{padding:2rem;margin-block:1rem;border:1px solid #90506066;border-radius:12px}.repository-catalog input{display:block;width:100%;padding:1rem;background:#ffffff0a;color:inherit;border:1px solid #905060;border-radius:10px}.repository-catalog button:disabled{opacity:.6}
+.repository-catalog { max-width:1200px; margin:2.5rem auto 5rem; padding:0 clamp(16px,3vw,32px); color:var(--color-text,inherit); }
+.repository-catalog__hero { padding:32px clamp(18px,3vw,40px); border:1px solid var(--color-border,#dee1e7); background:var(--color-surface-raised,var(--color-surface,#fff)); border-radius:22px; margin-bottom:22px; }
+.repository-catalog__eyebrow { font-size:.75rem; font-weight:800; letter-spacing:.1em; color:var(--color-accent,#3659a6); }
+.repository-catalog__hero h1 { margin:10px 0; font-size:clamp(1.65rem,3.5vw,2.6rem); }
+.repository-catalog__hero p { margin:0; color:var(--color-text-muted,#6c7584); line-height:1.9; }
+.repository-catalog__filters { display:grid; grid-template-columns:2fr 1fr 1fr; gap:13px; border:1px solid var(--color-border,#dee1e7); padding:18px; border-radius:18px; margin-bottom:22px; }
+.repository-catalog__filters label { display:flex; flex-direction:column; gap:8px; font-size:.82rem; font-weight:700; }
+.repository-catalog__filters :is(input,select) { width:100%; min-width:0; box-sizing:border-box; padding:12px; border:1px solid var(--color-border,#dee1e7); border-radius:10px; background:var(--color-surface,#fff); color:inherit; font:inherit; }
+.repository-catalog__count { font-size:.86rem; color:var(--color-text-muted,#667); }
+.repository-catalog__list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+.repository-catalog__card { border:1px solid var(--color-border,#dee1e7); border-radius:18px; background:var(--color-surface-raised,var(--color-surface,#fff)); padding:24px; display:flex; flex-direction:column; min-width:0; gap:14px; box-shadow:0 10px 35px rgb(0 0 0 / 4%); }
+.repository-catalog__card-top { display:flex; flex-wrap:wrap; gap:8px; }
+.repository-catalog__tag { border-radius:99px; background:rgb(var(--accent-rgb,53 87 163) / 12%); color:var(--color-accent,#3659a6); padding:4px 10px; font-size:.74rem; font-weight:700; }
+.repository-catalog__tag--outline { background:transparent; border:1px solid var(--color-border,#d4d9e0); color:inherit; }
+.repository-catalog__card h2 { font-size:1.24rem; line-height:1.55; margin:0; }
+.repository-catalog__abstract { color:var(--color-text-muted,#626b79); line-height:1.8; margin:0; }
+.repository-catalog__authors { border-block:1px solid var(--color-border,#e2e6ed); padding-block:12px; display:grid; gap:8px; }
+.repository-catalog__authors strong { font-size:.82rem; }.repository-catalog__authors ul { list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+.repository-catalog__authors li { display:grid; gap:2px; }.repository-catalog__authors li span { font-weight:650; }
+.repository-catalog__authors small { color:var(--color-text-muted,#626b79); line-height:1.6; }
+.repository-catalog__authors p { margin:0; }.repository-catalog__meta { display:flex; flex-wrap:wrap; gap:10px; font-size:.85rem; }
+.repository-catalog__card footer { margin-top:auto; font-size:.76rem; line-height:1.8; color:var(--color-text-muted,#6c7584); }
+.repository-catalog__empty { text-align:center; padding:3rem; border:1px dashed var(--color-border,#ccd); border-radius:18px; color:var(--color-text-muted,#667); }
+@media(max-width:850px) { .repository-catalog__filters { grid-template-columns:1fr 1fr; }.repository-catalog__filters label:first-child { grid-column:1 / -1; }.repository-catalog__list { grid-template-columns:1fr; } }
+@media(max-width:480px) { .repository-catalog__filters { grid-template-columns:1fr; }.repository-catalog__filters label:first-child { grid-column:auto; }.repository-catalog__card { padding:18px; } }

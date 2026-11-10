@@ -8,7 +8,6 @@ import { content as Library } from '../Library/LibraryPage.content.js'
 import { content as Assistant } from '../Assistant/AssistantPage.content.js'
 import { content as Map } from '../Map/MapPage.content.js'
 import { content as Observatory } from '../Observatory/ObservatoryPage.content.js'
-import { content as ObservatoryMap } from '../ObservatoryMap/ObservatoryMapPage.content.js'
 import { content as Dashboard } from '../Dashboard/DashboardPage.content.js'
 import { content as Institutions } from '../Institutions/InstitutionsPage.content.js'
 import { content as Excellence } from '../Excellence/ExcellencePage.content.js'
@@ -27,7 +26,6 @@ export const platformPagesEn = {
   '/assistant': Assistant.en,
   '/map': Map.en,
   '/observatory': Observatory.en,
-  '/map': ObservatoryMap.en,
   '/dashboard': Dashboard.en,
   '/institutions': Institutions.en,
   '/excellence': Excellence.en,

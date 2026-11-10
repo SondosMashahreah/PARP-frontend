@@ -78,7 +78,7 @@ test('The page ribbon extends its tail without scaling or moving the circle', ()
 
 test('Ribbon frame is available for direct URLs, refresh and old workspace shortcuts', () => {
   assert.equal(ribbonSelectionForRoute('/workspace', true), null)
-  assert.equal(ribbonSelectionForRoute('/workspace#certificates', true), null)
+  assert.equal(ribbonSelectionForRoute('/workspace#certificates', true)?.to, '/workspace#certificates')
   assert.equal(ribbonSelectionForRoute('/other#research', true), null)
   const sections = {
     research: 'research',

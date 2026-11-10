@@ -23,10 +23,10 @@ export default function Notifications({ isOpen, onToggle, onClose }) {
   const [error, setError] = useState(false)
   const fetchId = useRef(0)
   const title = isArabic ? 'الإشعارات' : 'Notifications'
-  const refresh = useCallback(async ({ quiet = false } = {}) => {
+  const refresh = useCallback(async () => {
     if (!isAuthenticated) return
     const seq = ++fetchId.current
-    if (!quiet) setLoading(true)
+    // State updates happen after the request, avoiding synchronous effect updates.
     try {
       const data = await notificationsApi.list(PAGE_SIZE, 0)
       if (seq !== fetchId.current) return
@@ -43,16 +43,19 @@ export default function Notifications({ isOpen, onToggle, onClose }) {
 
   useEffect(() => {
     if (!isAuthenticated) return undefined
-    refresh()
+    // Defer the initial fetch until after the effect has finished setup.
+    const kickoff = window.setTimeout(() => { void refresh() }, 0)
     const updateIfVisible = () => {
-      if (document.visibilityState === 'visible') refresh({ quiet: true })
+      if (document.visibilityState === 'visible') void refresh()
     }
     const timer = window.setInterval(updateIfVisible, 40000)
     window.addEventListener('focus', updateIfVisible)
     document.addEventListener('visibilitychange', updateIfVisible)
     window.addEventListener('parp:notifications-refresh', updateIfVisible)
+    const activeFetchRef = fetchId
     return () => {
-      ++fetchId.current
+      window.clearTimeout(kickoff)
+      ++activeFetchRef.current
       window.clearInterval(timer)
       window.removeEventListener('focus', updateIfVisible)
       document.removeEventListener('visibilitychange', updateIfVisible)
@@ -62,7 +65,8 @@ export default function Notifications({ isOpen, onToggle, onClose }) {
 
   useEffect(() => {
     if (!isOpen) return undefined
-    refresh({ quiet: true })
+    // An opening refresh is asynchronous and cancelled if the panel closes.
+    const kickoff = window.setTimeout(() => { void refresh() }, 0)
     function handlePointerDown(event) {
       if (!containerRef.current?.contains(event.target)) onClose()
     }
@@ -75,6 +79,7 @@ export default function Notifications({ isOpen, onToggle, onClose }) {
     document.addEventListener('pointerdown', handlePointerDown)
     document.addEventListener('keydown', handleKeyDown)
     return () => {
+      window.clearTimeout(kickoff)
       document.removeEventListener('pointerdown', handlePointerDown)
       document.removeEventListener('keydown', handleKeyDown)
     }

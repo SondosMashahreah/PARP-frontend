@@ -1,78 +1,73 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { workflowApi } from '../../features/workflow/workflowApi.js'
 import './RepositoryPage.css'
+
 export default function RepositoryPage() {
-  const { isArabic, dir } = useLanguage(),
-    [items, setItems] = useState(null),
-    [error, setError] = useState(''),
-    [q, setQ] = useState('')
+  const { isArabic, dir } = useLanguage()
+  const [items, setItems] = useState(null)
+  const [error, setError] = useState('')
+  const [q, setQ] = useState('')
+  const [year, setYear] = useState('')
+  const [field, setField] = useState('')
+  const t = (ar, en) => isArabic ? ar : en
   useEffect(() => {
     let active = true
-    workflowApi
-      .repository()
-      .then((r) => {
-        if (active) setItems(r)
-      })
-      .catch((e) => {
-        if (active) setError(e.message)
-      })
-    return () => {
-      active = false
-    }
+    workflowApi.repository().then((value) => { if (active) setItems(value) })
+      .catch((err) => { if (active) setError(err.message) })
+    return () => { active = false }
   }, [])
-  return (
-    <section className="repository-catalog" dir={dir}>
-      <h1>
-        {isArabic ? 'الأبحاث الإجرائية المنشورة' : 'Published action research'}
-      </h1>
-      <label>
-        {isArabic ? 'ابحث بالعربي أو الإنجليزي' : 'Search in Arabic or English'}
-        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} />
+  const years = useMemo(() => [...new Set((items || []).map((r) => r.academic_year).filter(Boolean))].sort().reverse(), [items])
+  const fields = useMemo(() => [...new Set((items || []).map((r) => r.research_field).filter(Boolean))].sort(), [items])
+  const filtered = useMemo(() => (items || []).filter((r) => {
+    if (year && r.academic_year !== year) return false
+    if (field && r.research_field !== field) return false
+    const authors = (r.researchers || []).flatMap((person) => [person.full_name, person.school, person.directorate])
+    const haystack = [r.title, r.title_en, r.abstract, r.research_field, r.subject_area,
+      r.academic_year, r.researcher_name, ...(r.keywords || []), ...authors].join(' ').toLocaleLowerCase()
+    return haystack.includes(q.trim().toLocaleLowerCase())
+  }), [items, year, field, q])
+  return <section className="repository-catalog" dir={dir}>
+    <header className="repository-catalog__hero">
+      <span className="repository-catalog__eyebrow">PARP / NATIONAL REPOSITORY</span>
+      <h1>{t('المستودع الوطني للأبحاث الإجرائية', 'National Action Research Repository')}</h1>
+      <p>{t('ابحث في الأبحاث المنشورة والباحثين والمدارس والمديريات.', 'Discover published studies, researchers, schools and directorates.')}</p>
+    </header>
+    <div className="repository-catalog__filters">
+      <label>{t('بحث بالعربي أو الإنجليزي', 'Search in Arabic or English')}
+        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('كلمات البحث…', 'Search keywords…')} />
       </label>
-      {error && <p role="alert">{error}</p>}
-      {!items && !error && (
-        <p role="status">{isArabic ? 'جارٍ التحميل…' : 'Loading…'}</p>
-      )}
-      {items
-        ?.filter((r) =>
-          `${r.title} ${r.title_en || ''} ${r.abstract || ''}`
-            .toLowerCase()
-            .includes(q.toLowerCase()),
-        )
-        .map((r) => (
-          <article key={r.id}>
-            <small>
-              {r.research_field} · {r.researcher_name}
-            </small>
-            <h2>{isArabic ? r.title : r.title_en || r.title}</h2>
-            <p>
-              {r.abstract ||
-                (isArabic
-                  ? 'لا يوجد ملخص لهذا السجل القديم'
-                  : 'No abstract available for this legacy record')}
-            </p>
-            <button disabled>
-              {isArabic
-                ? 'شراء البحث الكامل — غير مفعّل حالياً'
-                : 'Purchase full research — currently unavailable'}
-            </button>
-            <p>
-              <small>
-                {isArabic
-                  ? 'الملخص متاح مجاناً. سيتم تفعيل الوصول المدفوع عند اعتماد بوابة الدفع.'
-                  : 'The abstract is free. Paid access will be enabled after a payment provider is configured.'}
-              </small>
-            </p>
-          </article>
-        ))}
-      {items?.length === 0 && (
-        <p>
-          {isArabic
-            ? 'لا توجد أبحاث منشورة بعد.'
-            : 'No published research yet.'}
-        </p>
-      )}
-    </section>
-  )
+      <label>{t('العام الدراسي', 'Academic year')}
+        <select value={year} onChange={(e) => setYear(e.target.value)}><option value="">{t('جميع الأعوام', 'All years')}</option>{years.map((v) => <option key={v} value={v}>{v}</option>)}</select>
+      </label>
+      <label>{t('المجال', 'Research field')}
+        <select value={field} onChange={(e) => setField(e.target.value)}><option value="">{t('جميع المجالات', 'All fields')}</option>{fields.map((v) => <option key={v} value={v}>{v}</option>)}</select>
+      </label>
+    </div>
+    {error && <p role="alert">{error}</p>}
+    {!items && !error && <p role="status">{t('جارٍ تحميل الأبحاث…', 'Loading research…')}</p>}
+    {items && <p className="repository-catalog__count" role="status">{filtered.length} {t('بحث منشور', 'published studies')}</p>}
+    <div className="repository-catalog__list">
+      {filtered.map((r) => <article className="repository-catalog__card" key={r.id}>
+        <div className="repository-catalog__card-top">
+          <span className="repository-catalog__tag">{r.research_field || t('بحث إجرائي', 'Action research')}</span>
+          {r.standard_version && <span className="repository-catalog__tag repository-catalog__tag--outline">{r.standard_version}</span>}
+          {r.academic_year && <span className="repository-catalog__tag repository-catalog__tag--outline">{r.academic_year}</span>}
+        </div>
+        <h2>{isArabic ? r.title : (r.title_en || r.title)}</h2>
+        <p className="repository-catalog__abstract">{r.abstract || t('لا يوجد ملخص لهذا السجل القديم.', 'No abstract available for this legacy record.')}</p>
+        <div className="repository-catalog__authors"><strong>{t('الباحثون', 'Researchers')}</strong>
+          {r.researchers?.length ? <ul>{r.researchers.map((person, i) => <li key={i}>
+            <span>{person.full_name}</span><small>{[person.school, person.directorate].filter(Boolean).join(' · ')}</small>
+          </li>)}</ul> : <p>{r.researcher_name || '—'}</p>}
+        </div>
+        {(r.subject_area || r.target_grades?.length) && <div className="repository-catalog__meta">
+          {r.subject_area && <span>{t('المبحث:', 'Subject:')} {r.subject_area}</span>}
+          {r.target_grades?.length > 0 && <span>{t('الصفوف:', 'Grades:')} {r.target_grades.join(', ')}</span>}
+        </div>}
+        <footer>{t('الملخص متاح مجاناً. الوصول للملف الكامل غير مفعل حتى اعتماد بوابة الدفع.', 'Abstract is free. Full-text access remains disabled until payment integration is approved.')}</footer>
+      </article>)}
+    </div>
+    {items && !filtered.length && <div className="repository-catalog__empty">{t('لا توجد أبحاث مطابقة.', 'No matching research.')}</div>}
+  </section>
 }

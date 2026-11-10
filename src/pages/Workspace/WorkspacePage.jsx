@@ -127,6 +127,12 @@ function ResearchCard({ item, isArabic, onRefresh, reviewers = [], committee = f
         <span>{isArabic ? 'المديرية' : 'Directorate'}: {item.directorate_id || '—'}</span>
         <span>{isArabic ? 'النسخة' : 'Version'}: {item.current_version}</span>
       </div>
+      {item.researchers?.length > 0 && <details className="workspace-researchers">
+        <summary>{isArabic ? 'الباحثون والمدارس والمديريات' : 'Researchers & affiliations'}</summary>
+        <ul>{item.researchers.map((person, index) => <li key={index}>
+          <strong>{person.full_name}</strong> — {[person.school, person.directorate].filter(Boolean).join(' · ')}
+        </li>)}</ul>
+      </details>}
       {item.abstract && <p>{item.abstract}</p>}
       {item.problem && <p><strong>{isArabic ? 'المشكلة:' : 'Problem:'}</strong> {item.problem}</p>}
       {item.file?.url && <a className="workspace-link" href={item.file.url} target="_blank" rel="noreferrer">{isArabic ? 'فتح الملف المرفوع' : 'Open uploaded file'}</a>}

@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react'
 import { researcherApi } from '../../../features/researcher/researcherApi.js'
+import ActionResearchEditor from './ActionResearchEditor.jsx'
 const fields = [
   ['title', 'عنوان البحث', 'Research title', 500], ['research_field', 'مجال البحث', 'Research field', 150],
   ['problem', 'المشكلة', 'Problem'], ['research_question', 'سؤال البحث', 'Research question'], ['intervention', 'التدخل', 'Intervention'],
   ['abstract', 'الملخص (مطلوب عند الإرسال)', 'Abstract (required for submission)'], ['results', 'النتائج', 'Results'], ['recommendations', 'التوصيات', 'Recommendations'], ['keywords', 'الكلمات المفتاحية (بفواصل)', 'Keywords (comma separated)', 2000],
 ]
-export default function ResearchEditor({ draft, isArabic, onSaved, onSubmitted, kind = 'research' }) {
+// Old drafts and practices remain editable using the original fields.
+export default function ResearchEditor(props) {
+  if (props.kind === 'practice' || props.draft?.content?.kind === 'practice' || (props.draft && props.draft.content?.standard_version !== 'ARDS-1.0')) {
+    return <LegacyResearchEditor {...props} />
+  }
+  return <ActionResearchEditor {...props} />
+}
+function LegacyResearchEditor({ draft, isArabic, onSaved, onSubmitted, kind = 'research' }) {
   const [record, setRecord] = useState(draft)
   const [content, setContent] = useState(draft?.content || { kind })
   const [file, setFile] = useState(null)

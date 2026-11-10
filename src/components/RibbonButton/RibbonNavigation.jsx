@@ -25,10 +25,8 @@ export function RibbonNavigationProvider({ children }) {
     ? ribbonSelectionForRoute(activeSelection.to, isArabic) || activeSelection
     : fallback
 
-  // Preserve the same poster while moving among its child pages (e.g. drafts).
-  useEffect(() => {
-    if (!related) setActiveSelection(fallback)
-  }, [fallback, related])
+  // The selection is derived from the route when there is no matching active
+  // poster. This prevents redundant synchronous state updates in an effect.
 
   const reserve = useCallback((to) => {
     if (reserved.current) return false
@@ -77,13 +75,10 @@ function RibbonDocument({ children, selection }) {
 
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setReducedMotion(media.matches)
-    media.addEventListener('change', update)
-    return () => media.removeEventListener('change', update)
-  }, [])
-
-  useEffect(() => {
-    if (reducedMotion) {
+    const update = () => {
+      setReducedMotion(media.matches)
+      // An external accessibility preference change may finish an animation.
+      if (!media.matches) return
       if (phase === 'ribbon-opening' || phase === 'unrolling') {
         setProgress(1)
         setPhase('ready')
@@ -91,8 +86,13 @@ function RibbonDocument({ children, selection }) {
         setProgress(0)
         setPhase('closed')
       }
-      return
     }
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [phase])
+
+  useEffect(() => {
+    if (reducedMotion) return undefined
 
     if (phase === 'ribbon-opening' || phase === 'ribbon-closing') {
       const isOpening = phase === 'ribbon-opening'

@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { workflowApi } from '../../../features/workflow/workflowApi.js'
-export default function RevisionEditor({ item, isArabic, onRefresh }) {
+import ActionResearchEditor from './ActionResearchEditor.jsx'
+export default function RevisionEditor(props) {
+  if (props.item.standard_version === 'ARDS-1.0') {
+    return <details className="researcher-revision"><summary>{props.isArabic ? 'تعديل البحث المعياري وإعادة إرساله' : 'Revise and resubmit standardized research'}</summary>
+      <ActionResearchEditor submission={props.item} isArabic={props.isArabic} onRefresh={props.onRefresh} />
+    </details>
+  }
+  return <LegacyRevisionEditor {...props} />
+}
+function LegacyRevisionEditor({ item, isArabic, onRefresh }) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   async function submit(event) {

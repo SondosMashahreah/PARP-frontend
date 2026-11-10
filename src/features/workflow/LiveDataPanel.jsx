@@ -7,16 +7,7 @@ import { RouteLink } from '../../routing/clientRouter.jsx'
 import './LiveDataPanel.css'
 
 const LIVE_PATHS = new Set(['/repository', '/dashboard', '/institutions', '/observatory', '/excellence', '/conference'])
-
-const STATUS_AR = {
-  submitted: 'مرفوع',
-  under_review: 'قيد التحكيم',
-  revision_requested: 'بحاجة لتعديل',
-  approved: 'مقبول للنشر',
-  rejected: 'غير مقبول',
-  practice_suggested: 'مقترح كممارسة',
-  published: 'منشور',
-}
+const EMPTY_REPOSITORY = []
 
 function countBy(items, key, value) {
   return (items || []).filter((item) => item?.[key] === value).length
@@ -50,23 +41,26 @@ function ResearchList({ items, isArabic }) {
 export default function LiveDataPanel({ pathname }) {
   const { isArabic } = useLanguage()
   const { isAuthenticated, user } = useAuth()
-  const [data, setData] = useState(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [response, setResponse] = useState({ key: '', data: null, error: '' })
   const [query, setQuery] = useState('')
   const [field, setField] = useState('all')
+  const requestKey = `${pathname}:${isAuthenticated}:${user?.id ?? ''}`
+  const data = response.key === requestKey ? response.data : null
+  const error = response.key === requestKey ? response.error : ''
+  const loading = LIVE_PATHS.has(pathname) && response.key !== requestKey
 
   useEffect(() => {
-    if (!LIVE_PATHS.has(pathname)) {
-      setData(null)
-      setError('')
-      return undefined
-    }
+    if (!LIVE_PATHS.has(pathname)) return undefined
     let active = true
-    setLoading(true)
-    setError('')
 
     async function load() {
+      // Make state changes asynchronous and keep stale route data out of render.
+      await Promise.resolve()
+      if (!active) return
+      if (!isAuthenticated && !['/repository', '/excellence'].includes(pathname)) {
+        setResponse({ key: requestKey, data: null, error: '' })
+        return
+      }
       try {
         let payload = null
         if (pathname === '/repository' || pathname === '/excellence') {
@@ -83,19 +77,17 @@ export default function LiveDataPanel({ pathname }) {
           if (!isAuthenticated) return
           payload = { workspace: await workflowApi.workspace() }
         }
-        if (active) setData(payload)
+        if (active) setResponse({ key: requestKey, data: payload, error: '' })
       } catch (err) {
-        if (active) setError(err.message)
-      } finally {
-        if (active) setLoading(false)
+        if (active) setResponse({ key: requestKey, data: null, error: err.message })
       }
     }
 
-    load()
+    void load()
     return () => { active = false }
-  }, [isAuthenticated, pathname, user?.id])
+  }, [isAuthenticated, pathname, user?.id, requestKey])
 
-  const repository = data?.repository || []
+  const repository = data?.repository ?? EMPTY_REPOSITORY
   const fields = useMemo(() => [...new Set(repository.map((item) => item.research_field).filter(Boolean))].sort(), [repository])
   const filteredResearch = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -130,23 +122,18 @@ export default function LiveDataPanel({ pathname }) {
     const workspace = data.workspace || {}
     const submissions = workspace.submissions || []
     const role = workspace.role
-    let metrics = []
-    if (role === 'decision_maker') {
-      const recs = workspace.recommendations || []
-      metrics = [
-        [isArabic ? 'التوصيات' : 'Recommendations', recs.length],
-        [isArabic ? 'جديدة' : 'New', countBy(recs, 'status', 'new')],
-        [isArabic ? 'تم تبنيها' : 'Adopted', countBy(recs, 'status', 'adopted')],
-        [isArabic ? 'المشكلات' : 'Problems', (workspace.problems || []).length],
-      ]
-    } else {
-      metrics = [
-        [isArabic ? 'البحوث ضمن نطاقك' : 'Research in your scope', submissions.length],
-        [isArabic ? 'قيد التحكيم' : 'Under review', countBy(submissions, 'status', 'under_review')],
-        [isArabic ? 'بحاجة لتعديل' : 'Needs revision', countBy(submissions, 'status', 'revision_requested')],
-        [isArabic ? 'منشور' : 'Published', countBy(submissions, 'status', 'published')],
-      ]
-    }
+    const recs = workspace.recommendations || []
+    const metrics = role === 'decision_maker' ? [
+      [isArabic ? 'التوصيات' : 'Recommendations', recs.length],
+      [isArabic ? 'جديدة' : 'New', countBy(recs, 'status', 'new')],
+      [isArabic ? 'تم تبنيها' : 'Adopted', countBy(recs, 'status', 'adopted')],
+      [isArabic ? 'المشكلات' : 'Problems', (workspace.problems || []).length],
+    ] : [
+      [isArabic ? 'البحوث ضمن نطاقك' : 'Research in your scope', submissions.length],
+      [isArabic ? 'قيد التحكيم' : 'Under review', countBy(submissions, 'status', 'under_review')],
+      [isArabic ? 'بحاجة لتعديل' : 'Needs revision', countBy(submissions, 'status', 'revision_requested')],
+      [isArabic ? 'منشور' : 'Published', countBy(submissions, 'status', 'published')],
+    ]
     return <section className="live-data" aria-labelledby="live-dashboard-title">
       <div className="live-data__heading"><div><span>{isArabic ? 'بيانات فعلية حسب الصلاحية' : 'Live role-scoped data'}</span><h2 id="live-dashboard-title">{isArabic ? 'مؤشرات مساحة العمل' : 'Workspace indicators'}</h2><p>{roleLabel(role, isArabic)}</p></div></div>
       <MetricGrid items={metrics} />
