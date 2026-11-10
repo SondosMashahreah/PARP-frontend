@@ -15,8 +15,11 @@ import {
 import { historicalPalestineSource } from '../data/historicalPalestine.js'
 import { mapStrings, schoolTypeLabel } from './strings.js'
 import MapCanvas from './MapCanvas.jsx'
+import ResearchStatsPanel from './ResearchStatsPanel.jsx'
+import { researchBands, withResearchCounts } from '../domain/researchStatistics.js'
 import './EducationMap.css'
 import './MapFullScreen.css'
+import './ResearchMapMode.css'
 
 const INITIAL_FILTERS = {
   q: '',
@@ -39,6 +42,7 @@ export default function EducationMapPage() {
   const { language, dir } = useLanguage()
   const copy = mapStrings[language]
   const [revision, setRevision] = useState(0)
+  const [researchMode, setResearchMode] = useState(false)
   const catalog = useEducationData('/catalog', revision)
   const boundaries = useEducationData('/boundaries', revision)
   const directorates = useEducationData('/directorates/boundaries', revision)
@@ -46,7 +50,7 @@ export default function EducationMapPage() {
   const loading = catalog.loading || boundaries.loading || directorates.loading
   return (
     <section
-      className="education-map"
+      className={`education-map${researchMode ? ' education-map--research-mode' : ''}`}
       dir={dir}
       aria-labelledby="education-map-title"
     >
@@ -80,6 +84,8 @@ export default function EducationMapPage() {
           directorateGeography={directorates.data}
           language={language}
           copy={copy}
+          researchMode={researchMode}
+          onModeChange={setResearchMode}
         />
       )}
     </section>
@@ -92,6 +98,8 @@ function Directory({
   directorateGeography,
   language,
   copy,
+  researchMode,
+  onModeChange,
 }) {
   const [filters, setFilters] = useState(INITIAL_FILTERS)
   const [page, setPage] = useState(0)
@@ -101,21 +109,23 @@ function Directory({
   const [selectedDirectorate, setSelectedDirectorate] = useState(null)
   const [focus, setFocus] = useState(null)
   const [counts, setCounts] = useState(false)
+  const [selectedResearchGovernorate, setSelectedResearchGovernorate] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(() => window.innerWidth > 720)
   const [viewport, setViewport] = useState(null)
+  const research = useEducationData(researchMode ? '/research/governorates' : null, revision)
   const q = useDebouncedValue(filters.q)
   const bounds = useDebouncedValue(viewport)
   const params = { ...filters, q }
   const schools = useEducationData(
-    `/schools?${queryString({ ...params, offset: page * 25, limit: 25 })}`,
+    researchMode ? null : `/schools?${queryString({ ...params, offset: page * 25, limit: 25 })}`,
     revision,
   )
   const detail = useEducationData(
-    schoolId ? `/schools/${encodeURIComponent(schoolId)}` : null,
+    !researchMode && schoolId ? `/schools/${encodeURIComponent(schoolId)}` : null,
     revision,
   )
   const points = useEducationData(
-    bounds?.zoom >= 10
+    !researchMode && bounds?.zoom >= 10
       ? `/schools/points?${queryString({ ...params, bbox: bounds.bbox })}`
       : null,
     revision,
@@ -124,6 +134,9 @@ function Directory({
     () => withSchoolCounts(boundaries, catalog.governorates),
     [boundaries, catalog.governorates],
   )
+  const researchGeography = useMemo(() => withResearchCounts(
+    geography, research.data?.governorates, researchBands(research.data?.max_research_count || 0),
+  ), [geography, research.data])
   const name = (item) => localizedName(item, language)
   const format = (value) =>
     new Intl.NumberFormat(language === 'ar' ? 'ar-PS' : 'en').format(value)
@@ -240,7 +253,14 @@ function Directory({
         ))}
       </div>
       <div className="education-map__workspace">
-        <aside className="education-map__directory" aria-label={copy.filters}>
+        {researchMode && <ResearchStatsPanel
+          stats={research}
+          language={language}
+          selectedId={selectedResearchGovernorate}
+          onSelect={setSelectedResearchGovernorate}
+          onRetry={() => setRevision((value) => value + 1)}
+        />}
+        {!researchMode && <aside className="education-map__directory" aria-label={copy.filters}>
           <div className="education-map__search">
             <label htmlFor="education-search">{copy.search}</label>
             <input
@@ -455,31 +475,37 @@ function Directory({
               </>
             )}
           </div>
-        </aside>
+        </aside>}
         <div className="education-map__visual">
           <div className="education-map__toolbar">
-            <span>{copy.hint}</span>
-            <label>
-              <input
-                type="checkbox"
-                checked={counts}
-                onChange={(e) => setCounts(e.target.checked)}
-              />
-              {copy.counts}
-            </label>
+            <div className="education-map__mode-switch" role="group" aria-label={language === 'ar' ? 'وضع الخريطة' : 'Map mode'}>
+              <button type="button" aria-pressed={!researchMode} onClick={() => onModeChange(false)}>{language === 'ar' ? 'دليل المدارس' : 'School directory'}</button>
+              <button type="button" aria-pressed={researchMode} onClick={() => onModeChange(true)}>{language === 'ar' ? 'إحصائيات الأبحاث' : 'Research statistics'}</button>
+            </div>
+            {!researchMode && <div className="education-map__toolbar-copy">
+              <span>{copy.hint}</span>
+              <label>
+                <input type="checkbox" checked={counts} onChange={(e) => setCounts(e.target.checked)} />
+                {copy.counts}
+              </label>
+            </div>}
+            {researchMode && <span>{language === 'ar' ? 'اضغط على المحافظة لمعرفة عدد الأبحاث المسجّلة فيها' : 'Select a governorate to see its registered research'}</span>}
           </div>
           <MapCanvas
             key={language}
-            geography={geography}
+            geography={researchMode ? researchGeography : geography}
             directorateGeography={directorateGeography}
+            researchMode={researchMode}
+            researchDataReady={Boolean(research.data)}
+            onResearchGovernorate={setSelectedResearchGovernorate}
             points={points.data || EMPTY_GEOJSON}
             language={language}
             copy={copy}
             counts={counts}
-            focus={activeFocus}
-            selectedSchool={schoolId}
+            focus={researchMode ? null : activeFocus}
+            selectedSchool={researchMode ? '' : schoolId}
             selectedDirectorate={currentDirectorate?.id}
-            selectedGovernorate={highlightedGovernorate}
+            selectedGovernorate={researchMode ? selectedResearchGovernorate : highlightedGovernorate}
             onDirectorate={(id) => {
               const item = catalog.directorates.find((d) => d.id === id)
               if (item) chooseDirectorate(item)
@@ -488,7 +514,7 @@ function Directory({
             onSchool={chooseSchool}
             onViewport={setViewport}
           />
-          {points.error && (
+          {!researchMode && points.error && (
             <p className="education-map__notice" role="alert">
               {copy.pointError}{' '}
               <button onClick={() => setRevision((n) => n + 1)}>
@@ -496,10 +522,10 @@ function Directory({
               </button>
             </p>
           )}
-          {points.data?.truncated && (
+          {!researchMode && points.data?.truncated && (
             <p className="education-map__notice">{copy.truncated}</p>
           )}
-          {(schoolId || currentDirectorate) && (
+          {!researchMode && (schoolId || currentDirectorate) && (
             <section
               className="education-map__detail"
               aria-label={copy.details}

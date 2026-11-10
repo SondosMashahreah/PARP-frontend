@@ -9,6 +9,7 @@ import {
   EMPTY_GEOJSON,
 } from '../domain/geography.js'
 import { governorateLabelPoint } from '../domain/governorateLabels.js'
+import { RESEARCH_BEIGE } from '../domain/researchStatistics.js'
 
 export default function MapCanvas({
   geography,
@@ -17,6 +18,9 @@ export default function MapCanvas({
   language,
   copy,
   counts = false,
+  researchMode = false,
+  researchDataReady = false,
+  onResearchGovernorate,
   focus,
   selectedGovernorate = '',
   selectedDirectorate = '',
@@ -28,11 +32,15 @@ export default function MapCanvas({
 }) {
   const host = useRef(null)
   const mapRef = useRef(null)
+  const originalCamera = useRef(null)
   const handlers = useRef({
     onGovernorate,
     onDirectorate,
     onSchool,
     onViewport,
+    onResearchGovernorate,
+    researchMode,
+    researchDataReady,
     language,
     copy,
   })
@@ -45,10 +53,13 @@ export default function MapCanvas({
       onDirectorate,
       onSchool,
       onViewport,
+      onResearchGovernorate,
+      researchMode,
+      researchDataReady,
       language,
       copy,
     }
-  }, [onGovernorate, onDirectorate, onSchool, onViewport, language, copy])
+  }, [onGovernorate, onDirectorate, onSchool, onViewport, onResearchGovernorate, researchMode, researchDataReady, language, copy])
 
   useEffect(() => {
     let disposed = false
@@ -220,6 +231,10 @@ export default function MapCanvas({
           },
         })
         map.on('click', 'governorate-fill', (event) => {
+          if (handlers.current.researchMode) {
+            handlers.current.onResearchGovernorate?.(event.features?.[0]?.properties?.id || '')
+            return
+          }
           if (
             map.queryRenderedFeatures(event.point, {
               layers: ['schools', 'clusters', 'directorate-fill'],
@@ -266,14 +281,18 @@ export default function MapCanvas({
           'clusters',
         ]) {
           map.on('mousemove', layer, (event) => {
+            if (handlers.current.researchMode && layer !== 'governorate-fill') return
             map.getCanvas().style.cursor = 'pointer'
             const feature = event.features[0]
             const label = document.createElement('span')
             label.dir = handlers.current.language === 'ar' ? 'rtl' : 'ltr'
-            label.textContent =
-              layer === 'clusters'
+            const name = localizedName(feature.properties, handlers.current.language)
+            const count = feature.properties.research_count
+            label.textContent = handlers.current.researchMode
+              ? `${name} · ${handlers.current.researchDataReady && typeof count === 'number' ? new Intl.NumberFormat(handlers.current.language === 'ar' ? 'ar-PS' : 'en').format(count) : '—'} ${handlers.current.language === 'ar' ? 'بحث' : 'research'}`
+              : layer === 'clusters'
                 ? `${feature.properties.point_count} · ${handlers.current.copy.cluster}`
-                : localizedName(feature.properties, handlers.current.language)
+                : name
             popup.setLngLat(event.lngLat).setDOMContent(label).addTo(map)
           })
           map.on('mouseleave', layer, () => {
@@ -330,10 +349,23 @@ export default function MapCanvas({
         (feature) => feature.properties.school_count || 0,
       ),
     )
+    const light = researchMode
+    const originalBackground = getComputedStyle(document.documentElement).getPropertyValue('--color-background').trim() || '#0d0914'
+    map.setPaintProperty('background', 'background-color', light ? RESEARCH_BEIGE : originalBackground)
+    map.setPaintProperty('historical-palestine-fill', 'fill-color', light ? RESEARCH_BEIGE : '#352343')
+    map.setPaintProperty('historical-palestine-glow', 'line-opacity', light ? 0 : 0.12)
+    map.setPaintProperty('historical-palestine-outline', 'line-color', light ? '#CCBDAB' : '#cab1df')
+    map.setPaintProperty('governorate-fill', 'fill-opacity', light ? 1 : 0.82)
+    map.setPaintProperty('governorate-lines', 'line-color', light ? '#B5A695' : '#a780c0')
+    map.setPaintProperty('governorate-lines', 'line-opacity', light ? 1 : 0.85)
+    map.setPaintProperty('selected-governorate', 'line-color', light ? '#645091' : '#78d4cd')
+    for (const id of ['directorate-fill', 'selected-directorate', 'directorate-lines', 'schools', 'clusters']) {
+      map.setLayoutProperty(id, 'visibility', light ? 'none' : 'visible')
+    }
     map.setPaintProperty(
       'governorate-fill',
       'fill-color',
-      counts
+      light ? ['coalesce', ['get', 'research_color'], RESEARCH_BEIGE] : counts
         ? [
             'interpolate',
             ['linear'],
@@ -347,7 +379,18 @@ export default function MapCanvas({
           ]
         : '#4a2c64',
     )
-  }, [ready, geography, directorateGeography, counts])
+  }, [ready, geography, directorateGeography, counts, researchMode])
+  useEffect(() => {
+    if (!ready || !mapRef.current) return
+    const map = mapRef.current
+    if (researchMode) {
+      originalCamera.current = { center: map.getCenter().toArray(), zoom: map.getZoom() }
+      if (historicalPalestineBounds) map.fitBounds(historicalPalestineBounds, { padding: 30, duration: 0 })
+    } else if (originalCamera.current) {
+      map.jumpTo(originalCamera.current)
+      originalCamera.current = null
+    }
+  }, [ready, researchMode])
   // Accessible names are taken from imported governorate polygons. HTML markers
   // avoid external glyph/font dependencies and never intercept map interaction.
   useEffect(() => {
