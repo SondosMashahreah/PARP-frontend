@@ -1,6 +1,7 @@
 ﻿import { useCallback, useState } from "react";
 import { useLanguage } from "../../../i18n/useLanguage.js";
 import { ROLE_OPTIONS } from "../../../features/auth/roles.js";
+import InstitutionFields from "../../../components/institutions/InstitutionFields.jsx";
 import { platformApi } from "../../../features/platform/platformApi.js";
 import { useAdminResource } from "../../../features/admin/useAdminResource.js";
 import { AdminLoading, AdminError } from "./AdminUi.jsx";
@@ -18,6 +19,8 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [role, setRole] = useState("researcher");
+  const [creatingUser, setCreatingUser] = useState(false);
+  const [formVersion, setFormVersion] = useState(0);
   async function submit(event, path, method, transform) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -45,6 +48,7 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
       if (method === "post") {
         form.reset();
         setRole("researcher");
+        setFormVersion((n) => n + 1);
       }
     } catch (e) {
       setError(e.message);
@@ -68,13 +72,18 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
       {message && <p role="status">{message}</p>}
       {mode === "accounts" && (
         <>
-          <details>
+          <details onToggle={(event) => setCreatingUser(event.currentTarget.open)}>
             <summary>{t("إنشاء مستخدم", "Create user")}</summary>
             <form
+              key={formVersion}
               className="admin-user-form"
               onSubmit={(e) =>
                 submit(e, "/users", "post", (d) => ({
                   full_name: d.full_name,
+                  full_name_en: d.full_name_en,
+                  governorate_id: d.governorate_id || null,
+                  directorate_id: d.directorate_id || null,
+                  school_id: d.school_id || null,
                   email: d.email,
                   role: d.role,
                   password: d.password,
@@ -82,13 +91,12 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
               }
             >
               <label>
-                {t("الاسم", "Name")}
-                <input
-                  name="full_name"
-                  required
-                  minLength={2}
-                  maxLength={150}
-                />
+                {t("الاسم بالعربية", "Full name in Arabic")}
+                <input name="full_name" dir="rtl" required minLength={2} maxLength={150} />
+              </label>
+              <label>
+                {t("الاسم بالإنجليزية", "Full name in English")}
+                <input name="full_name_en" dir="ltr" required minLength={2} maxLength={150} />
               </label>
               <label>
                 {t("الإيميل", "Email")}
@@ -125,6 +133,7 @@ export default function PlatformAdmin({ mode = "payments", onSaved }) {
                 />
               </label>
 
+              <InstitutionFields active={creatingUser} isArabic={isArabic} requireDirectorate={role === 'researcher' || role === 'school_manager' || role === 'directorate_manager'} requireSchool={role === 'researcher' || role === 'school_manager'} />
               <button disabled={busy || payments.loading}>
                 {t("إنشاء الحساب", "Create account")}
               </button>

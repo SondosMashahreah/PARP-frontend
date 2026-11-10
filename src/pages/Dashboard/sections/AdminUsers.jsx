@@ -5,6 +5,7 @@ import { useAdminResource } from "../../../features/admin/useAdminResource.js";
 import { formatCount } from "../../../features/admin/dashboardModel.js";
 import { useLanguage } from "../../../i18n/useLanguage.js";
 import PlatformAdmin from "../components/PlatformAdmin.jsx";
+import InstitutionFields from "../../../components/institutions/InstitutionFields.jsx";
 import {
   AdminPanel,
   AdminError,
@@ -31,6 +32,7 @@ export default function AdminUsers() {
   const [busy, setBusy] = useState(null),
     [error, setError] = useState(""),
     [message, setMessage] = useState("");
+  const [openUser, setOpenUser] = useState(null);
   const saved = () => {
     users.reload();
     summary.reload();
@@ -55,6 +57,8 @@ export default function AdminUsers() {
     mutate(`user-${target.id}`, () =>
       workflowApi.updateUserAccess(target.id, {
         role: form.get("role"),
+        full_name: form.get("full_name"),
+        full_name_en: form.get("full_name_en") || null,
         is_active: form.get("is_active") === "on",
         governorate_id: form.get("governorate_id") || null,
         directorate_id: form.get("directorate_id") || null,
@@ -175,6 +179,7 @@ export default function AdminUsers() {
             <details
               key={`${target.id}-${target.role}-${target.is_active}-${JSON.stringify(target.affiliation)}`}
               className="admin-user-row"
+              onToggle={(event) => setOpenUser(event.currentTarget.open ? target.id : (prev) => prev === target.id ? null : prev)}
             >
               <summary>
                 <span className="admin-user-avatar" aria-hidden="true">
@@ -182,7 +187,7 @@ export default function AdminUsers() {
                 </span>
                 <span className="admin-user-main">
                   <strong>
-                    {target.full_name} · #{target.id}
+                    {ar ? target.full_name : (target.full_name_en || target.full_name)} · #{target.id}
                   </strong>
                   <small>{target.email}</small>
                 </span>
@@ -214,10 +219,14 @@ export default function AdminUsers() {
                     ))}
                   </select>
                 </label>
+                <label>{t('الاسم بالعربية', 'Arabic full name')}
+                  <input name="full_name" dir="rtl" defaultValue={target.full_name} required minLength={2} maxLength={150} />
+                </label>
+                <label>{t('الاسم بالإنجليزية', 'English full name')}
+                  <input name="full_name_en" dir="ltr" defaultValue={target.full_name_en || ''} minLength={2} maxLength={150} />
+                </label>
+                <InstitutionFields key={target.id} initial={target.affiliation || undefined} isArabic={ar} active={openUser === target.id} />
                 {[
-                  ["governorate_id", "معرّف المحافظة", "Governorate ID"],
-                  ["directorate_id", "معرّف المديرية", "Directorate ID"],
-                  ["school_id", "معرّف المدرسة", "School ID"],
                   ["specialization", "التخصص", "Specialization"],
                   ["research_field", "مجال البحث", "Research field"],
                 ].map(([name, a, e]) => (

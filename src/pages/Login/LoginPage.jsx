@@ -7,6 +7,7 @@ import Icon from '../../components/ui/Icon.jsx'
 import logo from '../../components/Header/img/logo.png'
 import { useAuth } from '../../features/auth/useAuth.js'
 import { ROLE_OPTIONS } from '../../features/auth/roles.js'
+import InstitutionFields from '../../components/institutions/InstitutionFields.jsx'
 import './LoginPage.css'
 
 const DOMAIN = '@meo.edu.ps'
@@ -27,7 +28,7 @@ export default function LoginPage() {
   const copy = isArabic ? {
     welcome: 'أهلًا بك في PARP', login: 'تسجيل الدخول', register: 'إنشاء حساب', verify: 'تأكيد البريد',
     intro: 'الحسابات متاحة فقط لمستخدمي وزارة التربية والتعليم.',
-    name: 'الاسم الكامل', email: 'البريد الإلكتروني', password: 'كلمة المرور', role: 'الدور',
+    name: 'الاسم بالعربية', nameEn: 'الاسم بالإنجليزية', email: 'البريد الإلكتروني', password: 'كلمة المرور', role: 'الدور',
     passwordHelp: '10 أحرف على الأقل، وتتضمن حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا.',
     show: 'إظهار كلمة المرور', hide: 'إخفاء كلمة المرور', otp: 'رمز التحقق',
     submitLogin: 'تسجيل الدخول', submitRegister: 'إنشاء الحساب', submitOtp: 'تأكيد الرمز',
@@ -36,7 +37,7 @@ export default function LoginPage() {
   } : {
     welcome: 'Welcome to PARP', login: 'Log in', register: 'Create account', verify: 'Verify email',
     intro: 'Accounts are available only to Ministry of Education users.',
-    name: 'Full name', email: 'Email address', password: 'Password', role: 'Role',
+    name: 'Full name in Arabic', nameEn: 'Full name in English', email: 'Email address', password: 'Password', role: 'Role',
     passwordHelp: 'At least 10 characters with uppercase, lowercase, number and symbol.',
     show: 'Show password', hide: 'Hide password', otp: 'Verification code',
     submitLogin: 'Log in', submitRegister: 'Create account', submitOtp: 'Verify code',
@@ -77,6 +78,10 @@ window.location.assign(
       } else if (mode === 'register') {
         const result = await register({
           full_name: String(data.get('full_name') || '').trim(),
+          full_name_en: String(data.get('full_name_en') || '').trim(),
+          governorate_id: data.get('governorate_id') || null,
+          directorate_id: data.get('directorate_id') || null,
+          school_id: data.get('school_id') || null,
           email,
           password,
         })
@@ -173,16 +178,17 @@ return (
 
           <form onSubmit={handleSubmit}>
             {mode === "register" && (
-              <div className="login-card__field">
-                <label htmlFor="full-name">{copy.name}</label>
-                <input
-                  id="full-name"
-                  name="full_name"
-                  required
-                  minLength={2}
-                  maxLength={150}
-                />
-              </div>
+              <>
+                <div className="login-card__field">
+                  <label htmlFor="full-name">{copy.name}</label>
+                  <input id="full-name" name="full_name" dir="rtl" autoComplete="name" required minLength={2} maxLength={150} />
+                </div>
+                <div className="login-card__field">
+                  <label htmlFor="full-name-en">{copy.nameEn}</label>
+                  <input id="full-name-en" name="full_name_en" dir="ltr" required minLength={2} maxLength={150} />
+                </div>
+                <InstitutionFields isArabic={isArabic} requireDirectorate requireSchool />
+              </>
             )}
 
             {mode !== "otp" ? (

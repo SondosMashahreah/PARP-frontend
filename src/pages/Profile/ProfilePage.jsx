@@ -15,11 +15,11 @@ export default function ProfilePage() {
   const [publications, setPublications] = useState([])
 
   const copy = isArabic ? {
-    title: 'الملف الشخصي', name: 'الاسم الكامل', email: 'البريد الإلكتروني',
+    title: 'الملف الشخصي', name: 'الاسم بالعربية', nameEn: 'الاسم بالإنجليزية', email: 'البريد الإلكتروني',
     save: 'حفظ التعديلات', avatar: 'تغيير الصورة الشخصية', logout: 'تسجيل الخروج',
     saved: 'تم حفظ التعديلات.', uploaded: 'تم تحديث الصورة.', role: 'الدور', publications: 'الأبحاث والمنشورات', noPublications: 'لا توجد منشورات بعد.',
   } : {
-    title: 'Profile', name: 'Full name', email: 'Email address',
+    title: 'Profile', name: 'Full name in Arabic', nameEn: 'Full name in English', email: 'Email address',
     save: 'Save changes', avatar: 'Change profile photo', logout: 'Log out',
     saved: 'Profile updated.', uploaded: 'Profile photo updated.', role: 'Role', publications: 'Research & publications', noPublications: 'No publications yet.',
   }
@@ -35,7 +35,7 @@ export default function ProfilePage() {
     event.preventDefault(); setBusy(true); setError(''); setMessage('')
     const data = new FormData(event.currentTarget)
     try {
-      await api('/profile/me', { method: 'PATCH', body: JSON.stringify({ full_name: String(data.get('full_name')).trim() }) })
+      await api('/profile/me', { method: 'PATCH', body: JSON.stringify({ full_name: String(data.get('full_name')).trim(), full_name_en: String(data.get('full_name_en') || '').trim() || null }) })
       await refreshUser()
       setMessage(copy.saved)
     } catch (err) { setError(err.message) } finally { setBusy(false) }
@@ -69,6 +69,7 @@ export default function ProfilePage() {
           <h1>{copy.title}</h1>
           <form onSubmit={updateProfile}>
             <label>{copy.name}<input name="full_name" defaultValue={user.full_name} minLength={2} maxLength={150} required /></label>
+            <label>{copy.nameEn}<input name="full_name_en" dir="ltr" defaultValue={user.full_name_en || ''} minLength={2} maxLength={150} /></label>
             <label>{copy.email}<input value={user.email} readOnly dir="ltr" /></label>
             <label>{copy.role}<input value={roleLabel(user.role, isArabic)} readOnly /></label>
             {error && <p className="profile-card__error" role="alert">{error}</p>}

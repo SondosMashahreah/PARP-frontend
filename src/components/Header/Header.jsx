@@ -127,7 +127,7 @@ export default function Header() {
         id.startsWith('/') ? id : `/#${id}`, label, short,
       ]);
   const accountName = isAuthenticated
-    ? user?.full_name || (isArabic ? "الملف الشخصي" : "Profile")
+    ? (isArabic ? user?.full_name : user?.full_name_en || user?.full_name) || (isArabic ? "الملف الشخصي" : "Profile")
     : isArabic
       ? "تسجيل الدخول"
       : "Log in";

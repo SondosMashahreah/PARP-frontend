@@ -8,21 +8,22 @@ import { useValuesNetwork } from './useValuesNetwork.js'
 import './ValuesNetwork.css'
 import './ValuesNetworkCompact.css'
 
-export default function ValuesNetwork() {
+export default function ValuesNetwork({ embedded = false, items = null, selectedIndex = 0, onSelect = null } = {}) {
   const { language, isArabic, dir } = useLanguage()
   const stage = useValuesNetwork(false, language)
   const page = (isArabic ? platformPages : platformPagesEn)['/about']
-  const values = page.sections.find((section) => section.title === (isArabic ? 'قيم المنصة' : 'Platform values')).items
+  const values = items || page.sections.find((section) => section.title === (isArabic ? 'قيم المنصة' : 'Platform values')).items
+  const Node = embedded ? 'button' : RouteLink
   return (
-    <section className="values-network" id="platform-values" dir={dir} aria-labelledby="values-network-title">
-      <header className="values-network__heading">
+    <section className={`values-network${embedded ? ' values-network--embedded' : ''}`} id={embedded ? undefined : 'platform-values'} dir={dir} aria-labelledby={embedded ? 'about-values-title' : 'values-network-title'}>
+      {!embedded && <header className="values-network__heading">
         <div>
           <span className="home-section-eyebrow">{isArabic ? 'ما يجمعنا، وما يقودنا' : 'What connects us. What guides us.'}</span>
           <h2 id="values-network-title">{isArabic ? 'قيمنا… صِلات تصنع الأثر' : 'Our values. Connected by purpose.'}</h2>
           <p>{isArabic ? 'ست قيم تلتقي في قلب المنصة، وترافق كل خطوة في رحلة البحث.' : 'Six shared values at the heart of PARP, guiding every step of the research journey.'}</p>
         </div>
         <RouteLink className="values-network__about" to="/about">{isArabic ? 'عن المنصة' : 'About PARP'} <span aria-hidden="true">↗</span></RouteLink>
-      </header>
+      </header>}
       <div className="values-network__stage" ref={stage}>
         <svg className="values-network__threads" aria-hidden="true">
           {Array.from({ length: values.length + NETWORK_EDGES.length }, (_, i) => <line key={i} className={i < values.length ? 'values-network__spoke' : ''} />)}
@@ -34,10 +35,16 @@ export default function ValuesNetwork() {
         </div>
         <ul className="values-network__nodes" aria-label={isArabic ? 'قيم المنصة' : 'Platform values'}>
           {values.map((value, index) => <li key={index}>
-            <RouteLink to="/about" className="values-network__node" data-value-node="" draggable="false"
+            <Node
+              to={embedded ? undefined : '/about'}
+              type={embedded ? 'button' : undefined}
+              onClick={embedded ? () => onSelect?.(index) : undefined}
+              aria-pressed={embedded ? selectedIndex === index : undefined}
+              className={`values-network__node${embedded && selectedIndex === index ? ' is-selected' : ''}`}
+              data-value-node="" draggable="false"
               style={{ '--nx': `${NETWORK_POSITIONS[index][0] * 100}%`, '--ny': `${NETWORK_POSITIONS[index][1] * 100}%`, '--mx': `${MOBILE_POSITIONS[index][0] * 100}%`, '--my': `${MOBILE_POSITIONS[index][1] * 100}%` }}>
               <span className="values-network__dot" aria-hidden="true" /><span>{value}</span>
-            </RouteLink>
+            </Node>
           </li>)}
         </ul>
       </div>

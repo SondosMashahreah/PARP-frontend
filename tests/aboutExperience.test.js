@@ -6,6 +6,7 @@ import { content } from '../src/pages/About/AboutPage.content.js'
 const app = readFileSync('src/App.jsx', 'utf8')
 const header = readFileSync('src/components/Header/Header.jsx', 'utf8')
 const about = readFileSync('src/pages/About/AboutPage.jsx', 'utf8')
+const network = readFileSync('src/features/values/presentation/ValuesNetwork.jsx', 'utf8')
 const styles = readFileSync('src/pages/About/AboutPage.css', 'utf8')
 
 test('About PARP is a genuine public route available to guests', () => {
@@ -27,7 +28,8 @@ test('The four sections use both existing language variants without changing the
   }
   assert.match(about, /\[vision, mission, values, goals\] = page\.sections/)
   assert.match(about, /aria-expanded=\{isOpen\}/)
-  assert.match(about, /aria-pressed=\{selectedValue === index\}/)
+  assert.match(about, /<ValuesNetwork embedded items=\{values.items\}/)
+  assert.match(network, /aria-pressed=\{embedded \? selectedIndex === index : undefined\}/)
   assert.match(about, /data-about-reveal/)
   assert.match(styles, /prefers-reduced-motion: reduce/)
 })

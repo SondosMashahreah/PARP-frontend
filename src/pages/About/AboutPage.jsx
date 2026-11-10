@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../../i18n/useLanguage.js'
 import { RouteLink } from '../../routing/clientRouter.jsx'
 import { content } from './AboutPage.content.js'
+import ValuesNetwork from '../../features/values/presentation/ValuesNetwork.jsx'
 import './AboutPage.css'
 
 const copy = {
@@ -162,24 +163,7 @@ export default function AboutPage() {
 
     <section className="about-values" id="about-values" aria-labelledby="about-values-title" data-about-reveal>
       <div className="about-section__heading"><span className="about-section__eyebrow">03 / {text.valueLead}</span><h2 id="about-values-title">{values.title}</h2><p>{text.valueHint}</p></div>
-      <div className="about-values__layout">
-        <div className="about-values__grid">
-          {values.items.map((value, index) => <button
-            type="button"
-            className={`about-values__tile${selectedValue === index ? ' is-selected' : ''}`}
-            key={value}
-            aria-pressed={selectedValue === index}
-            onClick={() => setSelectedValue(index)}
-            style={{ '--tile-index': index }}
-          ><span className="about-values__tile-number">{String(index + 1).padStart(2, '0')}</span><span className="about-values__tile-title">{value}</span><span className="about-values__tile-arrow" aria-hidden="true">↗</span></button>)}
-        </div>
-        <div className="about-values__spotlight" role="status" aria-live="polite" aria-atomic="true">
-          <div className="about-values__spotlight-ring" aria-hidden="true"><span>✦</span></div>
-          <span className="about-values__spotlight-caption">{text.valueName} / {String(selectedValue + 1).padStart(2, '0')}</span>
-          <strong key={`${language}-${selectedValue}`}>{values.items[selectedValue]}</strong>
-          <span className="about-values__spotlight-progress" aria-hidden="true">{values.items.map((item, index) => <i key={item} className={index === selectedValue ? 'is-active' : ''} />)}</span>
-        </div>
-      </div>
+      <ValuesNetwork embedded items={values.items} selectedIndex={selectedValue} onSelect={setSelectedValue} />
     </section>
 
     <section className="about-goals" id="about-goals" aria-labelledby="about-goals-title" data-about-reveal>

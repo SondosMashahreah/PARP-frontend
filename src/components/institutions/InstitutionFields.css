@@ -1,0 +1,10 @@
+.institution-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;min-width:0;padding:14px;border:1px solid #ad72e845;border-radius:14px;background:#ffffff05}
+.institution-fields__intro,.institution-fields__error,.institution-fields>small{grid-column:1/-1;margin:0}
+.institution-fields__intro{color:#f8d6c2;font-weight:650;line-height:1.6}
+.institution-fields label{display:grid;min-width:0;gap:8px}
+.institution-fields input,.institution-fields select{width:100%;max-width:100%;min-height:44px;box-sizing:border-box;border:1px solid #ffffff35;border-radius:10px;background:#21162c;color:#fff;font:inherit;padding:8px 12px}
+.institution-fields select option{background:#21162c;color:#fff}
+.institution-fields :focus-visible{outline:2px solid #f0b99a;outline-offset:2px}
+.institution-fields__error{color:#ffc3c3}
+.institution-fields>small{color:#c8b9d0;line-height:1.75}
+@media(max-width:600px){.institution-fields{grid-template-columns:1fr}}
