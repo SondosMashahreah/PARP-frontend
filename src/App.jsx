@@ -26,6 +26,7 @@ const PUBLIC_PATHS = new Set([
   "/search",
   "/login",
   "/account",
+  "/about",
   "/news",
   "/practices",
   "/repository",
