@@ -313,6 +313,8 @@ export default function WorkspacePage() {
     </section>
 
   if (data.role === 'researcher') return <ResearcherWorkspace key={user.id} user={user} data={data} isArabic={isArabic} dir={dir} affiliation={<>{error && <p role="alert" className="workspace-error">{error}</p>}{message && <p role="status" className="workspace-message">{message}</p>}{affiliationPanel}</>} onRefresh={load} renderResearch={(item) => <ResearchCard item={item} isArabic={isArabic} onRefresh={load} />} />
+  if (data.role === 'directorate_manager') return <section className="workspace-page" dir={dir}><InstitutionWorkspace />{data.affiliation?.approval_status !== 'approved' && affiliationPanel}</section>
+
 
   return <section className="workspace-page" dir={dir}>
     <header className="workspace-hero"><span>PARP</span><h1>{workspaceTitle}</h1><p>{copy.role}: <strong>{roleLabel(data.role, isArabic)}</strong></p></header>

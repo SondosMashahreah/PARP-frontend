@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar.jsx";
 import Icon from "../ui/Icon.jsx";
 import IconButton from "../ui/IconButton.jsx";
 import { RouteLink } from "../../routing/clientRouter.jsx";
+import { useLocation } from "../../routing/useLocation.js";
 import { useLanguage } from "../../i18n/useLanguage.js";
 import { useAuth } from "../../features/auth/useAuth.js";
 import { roleLabel } from "../../features/auth/roles.js";
@@ -36,6 +37,7 @@ export default function Header() {
   const accountButton = useRef(null);
   const { isArabic, dir, toggleLanguage } = useLanguage();
   const { isAuthenticated, user } = useAuth();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
     const header = headerRef.current;
@@ -115,7 +117,9 @@ export default function Header() {
     ? memberLinks
         .filter(([to]) => to !== "/map" || canAccessPath(user?.role, to))
         .map((link) =>
-          user?.role === "system_admin" && link[0] === "/workspace"
+          user?.role === "directorate_manager" && link[0] === "/workspace"
+            ? ["/institutions", isArabic ? "المؤسسات" : "Institutions", isArabic ? "المؤسسات" : "Institutions"]
+            : user?.role === "system_admin" && link[0] === "/workspace"
             ? [
                 "/dashboard",
                 isArabic ? "لوحة التحكم" : "Dashboard",
@@ -126,6 +130,11 @@ export default function Header() {
     : guestLinks.map(([id, label, short]) => [
         id.startsWith('/') ? id : `/#${id}`, label, short,
       ]);
+  const isCurrentLink = (to) => to === '/'
+    ? pathname === '/' && !hash
+    : to.startsWith('/#')
+      ? pathname === '/' && hash === to.slice(1)
+      : pathname === to || (to === '/institutions' && pathname === '/workspace' && user?.role === 'directorate_manager');
   const accountName = isAuthenticated
     ? (isArabic ? user?.full_name : user?.full_name_en || user?.full_name) || (isArabic ? "الملف الشخصي" : "Profile")
     : isArabic
@@ -252,7 +261,7 @@ export default function Header() {
         aria-label={isArabic ? "أقسام الصفحة الرئيسية" : "Homepage sections"}
       >
         {links.map(([id, label, shortLabel]) => (
-          <RouteLink key={id} to={id} onClick={closePanel} aria-label={label}>
+          <RouteLink key={id} to={id} onClick={closePanel} aria-label={label} aria-current={isCurrentLink(id) ? "page" : undefined}>
             <span className="site-header__nav-full">{label}</span>
             <span className="site-header__nav-short" aria-hidden="true">
               {shortLabel}

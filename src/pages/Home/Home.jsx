@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+import { useLocation } from '../../routing/useLocation.js'
 import SpaceJourney from '../../components/SpaceJourney/SpaceJourney.jsx'
 import SpaceJourneyEn from '../../components/SpaceJourney/SpaceJourney.en.jsx'
 import { useNews } from '../../features/news/useNews.js'
@@ -15,6 +17,9 @@ import './Home.css'
 
 export default function Home() {
   const { language, isArabic, dir } = useLanguage()
+  const { hash } = useLocation()
+  const contactRef = useRef(null)
+  useEffect(() => { if (hash === '#contact' && contactRef.current) contactRef.current.open = true }, [hash])
   const { data: news, loading: newsLoading, error: newsError } = useNews({ limit: 12 })
   const latestNews = (news?.items || []).map(row => displayNews(row, isArabic))
   const stats = getPlatformStats(language, news?.total ?? null)
@@ -39,16 +44,22 @@ export default function Home() {
       </section>
       <div id="space-journey">{isArabic ? <SpaceJourney /> : <SpaceJourneyEn />}</div>
       <ValuesNetwork />
-      <section className="home-contact" id="contact" dir={dir} aria-labelledby="contact-title">
-        <div className="home-contact__intro">
-          <span className="home-section-eyebrow">{isArabic ? 'لنبقَ على تواصل' : 'Let’s stay connected'}</span>
-          <h2 id="contact-title">{isArabic ? 'كل فكرة تبدأ بمحادثة.' : 'Every idea starts with a conversation.'}</h2>
-          <p>{isArabic ? 'عندك سؤال، اقتراح أو فكرة للتعاون؟ اكتب لنا، ويسعد فريق المنصة بمساعدتك في خطوتك القادمة.' : 'Have a question, a suggestion, or an idea for collaboration? Write to us. The platform team is here to help with your next step.'}</p>
-          <a className="home-contact__email" href={`mailto:${CONTACT_EMAIL}`}><Icon name="mail" /><span dir="ltr">{CONTACT_EMAIL}</span></a>
-          <small>{isArabic ? 'متحف الرياضيات · جامعة القدس · أبو ديس، فلسطين' : 'Meet Math Museum · Al-Quds University · Abu Dis, Palestine'}</small>
+      <details className="home-contact" id="contact" ref={contactRef} dir={dir}>
+        <summary className="home-contact__toggle">
+          <span className="home-contact__toggle-title">{isArabic ? 'تواصل معنا' : 'Contact us'}</span>
+          <span className="home-contact__toggle-symbol" aria-hidden="true" />
+        </summary>
+        <div className="home-contact__body">
+          <div className="home-contact__intro">
+            <span className="home-section-eyebrow">{isArabic ? 'لنبقَ على تواصل' : 'Let’s stay connected'}</span>
+            <h2 id="contact-title">{isArabic ? 'كل فكرة تبدأ بمحادثة.' : 'Every idea starts with a conversation.'}</h2>
+            <p>{isArabic ? 'عندك سؤال، اقتراح أو فكرة للتعاون؟ اكتب لنا، ويسعد فريق المنصة بمساعدتك في خطوتك القادمة.' : 'Have a question, a suggestion, or an idea for collaboration? Write to us. The platform team is here to help with your next step.'}</p>
+            <a className="home-contact__email" href={`mailto:${CONTACT_EMAIL}`}><Icon name="mail" /><span dir="ltr">{CONTACT_EMAIL}</span></a>
+            <small>{isArabic ? 'متحف الرياضيات · جامعة القدس · أبو ديس، فلسطين' : 'Meet Math Museum · Al-Quds University · Abu Dis, Palestine'}</small>
+          </div>
+          <div className="home-contact__form"><ContactForm /></div>
         </div>
-        <div className="home-contact__form"><ContactForm /></div>
-      </section>
+      </details>
     </>
   )
 }

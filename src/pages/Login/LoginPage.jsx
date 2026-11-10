@@ -73,7 +73,7 @@ export default function LoginPage() {
 const loggedUser = await login(email, password, role)
 const next = new URLSearchParams(window.location.search).get('next')
 window.location.assign(
-  (next?.startsWith('/') && !next.startsWith('//') ? next : null) || (loggedUser?.role === 'system_admin' ? '/dashboard' : '/workspace')
+  (next?.startsWith('/') && !next.startsWith('//') ? next : null) || (loggedUser?.role === 'system_admin' ? '/dashboard' : loggedUser?.role === 'directorate_manager' ? '/institutions' : '/workspace')
 )
       } else if (mode === 'register') {
         const result = await register({

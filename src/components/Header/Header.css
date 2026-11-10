@@ -121,3 +121,8 @@
   border: 1px solid rgb(var(--neutral-rgb) / 30%);
   background: var(--color-primary-soft);
 }
+
+
+/* V11: keep current page as visually distinct as the hover state. */
+.site-header__nav a[aria-current="page"] { color: var(--color-text); border-bottom-color: var(--color-accent); background: linear-gradient(to top, rgb(var(--accent-rgb) / 9%), transparent 65%); font-weight: 750; }
+.site-header__nav a[aria-current="page"]:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -3px; }

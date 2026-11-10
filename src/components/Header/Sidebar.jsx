@@ -113,7 +113,8 @@ export default function Sidebar({ isOpen, onClose }) {
   const groups = NAV_GROUPS[language].map((group) => ({
     ...group,
     items: group.items.filter((item) => {
-      if (item.to === '/workspace' && user?.role === 'system_admin') return false
+      if (item.to === '/workspace' && ['system_admin', 'directorate_manager'].includes(user?.role)) return false
+      if (item.to === '/training' && user?.role === 'directorate_manager') return false
       if (item.to === '/map') return isAuthenticated && canAccessPath(user?.role, '/map')
       if (item.to === '/login') return !isAuthenticated
       return !isAuthenticated || canAccessPath(user?.role, item.to)

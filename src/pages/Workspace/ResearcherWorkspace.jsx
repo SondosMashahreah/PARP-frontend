@@ -62,13 +62,6 @@ export default function ResearcherWorkspace({
     }
   }, [])
   const t = (ar, en) => (isArabic ? ar : en)
-  const researching = [
-    'research',
-    'new',
-    'drafts',
-    'decisions',
-    'tracking',
-  ].includes(section)
   const titles = {
     practices: t('ممارساتي', 'My practices'),
     'new-practice': t('ممارسة جديدة', 'New practice'),
@@ -108,7 +101,7 @@ export default function ResearcherWorkspace({
           aria-label={t('مسار الصفحة', 'Breadcrumb')}
         >
           <RouteLink to="/workspace">{t('مساحة العمل', 'Workspace')}</RouteLink>
-          {researching && (
+          {section === 'research' && (
             <RouteLink to="/workspace#research">
               {t('البحوث', 'Research')}
             </RouteLink>
@@ -139,7 +132,7 @@ export default function ResearcherWorkspace({
           </details>
         </>
       )}
-      {researching && (
+      {section === 'research' && (
         <nav
           className="researcher-tiles"
           aria-label={t('أقسام البحوث', 'Research sections')}
