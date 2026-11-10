@@ -63,7 +63,7 @@ export default function ProfilePage() {
         <div className="profile-card__avatar-wrap">
           {user.avatar_url ? <img className="profile-card__avatar" src={user.avatar_url} alt="" /> : <div className="profile-card__avatar profile-card__avatar--empty">{user.full_name?.slice(0, 1)?.toUpperCase()}</div>}
           <button type="button" onClick={() => fileRef.current?.click()} disabled={busy}>{copy.avatar}</button>
-          <input ref={fileRef} className="profile-card__file" type="file" accept="image/jpeg,image/png,image/webp" onChange={uploadAvatar} />
+          <input ref={fileRef} className="profile-card__file" type="file" accept="image/*,.heic,.heif,.avif,.tif,.tiff,.bmp" onChange={uploadAvatar} />
         </div>
         <div className="profile-card__content">
           <h1>{copy.title}</h1>

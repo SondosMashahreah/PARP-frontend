@@ -1,0 +1,45 @@
+/* One consistent drop target for all native file pickers across PARP. */
+label:has(> input[type="file"]), label:has(> .ards-upload input[type="file"]) {
+  border-radius: 12px;
+}
+label:has(input[type="file"]) input[type="file"] {
+  max-width: 100%;
+  cursor: pointer;
+}
+label:has(input[type="file"]):not(.admin-news__file-drop) {
+  outline-offset: 4px;
+  transition: outline-color .15s, background-color .15s;
+}
+.parp-file-drop-active {
+  outline: 2px dashed #c99dfd !important;
+  background: rgba(155, 98, 222, .13) !important;
+}
+label:has(input[type="file"]):not(.admin-news__file-drop)::after {
+  content: '↧ اسحب الملف وأفلته هنا أو اختره من الجهاز';
+  display: block;
+  font-size: .76rem;
+  color: var(--color-text-muted, #d3c7e6);
+  padding-block: 4px;
+}
+html[lang="en"] label:has(input[type="file"]):not(.admin-news__file-drop)::after {
+  content: '↧ Drag and drop a file here, or choose from your device';
+}
+/* Research PDFs and profile photos also get a recognizable target when their
+   native input sits beside its label instead of inside it. */
+.ards-upload:has(input[type="file"]),
+.profile-card__avatar-wrap:has(input[type="file"]) {
+  border: 1px dashed rgb(172 121 229 / 48%);
+  border-radius: 14px;
+  padding: 12px;
+  transition: border-color .15s, background-color .15s;
+}
+.ards-upload:has(input[type="file"])::after {
+  content: '↧ يمكن سحب ملف البحث وإفلاته هنا';
+  display: block;
+  padding-top: 6px;
+  font-size: .75rem;
+  color: var(--color-text-muted, #d3c7e6);
+}
+html[lang="en"] .ards-upload:has(input[type="file"])::after {
+  content: '↧ You can drop your research document here';
+}

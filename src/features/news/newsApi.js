@@ -5,6 +5,7 @@ export const newsApi = {
   save: (id, data) => api(`/api/news/admin${id ? `/${id}` : ''}`, { method: id ? 'PUT' : 'POST', body: JSON.stringify(data) }),
   // The first uploaded image is the cover; subsequent images are appended in upload order.
   image: (id, file) => { const body = new FormData(); body.append('file', file); return api(`/api/news/admin/${id}/image`, { method: 'POST', body }) },
+  preview: (file) => { const body = new FormData(); body.append('file', file); return api('/api/news/admin/images/preview', { method: 'POST', body }) },
   addImage: (id, file) => { const body = new FormData(); body.append('file', file); return api(`/api/news/admin/${id}/images`, { method: 'POST', body }) },
   removeImage: (id, imageId) => api(`/api/news/admin/${id}/images/${encodeURIComponent(imageId)}`, { method: 'DELETE' }),
   delete: (id) => api(`/api/news/admin/${id}`, { method: 'DELETE' }),
